@@ -1,12 +1,13 @@
 package com.swp391.Court_Master.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.swp391.Court_Master.Entity.AuthenticatedUser;
+import com.swp391.Court_Master.Entities.AuthenticatedUser;
 import com.swp391.Court_Master.Repository.userRepository;
 import com.swp391.Court_Master.dto.request.UserCreateRequest;
 
@@ -56,6 +57,14 @@ public class UserService {
 
         return errorMap;
     }
+
+    public AuthenticatedUser getUserById(String id){
+        List<AuthenticatedUser> userList = userRepository.findByUserId(id);
+        AuthenticatedUser user = userList.get(0);
+        return user;
+    } 
+
+    
 
     // Create an error message array
     // public ArrayList<String> errorArr(AuthenticatedUser user){

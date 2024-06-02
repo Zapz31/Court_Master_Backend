@@ -1,4 +1,4 @@
-package com.swp391.Court_Master.Entity;
+package com.swp391.Court_Master.Entities;
 
 import java.time.LocalDate;
 
@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 public class AuthenticatedUser {
     @Id
     private String userId;
-
+    
     private String firstName;
     private String lastName;
     private String email;
@@ -23,6 +23,7 @@ public class AuthenticatedUser {
     private LocalDate registerDate;
     private String avatarImageUrl;
     private String courtManagerId;
+    
     
     public String getUserId() {
         return userId;

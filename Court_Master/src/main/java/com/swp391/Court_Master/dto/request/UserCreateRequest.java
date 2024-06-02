@@ -2,6 +2,7 @@ package com.swp391.Court_Master.dto.request;
 
 import java.time.LocalDate;
 
+
 public class UserCreateRequest {
     private String userId;
     private String firstName;

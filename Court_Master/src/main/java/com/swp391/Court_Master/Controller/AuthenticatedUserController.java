@@ -7,10 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.swp391.Court_Master.Entity.AuthenticatedUser;
+import com.swp391.Court_Master.Entities.AuthenticatedUser;
 import com.swp391.Court_Master.Service.UserService;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +34,10 @@ public class AuthenticatedUserController {
         
         return new ResponseEntity<>(registerNotic, HttpStatus.CREATED);
     }
-    
+
+    @GetMapping("/userById")
+    public ResponseEntity<AuthenticatedUser> getUserById( @RequestBody AuthenticatedUser userGet) {
+        AuthenticatedUser user = userService.getUserById(userGet.getUserId());      
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
 }
