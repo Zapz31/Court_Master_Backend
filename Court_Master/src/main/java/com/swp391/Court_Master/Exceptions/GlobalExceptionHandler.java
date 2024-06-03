@@ -11,4 +11,6 @@ public class GlobalExceptionHandler {
     ResponseEntity<String> handlingRuntimeException (RuntimeException exception){
         return ResponseEntity.badRequest().body(exception.getMessage()); // Loi do du lieu nguoi dung nhap vao se la badRequest
     }
+
+    
 }

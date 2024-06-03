@@ -8,13 +8,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.swp391.Court_Master.Entities.AuthenticatedUser;
+import com.swp391.Court_Master.Repository.UserValidatationDTORepository;
 import com.swp391.Court_Master.Repository.userRepository;
+import com.swp391.Court_Master.Utils.UserInputValidate;
 import com.swp391.Court_Master.dto.request.UserCreateRequest;
+import com.swp391.Court_Master.dto.request.UserValidationDTO;
 
 @Service
 public class UserService {
     @Autowired
     private userRepository userRepository;
+
+
+    UserInputValidate userInputValidate;
+
+    @Autowired
+    UserValidatationDTORepository userValidatationDTORepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -27,34 +36,60 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
-    public HashMap<String, String> registerUser(AuthenticatedUser user) {
+    public HashMap<String, String> registerUser(UserCreateRequest user) {
         HashMap<String, String> errorMap = new HashMap<>();
+        List<UserValidationDTO> list;
         boolean isValid = true;
-        if (user.getPassword().trim() == null || user.getPassword().trim().isEmpty()) {
-            errorMap.put("passwordEmptyError", "Invalid password !");
+        userInputValidate = new UserInputValidate(); 
+        String userFirstName = userInputValidate.getString(user.getFirstName(), 2, 300, "^(?!\\d)[\\p{L}\\s]+$", errorMap, 
+        "First name", "firstNameError", "First name must start with a letter and have no special characters");
+        if(userFirstName.equals("error")){
             isValid = false;
         }
 
-        if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
-            errorMap.put("FirstNameEmptyError", "First name can not be empty !");
+        String userLastName = userInputValidate.getString(user.getLastName(), 2, 300, "^(?!\\d)[\\p{L}\\s]+$", errorMap, 
+        "Last name", "lastNameError", "Last name must start with a letter and have no special characters");
+        if(userLastName.equals("error")){
+            isValid = false;
+        } 
+
+        String userPhoneNumber = userInputValidate.getString(user.getPhoneNumber(), 10, 10, "^0\\d{9}$", errorMap, 
+        "Phone number", "phoneNumberError", "Please enter your phone number in the correct format");
+        if(userPhoneNumber.equals("error")){
+            isValid = false;
+        } 
+        // ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}
+        String userEmail = userInputValidate.getString(user.getEmail(), 1, 100, "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", errorMap, 
+        "Email", "emailError", "Please enter the following email format correctly: example@gmail.com");
+        if(userEmail.equals("error")){
             isValid = false;
         }
 
+        String userPassword = userInputValidate.getString(user.getPassword(), 1, 100, "^.*$", errorMap, 
+        "Password", "passwordError", "");
+        if(userPassword.equals("error")){
+            isValid = false;
+        }
 
-        if (isValid) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            try {
-                if (userRepository.save(user) != null) {
-                    errorMap.put("registerSuccessNoti", "Register successfully !");
-                }
-            } catch (Exception e) {
-                System.out.println(e.toString());
-                if (e.toString().contains("unique_email")) {
-                    errorMap.put("emailDuplicateError", "This email has already registered !");
-                }
+        int userRole = user.getRole();
+        if(isValid){
+            list = userValidatationDTORepository.validateUserRegistration(userEmail, userPhoneNumber);
+            if(list.size() != 0){
+                errorMap.put("duplicateError", "Email or phone number has already exsit");
+            } else {
+                userPassword = passwordEncoder.encode(userPassword);
+                AuthenticatedUser authenUser = new AuthenticatedUser();
+                authenUser.setUserId("3");
+                authenUser.setRole(userRole);
+                authenUser.setFirstName(userFirstName);
+                authenUser.setLastName(userLastName);
+                authenUser.setPhoneNumber(userPhoneNumber);
+                authenUser.setEmail(userEmail);
+                authenUser.setPassword(userPassword);
+                userRepository.save(authenUser);
+                errorMap.put("registerMess", "success");
             }
         }
-
         return errorMap;
     }
 
