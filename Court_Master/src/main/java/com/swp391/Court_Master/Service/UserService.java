@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.swp391.Court_Master.Entities.AuthenticatedUser;
 import com.swp391.Court_Master.Repository.UserValidatationDTORepository;
-import com.swp391.Court_Master.Repository.userRepository;
+import com.swp391.Court_Master.Repository.UserRepository;
 import com.swp391.Court_Master.Utils.UserInputValidate;
 import com.swp391.Court_Master.dto.request.UserCreateRequest;
 import com.swp391.Court_Master.dto.request.UserValidationDTO;
@@ -17,7 +17,7 @@ import com.swp391.Court_Master.dto.request.UserValidationDTO;
 @Service
 public class UserService {
     @Autowired
-    private userRepository userRepository;
+    private UserRepository userRepository;
 
 
     UserInputValidate userInputValidate;

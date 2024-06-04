@@ -1,21 +1,51 @@
 package com.swp391.Court_Master.Entities;
 
 import java.time.LocalDate;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.ColumnResult;
+import jakarta.persistence.ConstructorResult;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedNativeQuery;
+import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
 
+
+
 @Entity
+@NamedNativeQuery(
+    name = "User.findUserByPhone",
+    query = "select email, phone_number as phoneNumber,user_id as userId, password, birth_day as birthDay, register_date as registerDate, role from authenticated_user\r\n" + //
+                "where email = :userInput or phone_number = :userInput",
+    resultSetMapping = "ExsitUser"
+)
+@SqlResultSetMapping(
+    name = "ExsitUser",
+    classes = @ConstructorResult(
+        targetClass = AuthenticatedUser.class,
+        columns = {
+            @ColumnResult(name = "email", type = String.class),
+            @ColumnResult(name = "phoneNumber", type = String.class),
+            @ColumnResult(name = "userId", type = String.class),
+            @ColumnResult(name = "birthDay", type = LocalDate.class),
+            @ColumnResult(name = "registerDate", type = LocalDate.class),
+            @ColumnResult(name = "role", type = Integer.class),
+            @ColumnResult(name = "password", type = String.class)          
+        }
+    )
+)
 @Table(name = "authenticated_user")
-public class AuthenticatedUser {
+public class AuthenticatedUser{
     @Id
     private String userId;
     
     private String firstName;
     private String lastName;
     private String email;
+
+    @JsonIgnore
     private String password;
+
     private String phoneNumber;
     private LocalDate birthDay;
     private int role;
@@ -23,8 +53,41 @@ public class AuthenticatedUser {
     private LocalDate registerDate;
     private String avatarImageUrl;
     private String courtManagerId;
+
     
+
+    public AuthenticatedUser() {
+    }
+
+    public AuthenticatedUser(String userId, String firstName, String lastName, String email, String password,
+            String phoneNumber, LocalDate birthDay, int role, int user_status, LocalDate registerDate,
+            String avatarImageUrl, String courtManagerId) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.birthDay = birthDay;
+        this.role = role;
+        this.user_status = user_status;
+        this.registerDate = registerDate;
+        this.avatarImageUrl = avatarImageUrl;
+        this.courtManagerId = courtManagerId;
+    }
     
+
+    
+    public AuthenticatedUser(String userId, String email, String phoneNumber, LocalDate birthDay, int role,
+            LocalDate registerDate) {
+        this.userId = userId;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.birthDay = birthDay;
+        this.role = role;
+        this.registerDate = registerDate;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -97,6 +160,25 @@ public class AuthenticatedUser {
     public void setCourtManagerId(String courtManagerId) {
         this.courtManagerId = courtManagerId;
     }
+
+    public String getRoleNameAuthenticate(int roleId){
+        String roleName;
+        switch (roleId) {
+            case 1:
+                roleName = "USER_CUSTOMER";
+                break;
+            case 2:
+                roleName = "USER_COURT_MANAGER";
+                break;
+            case 3:
+                roleName = "USER_COURT_STAFF";
+                break;
+            default:
+                roleName = "SYSTEM_ADMIN";
+        } 
+        return roleName;
+    }
+
 
     
 }
