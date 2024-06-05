@@ -10,16 +10,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @RequestMapping("/api/test")
 public class testAPI {
-    @GetMapping("path")
+    @GetMapping("/all")
     public String allAccess() {
-        return "Public asscess content";
+        return "Hahahahahahahahaa";
     }
 
     @GetMapping("/customer")
-    @PreAuthorize("hasAuthority('USER_CUSTOMER')")
+    @PreAuthorize("hasAuthority('USER_CUSTOMER')") /*or hasAuthority('USER_COURT_MANAGER')*/
     public String getMethodName() {
         return " chi co ta moi la dang chi ton";
     }
     
+    @GetMapping("/courtmanager")
+    @PreAuthorize("hasAuthority('USER_COURT_MANAGER')")
+    public String getCourtManagerAccess() {
+        return "tai sao phai lam vua";
+    }
+
+
     
 }
