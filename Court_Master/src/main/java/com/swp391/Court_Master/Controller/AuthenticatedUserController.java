@@ -1,10 +1,13 @@
 package com.swp391.Court_Master.Controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -15,6 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.swp391.Court_Master.Entities.AuthenticatedUser;
+import com.swp391.Court_Master.Entities.PasswordResetToken;
 import com.swp391.Court_Master.Service.UserDetailsImbl;
 import com.swp391.Court_Master.Service.UserService;
 import com.swp391.Court_Master.dto.request.LoginRequest;
@@ -28,6 +33,7 @@ import org.springframework.http.HttpHeaders;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,4 +102,18 @@ public class AuthenticatedUserController {
     // AuthenticatedUser user = userService.getUserById(userGet.getUserId());
     // return new ResponseEntity<>(user, HttpStatus.CREATED);
     // }
+
+    @PostMapping("/forgotpassword/{email}")
+    public ResponseEntity<MessageResponse> postMethodName(@PathVariable("email") String email) {
+        //TODO: process POST request
+        AuthenticatedUser authenticatedUser = userService.getUserByEmail(email);
+        String token = UUID.randomUUID().toString();
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(20);
+        
+        PasswordResetToken passwordResetToken = new PasswordResetToken(authenticatedUser.getUserId(), token, expirationTime);
+        userService.CreateResetPasswordTokenForUser(passwordResetToken);
+        MessageResponse resetPasswordMess = new MessageResponse("Add password resetToken successfully");
+        return new ResponseEntity<>(resetPasswordMess, HttpStatus.CREATED);
+    }
+    
 }

@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.swp391.Court_Master.Entities.AuthenticatedUser;
+import com.swp391.Court_Master.Entities.PasswordResetToken;
 import com.swp391.Court_Master.Repository.UserValidatationDTORepository;
+import com.swp391.Court_Master.Repository.PasswordResetTokenRepository;
 import com.swp391.Court_Master.Repository.UserRepository;
 import com.swp391.Court_Master.Utils.UserInputValidate;
 import com.swp391.Court_Master.dto.request.UserCreateRequest;
@@ -19,6 +22,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    PasswordResetTokenRepository passwordResetTokenRepository;
 
     UserInputValidate userInputValidate;
 
@@ -98,6 +103,21 @@ public class UserService {
         AuthenticatedUser user = userList.get(0);
         return user;
     } 
+
+    public AuthenticatedUser getUserByEmail(String email){
+        AuthenticatedUser authenticatedUser = userRepository.findByEmailOrPhoneNumber(email)
+          .orElseThrow(() -> new UsernameNotFoundException("Your email is not registered"));
+
+          return authenticatedUser;
+    }
+
+    public void CreateResetPasswordTokenForUser( PasswordResetToken passwordResetToken){
+        passwordResetTokenRepository.addPasswordResetToken(passwordResetToken.getUserId(), passwordResetToken.getToken(), passwordResetToken.getExpirationTime());
+    }
+
+
+
+
 
     
 
