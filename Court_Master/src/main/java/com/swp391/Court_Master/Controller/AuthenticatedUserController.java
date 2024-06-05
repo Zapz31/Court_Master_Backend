@@ -19,6 +19,7 @@ import com.swp391.Court_Master.Service.UserDetailsImbl;
 import com.swp391.Court_Master.Service.UserService;
 import com.swp391.Court_Master.dto.request.LoginRequest;
 import com.swp391.Court_Master.dto.request.UserCreateRequest;
+import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.UserInfoResponse;
 import com.swp391.Court_Master.security.jwt.JwtUtils;
 import org.springframework.security.core.Authentication;
@@ -70,9 +71,7 @@ public class AuthenticatedUserController {
 
     ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
 
-    List<String> roles = userDetails.getAuthorities().stream()
-        .map(item -> item.getAuthority())
-        .collect(Collectors.toList());
+ 
 
     return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
         .body(new UserInfoResponse(userDetails.getUserId(), 
@@ -82,6 +81,13 @@ public class AuthenticatedUserController {
                                     userDetails.getEmail(), 
                                     userDetails.getPhoneNumber(), 
                                     loginRequest.getRoleName(loginRequest.getRoleId())));
+  }
+
+  @PostMapping("/signout")
+  public ResponseEntity<?> logoutUser() {
+    ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
+    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
+        .body(new MessageResponse("You've been signed out!"));
   }
 
     // @GetMapping("/userById")
