@@ -37,7 +37,7 @@ public class UserDetailsImbl implements UserDetails{
 
 
 
-    public UserDetailsImbl(String userId, LocalDate birthDay, LocalDate registerDate,
+    public UserDetailsImbl(String userId,String emailorPhoneNumber, LocalDate birthDay, LocalDate registerDate,
             String email, String phoneNumber, String password, Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.birthDay = birthDay;
@@ -46,11 +46,12 @@ public class UserDetailsImbl implements UserDetails{
         this.phoneNumber = phoneNumber;
         this.authorities = authorities;
         this.password = password;
+        this.emailOrPhoneNumber = emailorPhoneNumber;
     }
 
 
 
-    public static UserDetailsImbl build(AuthenticatedUser user) {
+    public static UserDetailsImbl build(AuthenticatedUser user, String emailOrPhoneNumber) {
     // List<GrantedAuthority> authorities = user.getRoles().stream()
     //     .map(role -> new SimpleGrantedAuthority(role.getName().name()))
     //     .collect(Collectors.toList());
@@ -59,7 +60,8 @@ public class UserDetailsImbl implements UserDetails{
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(authority);
     return new UserDetailsImbl(
-        user.getUserId(), 
+        user.getUserId(),
+        emailOrPhoneNumber, 
         user.getBirthDay(), 
         user.getRegisterDate(),
         user.getEmail(),

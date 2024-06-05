@@ -18,7 +18,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AuthenticatedUser user = userRepository.findByEmailOrPhoneNumber(username)
            .orElseThrow(() -> new UsernameNotFoundException("Invalid Email or Phone number"));
-        return UserDetailsImbl.build(user);
+        return UserDetailsImbl.build(user, username);
     }
 
 }
