@@ -2,12 +2,12 @@ package com.swp391.Court_Master.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.swp391.Court_Master.Entities.AuthenticatedUser;
 import com.swp391.Court_Master.Entities.PasswordResetToken;
 import com.swp391.Court_Master.Repository.UserValidatationDTORepository;
@@ -21,6 +21,9 @@ import com.swp391.Court_Master.dto.request.UserValidationDTO;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     PasswordResetTokenRepository passwordResetTokenRepository;
@@ -115,11 +118,34 @@ public class UserService {
         passwordResetTokenRepository.addPasswordResetToken(passwordResetToken.getUserId(), passwordResetToken.getToken(), passwordResetToken.getExpirationTime());
     }
 
+    public String createToken(){
+        String token = "";
+        Random random = new Random(System.currentTimeMillis());
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(int i = 0; i < 6; i++){
+            int randomNumber = random.nextInt(10); //int randomNumber = random.nextInt((max - min) + 1) + min;
+            stringBuilder.append(randomNumber);
+        }
+        token = stringBuilder.toString();
+        return token;
+    }
+
+    public PasswordResetToken getToken(String userId){
+        List<PasswordResetToken> list = passwordResetTokenRepository.getTokenByUserId(userId);
+         PasswordResetToken token = list.get(0);
+         return token;
+    }
+
+    public void updatePassword(String newPassword, String email){
+        newPassword = passwordEncoder.encode(newPassword);
+        userRepository.updatepassword(newPassword, email);
+
+    }
 
 
 
 
-    
 
     // Create an error message array
     // public ArrayList<String> errorArr(AuthenticatedUser user){

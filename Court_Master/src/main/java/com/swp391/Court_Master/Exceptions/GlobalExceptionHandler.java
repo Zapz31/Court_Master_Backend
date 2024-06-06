@@ -28,10 +28,11 @@ public class GlobalExceptionHandler {
       return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST); 
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler(value = AccessDeniedException.class)
     public ResponseEntity<MessageResponse> handleAccessDeniedException(AccessDeniedException ex) {
         MessageResponse mess = new MessageResponse("You don't have permission to access this resource");
         return new ResponseEntity<>(mess, HttpStatus.FORBIDDEN);
     }
+
 
 }
