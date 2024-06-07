@@ -143,6 +143,12 @@ public class UserService {
 
     }
 
+    public void RemoveToken(String token){
+        passwordResetTokenRepository.RemoveToken(token);
+    }
+
+
+
 
 
 

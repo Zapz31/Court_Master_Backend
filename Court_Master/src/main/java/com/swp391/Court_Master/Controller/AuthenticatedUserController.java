@@ -149,8 +149,10 @@ public class AuthenticatedUserController {
         if(!passwordResetToken.getToken().equals(passwordResetTokenInput.getToken())){
             return new ResponseEntity<>(new MessageResponse("Invalid Token"), HttpStatus.UNAUTHORIZED);
         } else if(!passwordResetTokenInput.getExpirationTime().isBefore(passwordResetToken.getExpirationTime())){
+            userService.RemoveToken(passwordResetToken.getToken());
             return new ResponseEntity<>(new MessageResponse("Your token is expired"), HttpStatus.UNAUTHORIZED);
         }
+        userService.RemoveToken(passwordResetToken.getToken());
         return ResponseEntity.ok(new MessageResponse(message));
 
     }
