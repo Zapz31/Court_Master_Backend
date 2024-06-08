@@ -80,6 +80,7 @@ public class AuthenticatedUserController {
     List<GrantedAuthority> authorityList = new ArrayList<>();
     authorityList.add(authority);
     loginRequest.setAuthorities(authorityList);
+    userService.getUserByEmail(loginRequest.getEmailOrPhoneNumber());
     Authentication authentication = authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmailOrPhoneNumber(), loginRequest.getPassword()));
 
@@ -91,7 +92,7 @@ public class AuthenticatedUserController {
 
  
 
-    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()) 
         .body(new UserInfoResponse(userDetails.getUserId(), 
                                     userDetails.getEmailOrPhoneNumber(), 
                                     userDetails.getBirthDay(), 

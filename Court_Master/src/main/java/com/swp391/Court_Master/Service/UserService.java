@@ -94,8 +94,9 @@ public class UserService {
                 authenUser.setPhoneNumber(userPhoneNumber);
                 authenUser.setEmail(userEmail);
                 authenUser.setPassword(userPassword);
+                authenUser.setRegisterDate(user.getRegisterDate());
                 userRepository.save(authenUser);
-                errorMap.put("registerMess", "success");
+                errorMap.put("duplicateError", "none");
             }
         }
         return errorMap;
@@ -108,7 +109,7 @@ public class UserService {
     } 
 
     public AuthenticatedUser getUserByEmail(String email){
-        AuthenticatedUser authenticatedUser = userRepository.findByEmailOrPhoneNumber(email)
+        AuthenticatedUser authenticatedUser = userRepository.findByEmailOrPhoneNumberPRT(email)
           .orElseThrow(() -> new UsernameNotFoundException("Your email is not registered"));
 
           return authenticatedUser;

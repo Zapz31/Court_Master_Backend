@@ -15,9 +15,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AuthenticatedUser user = userRepository.findByEmailOrPhoneNumber(username)
-           .orElseThrow(() -> new UsernameNotFoundException("Invalid Email or Phone number"));
+    public UserDetails loadUserByUsername(String username){
+        AuthenticatedUser user = userRepository.findByEmailOrPhoneNumber(username); 
+        if(user == null){
+            throw new UsernameNotFoundException("Invalid Email or Phone number");
+        }         
         return UserDetailsImbl.build(user, username);
     }
 

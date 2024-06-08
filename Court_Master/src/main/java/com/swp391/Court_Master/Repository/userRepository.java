@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<AuthenticatedUser, String>
     List<AuthenticatedUser> findByUserId(String userId);
 
     @Query(name = "User.findUserByPhone", nativeQuery = true)
-    Optional<AuthenticatedUser> findByEmailOrPhoneNumber(@Param("userInput") String emailOrPhoneNumber);
+    AuthenticatedUser findByEmailOrPhoneNumber(@Param("userInput") String emailOrPhoneNumber);
     
     @Modifying
     @Transactional
@@ -25,4 +25,7 @@ public interface UserRepository extends JpaRepository<AuthenticatedUser, String>
                 "where email = :email", nativeQuery = true)
     public void updatepassword(@Param("newPassword") String newPassword, @Param("email") String email);
     
+
+    @Query(name = "User.findUserByPhone", nativeQuery = true)
+    Optional<AuthenticatedUser> findByEmailOrPhoneNumberPRT(@Param("userInput") String emailOrPhoneNumber);
 }
