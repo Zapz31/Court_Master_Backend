@@ -92,7 +92,7 @@ public class AuthenticatedUserController {
 
  
 
-    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()) 
+    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
         .body(new UserInfoResponse(userDetails.getUserId(), 
                                     userDetails.getEmailOrPhoneNumber(), 
                                     userDetails.getBirthDay(), 

@@ -1,5 +1,6 @@
 package com.swp391.Court_Master.security;
 
+import java.net.http.HttpHeaders;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,12 +66,13 @@ public class WebSecurityConfig {
                 .cors(cors -> {
                     CorsConfigurationSource source = request -> {
                         CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(Arrays.asList("*")); // Cho phép tất cả các nguồn gốc
+                        config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Cho phép tất cả các nguồn gốc
                         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Cho phép
                                                                                                             // các
                                                                                                             // phương
                                                                                                             // thức HTTP
-                        config.setAllowedHeaders(Arrays.asList("*")); // Cho phép tất cả các header
+                        config.setAllowedHeaders(Arrays.asList("*", "Set-Cookie")); // Cho phép tất cả các header
+                        config.setAllowCredentials(true);
                         return config;
                     };
                     cors.configurationSource(source);
