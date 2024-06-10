@@ -127,7 +127,10 @@ public class AuthenticatedUserController {
         String token = userService.createToken();
         LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(20);
         
+        userService.RemoveTokenByUserId(authenticatedUser.getUserId());
+
         PasswordResetToken passwordResetToken = new PasswordResetToken(authenticatedUser.getUserId(), token, expirationTime);
+
         userService.CreateResetPasswordTokenForUser(passwordResetToken);
         emailService.sendEmail(email, ResetPasswordEmailSubject, "This is your otp to reset your password: " + token);
         MessageResponse resetPasswordMess = new MessageResponse("success");

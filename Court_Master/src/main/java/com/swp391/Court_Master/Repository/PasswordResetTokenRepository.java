@@ -32,4 +32,12 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
     @Transactional
     @Query(value = "delete from password_reset_token where token = :token", nativeQuery = true)
     public void RemoveToken(@Param("token") String token);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from password_reset_token where user_id = :userId", nativeQuery = true)
+    public void RemoveTokenByUserId(@Param("userId") String userId);
+
+
+
 }

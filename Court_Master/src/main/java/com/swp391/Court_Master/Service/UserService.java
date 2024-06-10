@@ -148,6 +148,10 @@ public class UserService {
         passwordResetTokenRepository.RemoveToken(token);
     }
 
+    public void RemoveTokenByUserId(String userId){
+        passwordResetTokenRepository.RemoveTokenByUserId(userId);
+    }
+
 
 
 

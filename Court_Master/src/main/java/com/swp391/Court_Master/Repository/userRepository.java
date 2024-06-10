@@ -28,4 +28,6 @@ public interface UserRepository extends JpaRepository<AuthenticatedUser, String>
 
     @Query(name = "User.findUserByPhone", nativeQuery = true)
     Optional<AuthenticatedUser> findByEmailOrPhoneNumberPRT(@Param("userInput") String emailOrPhoneNumber);
+
+    
 }

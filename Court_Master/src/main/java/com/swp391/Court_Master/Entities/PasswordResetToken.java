@@ -27,6 +27,7 @@ import jakarta.persistence.SqlResultSetMapping;
         }
     )
 )
+
 public class PasswordResetToken {
 
     @Id
