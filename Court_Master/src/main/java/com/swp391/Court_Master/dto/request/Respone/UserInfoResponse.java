@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 public class UserInfoResponse {
     private String userId;
-    private String emailOrPhoneNumber;
     private LocalDate birthDay;
     private LocalDate registerDate;
     private String email;
@@ -15,10 +14,9 @@ public class UserInfoResponse {
     public UserInfoResponse() {
     }
 
-    public UserInfoResponse(String userId, String emailOrPhoneNumber, LocalDate birthDay, LocalDate registerDate,
+    public UserInfoResponse(String userId, LocalDate birthDay, LocalDate registerDate,
             String email, String phoneNumber, String role) {
         this.userId = userId;
-        this.emailOrPhoneNumber = emailOrPhoneNumber;
         this.birthDay = birthDay;
         this.registerDate = registerDate;
         this.email = email;
@@ -32,14 +30,6 @@ public class UserInfoResponse {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getEmailOrPhoneNumber() {
-        return emailOrPhoneNumber;
-    }
-
-    public void setEmailOrPhoneNumber(String emailOrPhoneNumber) {
-        this.emailOrPhoneNumber = emailOrPhoneNumber;
     }
 
     public LocalDate getBirthDay() {
