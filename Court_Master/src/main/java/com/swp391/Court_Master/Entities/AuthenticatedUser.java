@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 @Entity
 @NamedNativeQuery(
     name = "User.findUserByPhone",
-    query = "select email, phone_number as phoneNumber,user_id as userId, password, birth_day as birthDay, register_date as registerDate, role from authenticated_user\r\n" + //
+    query = "select email, phone_number as phoneNumber,user_id as userId, password, birth_day as birthDay, register_date as registerDate, role, avatar_image_url as avatarImageUrl from authenticated_user\r\n" + //
                 "where email = :userInput or phone_number = :userInput",
     resultSetMapping = "ExsitUser"
 )
@@ -30,7 +30,8 @@ import jakarta.persistence.Table;
             @ColumnResult(name = "birthDay", type = LocalDate.class),
             @ColumnResult(name = "registerDate", type = LocalDate.class),
             @ColumnResult(name = "role", type = Integer.class),
-            @ColumnResult(name = "password", type = String.class)          
+            @ColumnResult(name = "password", type = String.class),       
+            @ColumnResult(name = "avatarImageUrl", type = String.class)  
         }
     )
 )
@@ -79,13 +80,14 @@ public class AuthenticatedUser{
 
     
     public AuthenticatedUser(String userId, String email, String phoneNumber, LocalDate birthDay, int role,
-            LocalDate registerDate) {
+            LocalDate registerDate, String avatarImageUrl) {
         this.userId = userId;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.birthDay = birthDay;
         this.role = role;
         this.registerDate = registerDate;
+        this.avatarImageUrl = avatarImageUrl;
     }
 
     public String getUserId() {

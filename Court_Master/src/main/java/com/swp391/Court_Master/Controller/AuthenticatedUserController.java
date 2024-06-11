@@ -80,7 +80,7 @@ public class AuthenticatedUserController {
     List<GrantedAuthority> authorityList = new ArrayList<>();
     authorityList.add(authority);
     loginRequest.setAuthorities(authorityList);
-    userService.getUserByEmail(loginRequest.getEmailOrPhoneNumber());
+    AuthenticatedUser user = userService.getUserByEmail(loginRequest.getEmailOrPhoneNumber());
     Authentication authentication = authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmailOrPhoneNumber(), loginRequest.getPassword()));
 
@@ -98,7 +98,8 @@ public class AuthenticatedUserController {
                                     userDetails.getRegisterDate(), 
                                     userDetails.getEmail(), 
                                     userDetails.getPhoneNumber(), 
-                                    loginRequest.getRoleName(loginRequest.getRoleId())));
+                                    loginRequest.getRoleName(loginRequest.getRoleId()), 
+                                    user.getAvatarImageUrl()));
   }
 
   @PostMapping("/signout")

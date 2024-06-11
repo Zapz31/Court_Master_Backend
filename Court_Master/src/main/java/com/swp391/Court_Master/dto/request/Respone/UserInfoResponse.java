@@ -8,6 +8,7 @@ public class UserInfoResponse {
     private LocalDate registerDate;
     private String email;
     private String phoneNumber;
+    private String imageUrlString;
 
     private String role;
 
@@ -15,14 +16,17 @@ public class UserInfoResponse {
     }
 
     public UserInfoResponse(String userId, LocalDate birthDay, LocalDate registerDate,
-            String email, String phoneNumber, String role) {
+            String email, String phoneNumber, String role, String imageUrlString) {
         this.userId = userId;
         this.birthDay = birthDay;
         this.registerDate = registerDate;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.role = role;
+        this.imageUrlString = imageUrlString;
     }
+
+    
 
     public String getUserId() {
         return userId;
@@ -70,6 +74,14 @@ public class UserInfoResponse {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getImageUrlString() {
+        return imageUrlString;
+    }
+
+    public void setImageUrlString(String imageUrlString) {
+        this.imageUrlString = imageUrlString;
     }
 
     
