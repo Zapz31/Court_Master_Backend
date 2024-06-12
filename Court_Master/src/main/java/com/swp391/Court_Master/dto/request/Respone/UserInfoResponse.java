@@ -9,6 +9,8 @@ public class UserInfoResponse {
     private String email;
     private String phoneNumber;
     private String imageUrlString;
+    private String firstName;
+    private String lastName;
 
     private String role;
 
@@ -16,7 +18,7 @@ public class UserInfoResponse {
     }
 
     public UserInfoResponse(String userId, LocalDate birthDay, LocalDate registerDate,
-            String email, String phoneNumber, String role, String imageUrlString) {
+            String email, String phoneNumber, String role, String imageUrlString, String firstName, String lastName) {
         this.userId = userId;
         this.birthDay = birthDay;
         this.registerDate = registerDate;
@@ -24,6 +26,8 @@ public class UserInfoResponse {
         this.phoneNumber = phoneNumber;
         this.role = role;
         this.imageUrlString = imageUrlString;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     
@@ -82,6 +86,22 @@ public class UserInfoResponse {
 
     public void setImageUrlString(String imageUrlString) {
         this.imageUrlString = imageUrlString;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     

@@ -99,7 +99,7 @@ public class AuthenticatedUserController {
                                     userDetails.getEmail(), 
                                     userDetails.getPhoneNumber(), 
                                     loginRequest.getRoleName(loginRequest.getRoleId()), 
-                                    user.getAvatarImageUrl()));
+                                    user.getAvatarImageUrl(), user.getFirstName(), user.getLastName()));
   }
 
   @PostMapping("/signout")
