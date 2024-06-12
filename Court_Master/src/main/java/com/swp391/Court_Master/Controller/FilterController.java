@@ -1,5 +1,7 @@
 package com.swp391.Court_Master.Controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +34,9 @@ public class FilterController {
     }
 
     @GetMapping("/address/districts")
-    public ResponseEntity<List<DistrictFullNameResponse>> getAllProvincesFullName(@RequestBody ProvinceFullNameRequest ProvinceFullNameRequest) {
-        List<DistrictFullNameResponse> list = addressService.getAllDistrictsFullName(ProvinceFullNameRequest.getFullName());
+    public ResponseEntity<List<DistrictFullNameResponse>> getAllProvincesFullName(@RequestParam("fullName") String fullName) throws UnsupportedEncodingException {
+        String decodedParam = URLDecoder.decode(fullName, "UTF-8");
+        List<DistrictFullNameResponse> list = addressService.getAllDistrictsFullName(decodedParam);
         return ResponseEntity.ok().body(list);
     }
 
@@ -43,6 +46,7 @@ public class FilterController {
         return ResponseEntity.ok().body(list);  
     }
     
+
 
     
     
