@@ -42,7 +42,6 @@ public class BadmintonClubController {
             String base64Image = Base64.getEncoder().encodeToString(bytes);
             clubHomePageResponse.setClubImageBase64(base64Image);
             
-
         }
         return ResponseEntity.ok().body(list);
     }

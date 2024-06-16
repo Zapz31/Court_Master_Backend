@@ -48,7 +48,7 @@ public class AddressService {
         String sql = "select w.full_name from wards w\r\n" + //
                 "inner join districts d on w.district_code = d.code\r\n" + //
                 "inner join provinces p on d.province_code = p.code\r\n" + //
-                "where p.full_name = ? and d.full_name = ?";
+                "where p.full_name = ? and d.full_name = ? order by w.full_name asc";
         PreparedStatementSetter pss = new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
@@ -59,4 +59,6 @@ public class AddressService {
         return jdbcTemplate.query(sql, pss, new WardsFullNameResponseRowMapper());
     }
 
+
+    
 }

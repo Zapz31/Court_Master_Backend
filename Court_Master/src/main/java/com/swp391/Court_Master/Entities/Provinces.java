@@ -16,7 +16,7 @@ import jakarta.persistence.SqlResultSetMapping;
 
 @NamedNativeQuery(
     name = "Provinces.getAllProvinces",
-    query = "select code, name, full_name as fullName from provinces",
+    query = "select code, name, full_name as fullName from provinces order by full_name asc",
     resultSetMapping = "Provinces"
 )
 @SqlResultSetMapping(
