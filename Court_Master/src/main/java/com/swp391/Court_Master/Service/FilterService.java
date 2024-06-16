@@ -19,10 +19,10 @@ public class FilterService {
     private JdbcTemplate jdbcTemplate;
 
     public List<ClubHomePageResponse> filterNoTime(String nameOrUnitNumber, String province, String district, String ward){
-        StringBuilder queryBuilder = new StringBuilder("select t1.clubId, t1.clubName, t1.clubAddress, t1.clubImageName, t1.averagePrice from (\r\n" + //
+        StringBuilder queryBuilder = new StringBuilder(" select t1.clubId, t1.clubName, t1.clubAddress, t1.clubImageName, t1.averagePrice from (\r\n" + //
                         "   select bc.badminton_club_id as clubId, bc.badminton_club_name as clubName, \r\n" + //
                         "   CONCAT(ad.unit_number,', ',ad.ward,', ',ad.district,', ',ad.province) as clubAddress, \r\n" + //
-                        "   bci.image_url as clubImageName, AVG(pr.price_per_hour) AS averagePrice from badminton_club bc\r\n" + //
+                        "   bci.image_url as clubImageName, AVG(pr.one_time_play + pr.flexible + pr.fixed)/3 AS averagePrice from badminton_club bc\r\n" + //
                         "   inner join badminton_club_image bci on bc.badminton_club_id = bci.badminton_club_id AND bci.is_main_avatar = 1\r\n" + //
                         "   inner join address ad on bc.address_id = ad.address_id\r\n" + //
                         "   inner join time_frame tf on bc.badminton_club_id = tf.badminton_club_id\r\n" + //
@@ -32,7 +32,8 @@ public class FilterService {
                         "\r\n" + //
                         "     select bcl.badminton_club_id from badminton_club bcl\r\n" + //
                         "     inner join address ad on bcl.address_id = ad.address_id\r\n" + //
-                        "     where 1=1 \r\n");
+                        "     where 1=1 \r\n" + //
+                        "");
 
         List<Object> params = new ArrayList<>();
                     
@@ -69,7 +70,7 @@ public class FilterService {
         StringBuilder queryBuilder = new StringBuilder("select t1.clubId, t1.clubName, t1.clubAddress, t1.clubImageName, t1.averagePrice from (\r\n" + //
                         "   select bc.badminton_club_id as clubId, bc.badminton_club_name as clubName, \r\n" + //
                         "   CONCAT(ad.unit_number,', ',ad.ward,', ',ad.district,', ',ad.province) as clubAddress, \r\n" + //
-                        "   bci.image_url as clubImageName, AVG(pr.price_per_hour) AS averagePrice from badminton_club bc\r\n" + //
+                        "   bci.image_url as clubImageName, AVG(pr.one_time_play + pr.flexible + pr.fixed)/3 AS averagePrice from badminton_club bc\r\n" + //
                         "   inner join badminton_club_image bci on bc.badminton_club_id = bci.badminton_club_id AND bci.is_main_avatar = 1\r\n" + //
                         "   inner join address ad on bc.address_id = ad.address_id\r\n" + //
                         "   inner join time_frame tf on bc.badminton_club_id = tf.badminton_club_id\r\n" + //
@@ -139,10 +140,4 @@ public class FilterService {
         return jdbcTemplate.query(query, params.toArray(), new ClubHomePageResponseRowMapper());
 
     }
-
-    
-
-    
-
-
 }
