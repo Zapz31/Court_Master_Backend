@@ -16,11 +16,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.swp391.Court_Master.Entities.TimeFrame;
+import com.swp391.Court_Master.Repository.DetailClubRepository;
 import com.swp391.Court_Master.Service.ClubHomePageService;
+import com.swp391.Court_Master.Service.DetailPageService;
 import com.swp391.Court_Master.dto.request.Respone.ClubHomePageResponse;
+import com.swp391.Court_Master.dto.request.Respone.DetailPageResponseDTO;
+import com.swp391.Court_Master.dto.request.Respone.ImageResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.ProvincesFullNameResponse;
+import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -30,6 +39,12 @@ public class BadmintonClubController {
     
     @Autowired
     ClubHomePageService clubHomePageService;
+
+    @Autowired
+    private DetailClubRepository detailClubRepository;
+
+    @Autowired
+    private DetailPageService detailPageService;
 
     @GetMapping("/clubsView")
     public ResponseEntity<List<ClubHomePageResponse>> getAllProvincesFullName() throws IOException {
@@ -45,6 +60,14 @@ public class BadmintonClubController {
         }
         return ResponseEntity.ok().body(list);
     }
+
+    @GetMapping("/detail/{clubId}")
+    public ResponseEntity<DetailPageResponseDTO> getDetailPageResponse(@PathVariable("clubId") String clubId) throws IOException {
+        DetailPageResponseDTO detailPageResponseDTO = detailPageService.detailPageBuild(clubId);
+        return ResponseEntity.ok().body(detailPageResponseDTO);
+    }
+
+    
     
     
 
