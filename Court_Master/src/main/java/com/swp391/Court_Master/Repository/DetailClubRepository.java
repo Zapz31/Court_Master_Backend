@@ -2,6 +2,7 @@ package com.swp391.Court_Master.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -91,6 +92,5 @@ public class DetailClubRepository {
         return jdbcTemplate.query(sql, pss, new CustomerFeedbackRowMapper());
     }
 
-    
 }
 
