@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -28,8 +27,8 @@ public class DetailPageService {
     @Autowired
     private DetailClubRepository detailClubRepository;
 
-    private static final String IMAGE_CLUB_DIRECTORY = "D:/FPTU/Semester V/SWP391/courtmasterimage/club-image/";
-    private static final String IMAGE_USER_DIRECTORY = "D:/FPTU/Semester V/SWP391/courtmasterimage/user-image/";
+   // private static final String IMAGE_CLUB_DIRECTORY = "D:/FPTU/Semester V/SWP391/courtmasterimage/club-image/";
+   // private static final String IMAGE_USER_DIRECTORY = "D:/FPTU/Semester V/SWP391/courtmasterimage/user-image/";
 
     public List<TimeFramePricingServiceDTO> getTimeFramePricingService(String clubId) {
         List<TimeFramePricingServiceDTO> list = detailClubRepository.getClubTimeFramePricing(clubId);
@@ -82,6 +81,10 @@ public class DetailPageService {
     }
 
     public DetailPageResponseDTO detailPageBuild(String clubId) throws IOException {
+        File clubImages = new File("club-image");
+        String clubImageAbsolutePath = clubImages.getAbsolutePath() + "/";  
+        File userImages = new File("user-image");
+        String userImageAbsolutePath = userImages.getAbsolutePath() + "/";        
         List<DetailPageResponseDTO> list = detailClubRepository.getClubInfo(clubId);
         DetailPageResponseDTO detailPageResponseDTO = list.get(0);
         List<ImageResponseDTO> listImages = detailClubRepository.getAllImageName(clubId);
@@ -91,7 +94,7 @@ public class DetailPageService {
         //Convert image to base64
         for (ImageResponseDTO imageResponseDTO : listImages) {
             String imageFileName = imageResponseDTO.getImageName();
-            File file = new File(IMAGE_CLUB_DIRECTORY + imageFileName);
+            File file = new File(clubImageAbsolutePath + imageFileName);
             Path path = Paths.get(file.getAbsolutePath());
             byte[] bytes = Files.readAllBytes(path);
             String base64Image = Base64.getEncoder().encodeToString(bytes);
@@ -101,7 +104,7 @@ public class DetailPageService {
 
         for (CustomerFeedback customerFeedback : feedbacks) {
             String imageFileName = customerFeedback.getCustomerImageBase64();
-            File file = new File(IMAGE_USER_DIRECTORY + imageFileName);
+            File file = new File(userImageAbsolutePath + imageFileName);
             Path path = Paths.get(file.getAbsolutePath());
             byte[] bytes = Files.readAllBytes(path);
             String base64Image = Base64.getEncoder().encodeToString(bytes);

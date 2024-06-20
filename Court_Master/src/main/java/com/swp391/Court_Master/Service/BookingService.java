@@ -179,6 +179,8 @@ public class BookingService {
         long minutes = duration.minusHours(hours).toMinutes();
         return String.format("%02d:%02d", hours, minutes);
     }
+
+    
     
 
 }

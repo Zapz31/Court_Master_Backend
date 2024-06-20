@@ -7,9 +7,7 @@ import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Time;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +22,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swp391.Court_Master.Service.AddressService;
 import com.swp391.Court_Master.Service.FilterService;
 import com.swp391.Court_Master.dto.request.Request.FilterRequstDTO;
-import com.swp391.Court_Master.dto.request.Request.ProvinceFullNameRequest;
-import com.swp391.Court_Master.dto.request.Request.ProvincesAndDistrictFullNameRequest;
 import com.swp391.Court_Master.dto.request.Respone.ClubHomePageResponse;
 import com.swp391.Court_Master.dto.request.Respone.DistrictFullNameResponse;
 import com.swp391.Court_Master.dto.request.Respone.ProvincesFullNameResponse;
 import com.swp391.Court_Master.dto.request.Respone.WardsFullNameResponse;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,8 +40,6 @@ public class FilterController {
 
     @Autowired
     private FilterService filterService;
-
-    private static final String IMAGE_DIRECTORY = "D:/FPTU/Semester V/SWP391/courtmasterimage/club-image/";
 
     @GetMapping("/address/provinces")
     public ResponseEntity<List<ProvincesFullNameResponse>> getAllProvincesFullName() {
@@ -79,6 +72,8 @@ public class FilterController {
 
     @PostMapping("/getClubs")
     public ResponseEntity<List<ClubHomePageResponse>> postMethodName(@RequestBody FilterRequstDTO filterRequstDTO) throws IOException {
+        File clubImages = new File("club-image");
+        String clubimageAbsolutePath = clubImages.getAbsolutePath() + "/"; 
 
         List<ClubHomePageResponse> list = null;
         String nameOrUnitNumber = filterRequstDTO.getNameOrUnitNumber();
@@ -97,7 +92,7 @@ public class FilterController {
             if(!list.isEmpty()){
                 for (ClubHomePageResponse clubHomePageResponse : list) {
                     String imageFileName = clubHomePageResponse.getClubImageName();
-                    File file = new File(IMAGE_DIRECTORY + imageFileName);
+                    File file = new File(clubimageAbsolutePath + imageFileName);
                     Path path = Paths.get(file.getAbsolutePath());
                     byte[] bytes = Files.readAllBytes(path);
                     String base64Image = Base64.getEncoder().encodeToString(bytes);
@@ -116,7 +111,7 @@ public class FilterController {
             if(!list.isEmpty()){
                 for (ClubHomePageResponse clubHomePageResponse : list) {
                     String imageFileName = clubHomePageResponse.getClubImageName();
-                    File file = new File(IMAGE_DIRECTORY + imageFileName);
+                    File file = new File(clubimageAbsolutePath + imageFileName);
                     Path path = Paths.get(file.getAbsolutePath());
                     byte[] bytes = Files.readAllBytes(path);
                     String base64Image = Base64.getEncoder().encodeToString(bytes);

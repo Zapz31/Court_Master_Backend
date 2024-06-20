@@ -1,7 +1,4 @@
 package com.swp391.Court_Master.dto.request.Respone;
-
-import com.swp391.Court_Master.Entities.Provinces;
-
 import jakarta.persistence.ColumnResult;
 import jakarta.persistence.ConstructorResult;
 import jakarta.persistence.Entity;

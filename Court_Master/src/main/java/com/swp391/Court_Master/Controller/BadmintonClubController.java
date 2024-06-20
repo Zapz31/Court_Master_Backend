@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @RequestMapping("/clubs")
 public class BadmintonClubController {
-    private static final String IMAGE_DIRECTORY = "D:/FPTU/Semester V/SWP391/courtmasterimage/club-image/"; 
     
     @Autowired
     ClubHomePageService clubHomePageService;
@@ -48,10 +47,12 @@ public class BadmintonClubController {
 
     @GetMapping("/clubsView")
     public ResponseEntity<List<ClubHomePageResponse>> getAllProvincesFullName() throws IOException {
+        File clubImage = new File("club-image");
+        String clubimageAbsolutePath = clubImage.getAbsolutePath() + "/";
         List<ClubHomePageResponse> list = clubHomePageService.getAllClubHomePage();
         for (ClubHomePageResponse clubHomePageResponse : list) {
             String imageFileName = clubHomePageResponse.getClubImageName();
-            File file = new File(IMAGE_DIRECTORY + imageFileName);
+            File file = new File(clubimageAbsolutePath + imageFileName);
             Path path = Paths.get(file.getAbsolutePath());
             byte[] bytes = Files.readAllBytes(path);
             String base64Image = Base64.getEncoder().encodeToString(bytes);

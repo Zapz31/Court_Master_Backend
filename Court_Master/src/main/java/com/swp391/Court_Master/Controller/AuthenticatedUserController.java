@@ -1,5 +1,9 @@
 package com.swp391.Court_Master.Controller;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +19,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.swp391.Court_Master.Entities.AuthenticatedUser;
 import com.swp391.Court_Master.Entities.PasswordResetToken;
 import com.swp391.Court_Master.Service.EmailService;
@@ -35,6 +41,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
 
@@ -161,12 +168,5 @@ public class AuthenticatedUserController {
         userService.updatePassword(changePasswordDTO.getPassword(), changePasswordDTO.getEmail());
         return new ResponseEntity<>(new MessageResponse("Update successfully"), HttpStatus.ACCEPTED);
     }
-    
-    
-
-
-
-
-    
-    
+  
 }
