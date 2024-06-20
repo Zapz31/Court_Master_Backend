@@ -15,7 +15,9 @@ import com.swp391.Court_Master.Entities.PricingService;
 import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
+import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
+import com.swp391.Court_Master.dto.request.Respone.UnpaidBookingInfo;
 
 @Service
 public class BookingService {
@@ -178,6 +180,45 @@ public class BookingService {
         long hours = duration.toHours();
         long minutes = duration.minusHours(hours).toMinutes();
         return String.format("%02d:%02d", hours, minutes);
+    }
+
+    /*
+     * Tinh tien va thoi gian cho moi slot trong mot list slot chua tra tien
+    */
+    public List<BookingSlotResponseDTO> getAllUnpaidBooking(List<PricePerSlotRequestDTO> pricePerSlotRequestDTOs){
+        List<BookingSlotResponseDTO> unpaidBookingList = new ArrayList<>();
+        for(PricePerSlotRequestDTO perSlotRequestDTO: pricePerSlotRequestDTOs){
+            Integer price = getPricePerSlot(perSlotRequestDTO.getCourtId(), 
+                                            perSlotRequestDTO.getStartBooking(), 
+                                            perSlotRequestDTO.getEndBooking(), 
+                                            perSlotRequestDTO.getBookingDate(), 
+                                            perSlotRequestDTO.getBookingType());
+            Duration duration = Duration.between(perSlotRequestDTO.getStartBooking(), perSlotRequestDTO.getEndBooking());
+            String playTime = formatDuration(duration);
+            unpaidBookingList.add(new BookingSlotResponseDTO(perSlotRequestDTO.getCourtId(), 
+                                                            perSlotRequestDTO.getStartBooking(), 
+                                                            perSlotRequestDTO.getEndBooking(), 
+                                                            perSlotRequestDTO.getBookingDate(), 
+                                                            perSlotRequestDTO.getBookingType(), 
+                                                            playTime, price));
+
+
+        }
+        return unpaidBookingList;
+    }
+
+    /*
+     * Tong hop thong tin xem truoc cua cac booking slot, tong gia tien va gio choi de hien thi len cai bang ben trai man hinh dat lich
+    */
+    public UnpaidBookingInfo buildUnpaidBookingInfo(List<PricePerSlotRequestDTO> pricePerSlotRequestDTOs){
+        List<BookingSlotResponseDTO> list = getAllUnpaidBooking(pricePerSlotRequestDTOs);
+        Integer totalPrice= getAllBookingSLotTotalPrice(pricePerSlotRequestDTOs);
+        String totalHours = getTotalHoursAllSlot(pricePerSlotRequestDTOs);
+
+        UnpaidBookingInfo unpaidBookingInfo = new UnpaidBookingInfo(totalPrice, totalHours, list);
+        return unpaidBookingInfo;
+
+
     }
 
     

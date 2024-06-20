@@ -1,26 +1,28 @@
-package com.swp391.Court_Master.dto.request.Request;
+package com.swp391.Court_Master.dto.request.Respone;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class PricePerSlotRequestDTO {
-    //String courtId, LocalTime startBooking, LocalTime endBooking, LocalDate bookingDate, String bookingType
+public class BookingSlotResponseDTO {
     private String courtId;
     private LocalTime startBooking;
     private LocalTime endBooking;
     private LocalDate bookingDate;
     private String bookingType;
-    public PricePerSlotRequestDTO() {
+    private String playTime;
+    private Integer price;
+    public BookingSlotResponseDTO() {
     }
-    public PricePerSlotRequestDTO(String courtId, LocalTime startBooking, LocalTime endBooking, LocalDate bookingDate,
-            String bookingType) {
+    public BookingSlotResponseDTO(String courtId, LocalTime startBooking, LocalTime endBooking, LocalDate bookingDate,
+            String bookingType, String playTime, Integer price) {
         this.courtId = courtId;
         this.startBooking = startBooking;
         this.endBooking = endBooking;
         this.bookingDate = bookingDate;
         this.bookingType = bookingType;
+        this.playTime = playTime;
+        this.price = price;
     }
-    
     public String getCourtId() {
         return courtId;
     }
@@ -51,5 +53,18 @@ public class PricePerSlotRequestDTO {
     public void setBookingType(String bookingType) {
         this.bookingType = bookingType;
     }
+    public String getPlayTime() {
+        return playTime;
+    }
+    public void setPlayTime(String playTime) {
+        this.playTime = playTime;
+    }
+    public Integer getPrice() {
+        return price;
+    }
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
+    
 }
