@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Repository.ClubRepository;
@@ -136,6 +137,20 @@ public class testAPI {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Lỗi khi tải lên ảnh: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/getBookedListByCourtId")
+    public ResponseEntity<List<BookedDTO>> getBookedListByCourtId(
+            @RequestBody List<PricePerSlotRequestDTO> pricePerSlotRequestDTOList) {
+                List<BookedDTO> list = bookingRepository.getBookedList(pricePerSlotRequestDTOList);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @PostMapping("/getDuplicateBookingSlot")
+    public ResponseEntity<List<BookedDTO>> getDuplicateBookingSlotList(
+            @RequestBody List<PricePerSlotRequestDTO> pricePerSlotRequestDTOList) {
+                List<BookedDTO> list = bookingService.getDuplicateBookingSlotList(pricePerSlotRequestDTOList);
+        return ResponseEntity.ok().body(list);
     }
 
 }
