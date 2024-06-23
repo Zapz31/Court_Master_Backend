@@ -17,6 +17,7 @@ import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
 import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
+import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
 import com.swp391.Court_Master.dto.request.Respone.UnpaidBookingInfo;
 
@@ -267,12 +268,68 @@ public class BookingService {
                             duplicateBookingSlotList.add(bookedDTO);
                         }
                     }
-                } else if((!pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId())) && (flag == 1)){
+                } else if ((!pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId())) && (flag == 1)) {
                     break;
                 }
             }
         }
         return duplicateBookingSlotList;
+
+    }
+
+    /*
+     * Kiem tra tinh hop le cua thoi gian dat san so voi time frame
+     */
+    public List<MessageResponse> checkValidBookingSlot(String clubId, List<PricePerSlotRequestDTO> pricePerSlotRequestDTOs) {
+        List<MessageResponse> invalidMessages = new ArrayList<>();
+        List<TimeFrame> timeFrames = bookingRepository.getTimeFrameByClubId(clubId);
+        
+
+        for (PricePerSlotRequestDTO perSlotRequestDTO : pricePerSlotRequestDTOs) {
+            List<TimeFrame> rangeTimeFrames = new ArrayList<>();
+            Boolean isValidStartTime = false;
+            Boolean isValidEndTime = false;
+            Boolean isContinous = true;
+            for (TimeFrame tf : timeFrames) {
+                if ((perSlotRequestDTO.getStartBooking().equals(tf.getStarTime())
+                        || perSlotRequestDTO.getStartBooking().isAfter(tf.getStarTime()))
+                        && (perSlotRequestDTO.getStartBooking().equals(tf.getEndTime())
+                                || perSlotRequestDTO.getStartBooking().isBefore(tf.getEndTime()))) {
+                    isValidStartTime = true;
+                    rangeTimeFrames.add(tf);
+                }
+                if ((perSlotRequestDTO.getEndBooking().equals(tf.getStarTime())
+                        || perSlotRequestDTO.getEndBooking().isAfter(tf.getStarTime()))
+                        && (perSlotRequestDTO.getEndBooking().equals(tf.getEndTime())
+                                || perSlotRequestDTO.getEndBooking().isBefore(tf.getEndTime()))) {
+                    isValidEndTime = true;
+                    rangeTimeFrames.add(tf);
+                }
+                if(perSlotRequestDTO.getStartBooking().isBefore(tf.getStarTime()) && perSlotRequestDTO.getEndBooking().isAfter(tf.getEndTime())){
+                    rangeTimeFrames.add(tf);
+                }
+            }
+            List<TimeFrame> uniqueTimeFrames = new ArrayList<>();
+            for(TimeFrame tf: rangeTimeFrames){
+                if(!uniqueTimeFrames.contains(tf)){
+                    uniqueTimeFrames.add(tf);
+                }
+            }
+            if((uniqueTimeFrames.size() > 1)){
+                TimeFrame preTime = uniqueTimeFrames.get(0);
+                for(int i = 1; i < uniqueTimeFrames.size(); i++){
+                    if(!preTime.getEndTime().equals(uniqueTimeFrames.get(i).getStarTime())){
+                        isContinous = false;
+                    }
+                    preTime = uniqueTimeFrames.get(i);
+                }
+            }
+            if(isValidStartTime == false || isValidEndTime == false || isContinous == false){
+                invalidMessages.add(new MessageResponse("The booking from " + perSlotRequestDTO.getStartBooking() + " to "+perSlotRequestDTO.getEndBooking()+" is invalid. You can go back schedule to check." ));
+            }
+            
+        }
+        return invalidMessages;
 
     }
 

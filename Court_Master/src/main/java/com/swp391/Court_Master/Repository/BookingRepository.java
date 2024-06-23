@@ -13,8 +13,10 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
+import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.RowMapper.BookedDTORowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFramePricingServiceRowMapper;
+import com.swp391.Court_Master.RowMapper.TimeFrameRowMapperWithoutId;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
 import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
 
@@ -101,6 +103,24 @@ public class BookingRepository {
 
         return jdbcTemplate.query(sqlQuery, params.toArray(), new BookedDTORowMapper());
 
+    }
+
+    /*
+     * Lay danh sach thoi gian bat dau va thoi gian ket thuc cua tat ca cac time frame thuoc mot club id
+    */
+    public List<TimeFrame> getTimeFrameByClubId(String clubId){
+        String sql = "select tf.start_time, tf.end_time from badminton_club bcl \r\n" + //
+                        "inner join time_frame tf on bcl.badminton_club_id = tf.badminton_club_id\r\n" + //
+                        "where bcl.badminton_club_id = ? order by tf.start_time asc";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                 ps.setString(1, clubId);
+            }
+            
+        };
+        return jdbcTemplate.query(sql,pss, new TimeFrameRowMapperWithoutId());
     }
 
 }

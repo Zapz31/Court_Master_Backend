@@ -153,4 +153,13 @@ public class testAPI {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping("/get-timeframe-by-{clubId}")
+    public ResponseEntity<List<TimeFrame>> getAllTimeFrameByCourtId(@PathVariable("clubId") String clubId) {
+        List<TimeFrame> list = bookingRepository.getTimeFrameByClubId(clubId);
+        return ResponseEntity.ok().body(list);
+    }
+
+    
+    
+
 }
