@@ -37,6 +37,7 @@ public class PaymentController {
             return new ResponseObject<>(HttpStatus.BAD_REQUEST, "Failed", null);
         }
     }
+    // TEST =====================================================
     @PostMapping("/payment-handle")
     public ResponseEntity<Map<String, String>> postMethodName(@RequestBody Map<String, String> paymentData) {
         int amount = Integer.parseInt(paymentData.get("vnp_Amount"))/100;
@@ -45,15 +46,22 @@ public class PaymentController {
         String payDate = paymentData.get("vnp_PayDate");
         String responseCode = paymentData.get("vnp_ResponseCode");
         String TransactionNo = paymentData.get("vnp_TransactionNo");
+        String vnpCardType = paymentData.get("vnp_CardType");
         Map<String, String> response = new HashMap<>();
         response.put("amount", amountString);
         response.put("bankCode", bankCode);
         response.put("payDate", payDate);
         response.put("responseCode", responseCode);
         response.put("transactionNo", TransactionNo);
+        response.put("vnpCardType", vnpCardType);
+        if(responseCode.equals("00")){
+            
+        }
+        
         
         return ResponseEntity.ok().body(response);
     }
+    // TEST =====================================================
     
 }
 

@@ -1,5 +1,11 @@
 package com.swp391.Court_Master.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -108,10 +114,10 @@ public class UserService {
         return user;
     } 
 
-    public AuthenticatedUser getUserByEmail(String email){
+    public AuthenticatedUser getUserByEmail(String email) throws IOException{
         AuthenticatedUser authenticatedUser = userRepository.findByEmailOrPhoneNumberPRT(email)
           .orElseThrow(() -> new UsernameNotFoundException("Your email is not registered"));
-
+          authenticatedUser.setAvatarImageUrl(createBase64String(authenticatedUser.getAvatarImageUrl()));
           return authenticatedUser;
     }
 
@@ -152,8 +158,30 @@ public class UserService {
         passwordResetTokenRepository.RemoveTokenByUserId(userId);
     }
 
+    public String createBase64String(String imageURL) throws IOException{
+        File userImage = new File("user-image");
+        String userImageAbsolutePath = userImage.getAbsolutePath() + "/";
+        File file = new File(userImageAbsolutePath + imageURL);
+        Path path = Paths.get(file.getAbsolutePath());
+        byte[] bytes = Files.readAllBytes(path);
+        String base64Image = Base64.getEncoder().encodeToString(bytes);
+        return base64Image;
+    }
 
-
+    /*
+     * File clubImage = new File("club-image");
+        String clubimageAbsolutePath = clubImage.getAbsolutePath() + "/";
+        List<ClubHomePageResponse> list = clubHomePageService.getAllClubHomePage();
+        for (ClubHomePageResponse clubHomePageResponse : list) {
+            String imageFileName = clubHomePageResponse.getClubImageName();
+            File file = new File(clubimageAbsolutePath + imageFileName);
+            Path path = Paths.get(file.getAbsolutePath());
+            byte[] bytes = Files.readAllBytes(path);
+            String base64Image = Base64.getEncoder().encodeToString(bytes);
+            clubHomePageResponse.setClubImageBase64(base64Image);
+            
+        }
+    */
 
 
 

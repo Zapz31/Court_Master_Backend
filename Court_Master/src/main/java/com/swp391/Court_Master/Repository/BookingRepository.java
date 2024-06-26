@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Entities.TimeFrame;
+import com.swp391.Court_Master.RowMapper.BookedDTOResponseOMRowMapper;
 import com.swp391.Court_Master.RowMapper.BookedDTORowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFramePricingServiceRowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFrameRowMapperWithoutId;
@@ -121,6 +122,31 @@ public class BookingRepository {
             
         };
         return jdbcTemplate.query(sql,pss, new TimeFrameRowMapperWithoutId());
+    }
+
+    /*
+     * Lay danh sach tat ca cac booking_slot de hien thi ra man hinh dat lich (onMount)
+    */
+    public List<BookedDTO> getAllBookingSlotByClubId(String clubId){
+        String sql = "select bc.badminton_court_id, bc.badminton_court_name, bs.start_time, bs.end_time, bs.booking_date, bs.booking_slot_id, bs.is_check_in, bs.price, CONCAT(au.first_name,' ',au.last_name ) as cusFullName, au.user_id from badminton_club bcl \r\n" + //
+                        "inner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id\r\n" + //
+                        "inner join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id\r\n" + //
+                        "inner join booking_schedule bsd on bs.booking_schedule_id = bsd.booking_schedule_id\r\n" + //
+                        "inner join authenticated_user au on bsd.customer_id = au.user_id\r\n" + //
+                        "where bcl.badminton_club_id = ?\r\n" + //
+                        "order by start_time";
+
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, clubId);
+            }
+            
+        };
+
+        return jdbcTemplate.query(sql, pss, new BookedDTOResponseOMRowMapper());
+        
     }
 
 }

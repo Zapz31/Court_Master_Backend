@@ -13,6 +13,7 @@ public class BookedDTO {
     private int isCheckIn;
     private int price;
     private String userFullName;
+    private String userId;
     public BookedDTO() {
     }
     
@@ -28,7 +29,7 @@ public class BookedDTO {
 
 
     public BookedDTO(LocalTime startTime, LocalTime endTime, LocalDate bookingDate, String courtId, String courtName,
-            String bookingSlotId, int isCheckIn, int price, String userFullName) {
+            String bookingSlotId, int isCheckIn, int price, String userFullName, String userId) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.bookingDate = bookingDate;
@@ -38,6 +39,7 @@ public class BookedDTO {
         this.isCheckIn = isCheckIn;
         this.price = price;
         this.userFullName = userFullName;
+        this.userId = userId;
     }
 
     public LocalTime getStartTime() {
@@ -101,6 +103,14 @@ public class BookedDTO {
 
     public void setUserFullName(String userFullName) {
         this.userFullName = userFullName;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     

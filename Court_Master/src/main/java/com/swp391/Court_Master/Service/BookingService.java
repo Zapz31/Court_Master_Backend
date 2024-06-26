@@ -333,4 +333,12 @@ public class BookingService {
 
     }
 
+    /*
+     * Lay danh sach tat ca cac booking_slot de hien thi ra man hinh dat lich (onMount)
+    */
+    public List<BookedDTO> getAllBookingSlot(String clubId){
+        List<BookedDTO> list = bookingRepository.getAllBookingSlotByClubId(clubId);
+        return list;
+    }
+
 }

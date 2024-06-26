@@ -159,6 +159,14 @@ public class testAPI {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping("/get-all-bookedlist-{clubId}")
+    public ResponseEntity<List<BookedDTO>> getAllBookedSlotByClubId(@PathVariable("clubId") String clubId) {
+        List<BookedDTO> list = bookingRepository.getAllBookingSlotByClubId(clubId);
+        return ResponseEntity.ok().body(list);
+    }
+
+  
+
     
     
 

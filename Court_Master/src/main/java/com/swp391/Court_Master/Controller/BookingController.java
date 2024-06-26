@@ -3,16 +3,22 @@ package com.swp391.Court_Master.Controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Service.BookingService;
+import com.swp391.Court_Master.dto.request.Request.BookingPaymentRequestDTO;
 import com.swp391.Court_Master.dto.request.Request.CheckValidBooking;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
 import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.UnpaidBookingInfo;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -35,6 +41,18 @@ public class BookingController {
         
         return ResponseEntity.ok().body(invalidMessage);
     }
+
+    @GetMapping("/get-all-bookedlist-{clubId}")
+    public ResponseEntity<List<BookedDTO>> getAllBookedSlotByClubId(@PathVariable("clubId") String clubId) {
+        List<BookedDTO> list = bookingService.getAllBookingSlot(clubId);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @PostMapping("/payment-handle")
+    public ResponseEntity<BookingPaymentRequestDTO> handlePayment(@RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO){
+
+        return ResponseEntity.ok().body(bookingPaymentRequestDTO);
+    } 
 
     
    

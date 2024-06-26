@@ -1,6 +1,7 @@
 package com.swp391.Court_Master.Controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -76,7 +77,7 @@ public class AuthenticatedUserController {
     }
 
     @PostMapping("/signin")
-  public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) throws IOException {
     GrantedAuthority authority = loginRequest.getGrantedAuthority(loginRequest.getRoleName(loginRequest.getRoleId()));
     List<GrantedAuthority> authorityList = new ArrayList<>();
     authorityList.add(authority);
@@ -123,7 +124,7 @@ public class AuthenticatedUserController {
     //     + "</body></html>";
 
     @PostMapping("/forgotpassword/{email}")
-    public ResponseEntity<MessageResponse> postMethodName(@PathVariable("email") String email) {
+    public ResponseEntity<MessageResponse> postMethodName(@PathVariable("email") String email) throws IOException {
         //TODO: process POST request
         AuthenticatedUser authenticatedUser = userService.getUserByEmail(email);
         String token = userService.createToken();
@@ -147,7 +148,7 @@ public class AuthenticatedUserController {
     // }
 
     @PostMapping("/forgotpassword/checktoken/{email}")
-    public ResponseEntity<MessageResponse> validateToken(@PathVariable("email") String email, @RequestBody PasswordResetTokenRequest passwordResetTokenInput) {
+    public ResponseEntity<MessageResponse> validateToken(@PathVariable("email") String email, @RequestBody PasswordResetTokenRequest passwordResetTokenInput) throws IOException {
         String message = "Valid";
         AuthenticatedUser user = userService.getUserByEmail(email);
         PasswordResetToken passwordResetToken = userService.getToken(user.getUserId());

@@ -8,6 +8,7 @@ public class ClubHomePageResponse {
     private String clubAddress;
     private int AveragePrice;
     private String clubImageName;
+    private String courtManagerPhone;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String clubImageBase64;
@@ -15,16 +16,19 @@ public class ClubHomePageResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private byte[] clubImageByte;
 
+    
+
+    
+
     public ClubHomePageResponse(String clubId, String clubName, String clubAddress, int averagePrice,
-            String clubImageName) {
+            String clubImageName, String courtManagerPhone) {
         this.clubId = clubId;
         this.clubName = clubName;
         this.clubAddress = clubAddress;
         AveragePrice = averagePrice;
         this.clubImageName = clubImageName;
+        this.courtManagerPhone = courtManagerPhone;
     }
-
-    
 
     public String getClubName() {
         return clubName;
@@ -90,6 +94,14 @@ public class ClubHomePageResponse {
 
     public void setClubImageByte(byte[] clubImageByte) {
         this.clubImageByte = clubImageByte;
+    }
+
+    public String getCourtManagerPhone() {
+        return courtManagerPhone;
+    }
+
+    public void setCourtManagerPhone(String courtManagerPhone) {
+        this.courtManagerPhone = courtManagerPhone;
     }
 
     
