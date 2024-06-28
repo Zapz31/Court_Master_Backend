@@ -1,24 +1,32 @@
 package com.swp391.Court_Master.Repository;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
+import com.swp391.Court_Master.Entities.BookingSchedule;
+import com.swp391.Court_Master.Entities.Invoice;
+import com.swp391.Court_Master.Entities.PaymentDetail;
 import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.RowMapper.BookedDTOResponseOMRowMapper;
 import com.swp391.Court_Master.RowMapper.BookedDTORowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFramePricingServiceRowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFrameRowMapperWithoutId;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
+import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
 
 @Repository
@@ -85,7 +93,7 @@ public class BookingRepository {
     /*
      * Dua vao court id cua cac booking_slot duoc nguoi dung chon de tim tat ca cac booking slot cua san do o cac ngay khac nhau
     */
-    public List<BookedDTO> getBookedList(List<PricePerSlotRequestDTO> perSlotRequestDTOs){
+    public List<BookedDTO> getBookedList(List<BookingSlotResponseDTO> perSlotRequestDTOs){
         StringBuilder sql = new StringBuilder("select bs.booking_slot_id, bs.start_time, bs.end_time, bs.booking_date, bc.badminton_court_id, bc.badminton_court_name from booking_slot bs\r\n" + //
                         "inner join badminton_court bc on bc.badminton_court_id = bs.badminton_court_id ");
 
@@ -148,5 +156,105 @@ public class BookingRepository {
         return jdbcTemplate.query(sql, pss, new BookedDTOResponseOMRowMapper());
         
     }
+
+    @Transactional
+    public String insertBookingSchedule(BookingSchedule bookingSchedule){
+        String insertSQL = "insert into booking_schedule(customer_fullname, customer_phone_number, booking_schedule_status, start_date, end_date, schedule_type, customer_id, total_price)\r\n" + //
+                        "values(?, ?, ?, ?, ?, ?, ?, ?)";
+
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+               ps.setNString(1, bookingSchedule.getCustomerFullName());
+               ps.setString(2, bookingSchedule.getCustomerPhoneNumber());
+               ps.setString(3, bookingSchedule.getBookingScheduleStatus());
+               ps.setDate(4, Date.valueOf(bookingSchedule.getStartDate()));
+               ps.setDate(5, Date.valueOf(bookingSchedule.getEndDate()));
+               ps.setString(6, bookingSchedule.getScheduleType());
+               ps.setString(7, bookingSchedule.getCustomerId());
+               ps.setInt(8, bookingSchedule.getTotalPrice());
+            }
+            
+        };
+
+        jdbcTemplate.update(insertSQL, pss);
+
+        String selectSQL = "select TOP 1 booking_schedule_id from booking_schedule\r\n" + //
+                        "ORDER BY booking_schedule_id DESC";
+        return jdbcTemplate.queryForObject(selectSQL, String.class);
+        
+    }
+
+    @Transactional
+    public void insertBookingSlots(List<BookingSlotResponseDTO> bookingSlotList, String bookingScheduleId){
+        String sql = "insert into booking_slot(start_time, end_time, booking_date, price, badminton_court_id, booking_schedule_id)\r\n" + //
+                        "values(?, ?, ?, ?, ?, ?)";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+            @Override
+            public int getBatchSize() {
+                return bookingSlotList.size();
+            }
+
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                BookingSlotResponseDTO bookingSlotResponseDTO = bookingSlotList.get(i);
+                ps.setTime(1, Time.valueOf(bookingSlotResponseDTO.getStartBooking()));
+                ps.setTime(2, Time.valueOf(bookingSlotResponseDTO.getEndBooking()));
+                ps.setDate(3, Date.valueOf(bookingSlotResponseDTO.getBookingDate()));
+                ps.setInt(4, bookingSlotResponseDTO.getPrice());
+                ps.setString(5, bookingSlotResponseDTO.getCourtId());
+                ps.setString(6, bookingScheduleId);
+            }
+            
+        });
+        
+    }
+
+    @Transactional
+    public String insertInvoice(Invoice invoice){
+        String sql = "insert into invoice(badminton_club_name, court_manager_phone, booking_phone_number, badminton_club_id, booking_schedule_id)\r\n" + //
+                        "values(?, ?, ?, ?, ?)";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setNString(1, invoice.getClubName());
+                ps.setString(2, invoice.getCourtManagerPhone());
+                ps.setString(3, invoice.getBookingPhoneNumber());
+                ps.setString(4, invoice.getBadmintonClubId());
+                ps.setString(5, invoice.getBookingScheduleId());
+            }
+            
+        };
+
+        jdbcTemplate.update(sql, pss);
+
+        String sqlGetInvoiceId = "select TOP 1 invoice_id from invoice \r\n" + //
+                        "ORDER BY invoice_id DESC";
+        return jdbcTemplate.queryForObject(sqlGetInvoiceId, String.class);
+    }
+
+    public void insertPaymentDetail(PaymentDetail paymentDetail){
+        String sql = "insert into payment_detail(payment_id, amount, payment_method, payment_time, invoice_id, user_id)\r\n" + //
+                        "values(?, ?, ?, ?, ?, ?)";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, paymentDetail.getPaymentId());
+                ps.setInt(2, paymentDetail.getAmount());
+                ps.setString(3, paymentDetail.getPaymentMethod());
+                ps.setTimestamp(4, Timestamp.valueOf(paymentDetail.getPaymentTime()));
+                ps.setString(5, paymentDetail.getInvoiceId());
+                ps.setString(6, paymentDetail.getUserId());
+            }
+            
+        };
+        jdbcTemplate.update(sql, pss);
+        
+    }
+
 
 }

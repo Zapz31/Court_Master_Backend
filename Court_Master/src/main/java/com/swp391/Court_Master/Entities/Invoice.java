@@ -9,15 +9,16 @@ public class Invoice {
     private String bookingScheduleId;
     public Invoice() {
     }
-    public Invoice(String invoiceId, String clubName, String courtManagerPhone, String bookingPhoneNumber,
-            String badmintonClubId, String bookingScheduleId) {
-        this.invoiceId = invoiceId;
+    
+    public Invoice(String clubName, String courtManagerPhone, String bookingPhoneNumber, String badmintonClubId,
+            String bookingScheduleId) {
         this.clubName = clubName;
         this.courtManagerPhone = courtManagerPhone;
         this.bookingPhoneNumber = bookingPhoneNumber;
         this.badmintonClubId = badmintonClubId;
         this.bookingScheduleId = bookingScheduleId;
     }
+
     public String getInvoiceId() {
         return invoiceId;
     }

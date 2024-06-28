@@ -85,8 +85,7 @@ public class DetailPageService {
         String clubImageAbsolutePath = clubImages.getAbsolutePath() + "/";  
         File userImages = new File("user-image");
         String userImageAbsolutePath = userImages.getAbsolutePath() + "/";        
-        List<DetailPageResponseDTO> list = detailClubRepository.getClubInfo(clubId);
-        DetailPageResponseDTO detailPageResponseDTO = list.get(0);
+        DetailPageResponseDTO detailPageResponseDTO = detailClubRepository.getClubInfo(clubId);
         List<ImageResponseDTO> listImages = detailClubRepository.getAllImageName(clubId);
         List<CustomerFeedback> feedbacks = detailClubRepository.getFeedBacks(clubId);
 

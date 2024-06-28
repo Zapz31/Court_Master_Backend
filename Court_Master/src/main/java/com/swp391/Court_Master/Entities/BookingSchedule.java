@@ -3,7 +3,7 @@ package com.swp391.Court_Master.Entities;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
+import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
 
 public class BookingSchedule {
     private String bookKingScheduleId;
@@ -16,13 +16,14 @@ public class BookingSchedule {
     private String customerId;
     private int totalPrice;
     private int isView;
-    private List<PricePerSlotRequestDTO> pricePerSlotRequestDTOList;
+    private List<BookingSlotResponseDTO> bookingSlotResponseDTOs;
     
    
     
+    
     public BookingSchedule(String bookKingScheduleId, String customerFullName, String customerPhoneNumber,
             String bookingScheduleStatus, LocalDate startDate, LocalDate endDate, String scheduleType,
-            String customerId, int totalPrice, int isView, List<PricePerSlotRequestDTO> pricePerSlotRequestDTOList) {
+            String customerId, int totalPrice, int isView, List<BookingSlotResponseDTO> bookingSlotResponseDTOs) {
         this.bookKingScheduleId = bookKingScheduleId;
         this.customerFullName = customerFullName;
         this.customerPhoneNumber = customerPhoneNumber;
@@ -33,7 +34,7 @@ public class BookingSchedule {
         this.customerId = customerId;
         this.totalPrice = totalPrice;
         this.isView = isView;
-        this.pricePerSlotRequestDTOList = pricePerSlotRequestDTOList;
+        this.bookingSlotResponseDTOs = bookingSlotResponseDTOs;
     }
     public BookingSchedule() {
     }
@@ -97,13 +98,11 @@ public class BookingSchedule {
     public void setIsView(int isView) {
         this.isView = isView;
     }
-
-    public List<PricePerSlotRequestDTO> getPricePerSlotRequestDTOList() {
-        return pricePerSlotRequestDTOList;
+    public List<BookingSlotResponseDTO> getBookingSlotResponseDTOs() {
+        return bookingSlotResponseDTOs;
     }
-
-    public void setPricePerSlotRequestDTOList(List<PricePerSlotRequestDTO> pricePerSlotRequestDTOList) {
-        this.pricePerSlotRequestDTOList = pricePerSlotRequestDTOList;
+    public void setBookingSlotResponseDTOs(List<BookingSlotResponseDTO> bookingSlotResponseDTOs) {
+        this.bookingSlotResponseDTOs = bookingSlotResponseDTOs;
     }
     
 }

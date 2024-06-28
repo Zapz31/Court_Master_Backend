@@ -48,10 +48,31 @@ public class BookingController {
         return ResponseEntity.ok().body(list);
     }
 
-    @PostMapping("/payment-handle")
-    public ResponseEntity<BookingPaymentRequestDTO> handlePayment(@RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO){
+    // @PostMapping("/payment-handle")
+    // public ResponseEntity<BookingPaymentRequestDTO> handlePayment(@RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO){
 
-        return ResponseEntity.ok().body(bookingPaymentRequestDTO);
+    //     return ResponseEntity.ok().body(bookingPaymentRequestDTO);
+    // } 
+
+    @PostMapping("/payment-handle")
+    public ResponseEntity<MessageResponse> handlePayment(@RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO){
+        MessageResponse messageResponse = new MessageResponse("Payment successfully");
+        if(bookingPaymentRequestDTO.getBookingSchedule().getStartDate().isAfter(bookingPaymentRequestDTO.getBookingSchedule().getEndDate())){
+            messageResponse.setMassage("Invalid start and end dates");
+        } else {
+            List<BookedDTO> duplicateBookingList = bookingService.getDuplicateBookingSlotList(bookingPaymentRequestDTO.getBookingSchedule().getBookingSlotResponseDTOs());
+            if(duplicateBookingList.size()!=0){
+                StringBuilder invalidMess = new StringBuilder("Your booking has overlapped with the following bookings:");
+                for (BookedDTO bookedDTO : duplicateBookingList) {
+                    invalidMess.append("\n").append(bookedDTO.getStartTime()+" - "+bookedDTO.getEndTime()+" on "+bookedDTO.getBookingDate()+" at "+bookedDTO.getCourtName());
+                }
+                messageResponse.setMassage(invalidMess.toString());
+            } else {
+                // Ham insert trong day (Chac chan thanh toan se thanh cong moi di vao luong nay)
+                messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
+            }
+        }
+        return ResponseEntity.ok().body(messageResponse);
     } 
 
     

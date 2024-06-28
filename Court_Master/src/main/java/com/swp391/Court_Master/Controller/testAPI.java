@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
+import com.swp391.Court_Master.Entities.BookingSchedule;
 import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Repository.ClubRepository;
@@ -13,6 +14,7 @@ import com.swp391.Court_Master.Service.BookingService;
 import com.swp391.Court_Master.Service.DetailPageService;
 import com.swp391.Court_Master.dto.request.Request.BookingSlotRequest;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
+import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.ImageResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
 
@@ -141,14 +143,14 @@ public class testAPI {
 
     @PostMapping("/getBookedListByCourtId")
     public ResponseEntity<List<BookedDTO>> getBookedListByCourtId(
-            @RequestBody List<PricePerSlotRequestDTO> pricePerSlotRequestDTOList) {
+            @RequestBody List<BookingSlotResponseDTO> pricePerSlotRequestDTOList) {
                 List<BookedDTO> list = bookingRepository.getBookedList(pricePerSlotRequestDTOList);
         return ResponseEntity.ok().body(list);
     }
 
     @PostMapping("/getDuplicateBookingSlot")
     public ResponseEntity<List<BookedDTO>> getDuplicateBookingSlotList(
-            @RequestBody List<PricePerSlotRequestDTO> pricePerSlotRequestDTOList) {
+            @RequestBody List<BookingSlotResponseDTO> pricePerSlotRequestDTOList) {
                 List<BookedDTO> list = bookingService.getDuplicateBookingSlotList(pricePerSlotRequestDTOList);
         return ResponseEntity.ok().body(list);
     }
@@ -163,6 +165,20 @@ public class testAPI {
     public ResponseEntity<List<BookedDTO>> getAllBookedSlotByClubId(@PathVariable("clubId") String clubId) {
         List<BookedDTO> list = bookingRepository.getAllBookingSlotByClubId(clubId);
         return ResponseEntity.ok().body(list);
+    }
+
+    @PostMapping("/insert-booking-schedule")
+    public ResponseEntity<String> postMethodName(@RequestBody BookingSchedule entity) {
+        
+        String bookingScheduleId = bookingRepository.insertBookingSchedule(entity);
+        return ResponseEntity.ok().body(bookingScheduleId);
+    }
+    
+    @PostMapping("/insert-booking-slots")
+    public ResponseEntity<String> insertBookingSlots(@RequestBody BookingSchedule entity) {
+        
+        bookingRepository.insertBookingSlots(entity.getBookingSlotResponseDTOs(), "SD0000003");
+        return ResponseEntity.ok().body("insert successfully");
     }
 
   

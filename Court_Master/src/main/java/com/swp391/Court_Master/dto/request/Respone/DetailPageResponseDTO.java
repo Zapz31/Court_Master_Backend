@@ -2,6 +2,7 @@ package com.swp391.Court_Master.dto.request.Respone;
 
 import java.util.List;
 
+import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.Entities.TimeFrame;
 
 public class DetailPageResponseDTO {
@@ -12,18 +13,21 @@ public class DetailPageResponseDTO {
     private String clubDescription;
     private List<TimeFrame> timeFrame;
     private List<CustomerFeedback> feedbacks;
+    private String courtManagerPhone;
+    private List<Court> courtList;
     
 
     
-    public DetailPageResponseDTO(String clubAddress, String clubName, String clubId, String clubDescription) {
+    public DetailPageResponseDTO(String clubAddress, String clubName, String clubId, String clubDescription, String courtManagerPhone) {
         this.clubAddress = clubAddress;
         this.clubName = clubName;
         this.clubId = clubId;
         this.clubDescription = clubDescription;
+        this.courtManagerPhone = courtManagerPhone;
     }
 
     
-
+    
 
     public DetailPageResponseDTO() {
     }
@@ -101,23 +105,31 @@ public class DetailPageResponseDTO {
         return timeFrame;
     }
 
-
     public void setTimeFrame(List<TimeFrame> timeFrame) {
         this.timeFrame = timeFrame;
     }
-
-
-
 
     public List<CustomerFeedback> getFeedbacks() {
         return feedbacks;
     }
 
-
-
-
     public void setFeedbacks(List<CustomerFeedback> feedbacks) {
         this.feedbacks = feedbacks;
+    }
+    public String getCourtManagerPhone() {
+        return courtManagerPhone;
+    }
+
+    public void setCourtManagerPhone(String courtManagerPhone) {
+        this.courtManagerPhone = courtManagerPhone;
+    }
+
+    public List<Court> getCourtList() {
+        return courtList;
+    }
+
+    public void setCourtList(List<Court> courtList) {
+        this.courtList = courtList;
     }
 
 

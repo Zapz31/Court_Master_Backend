@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.swp391.Court_Master.Entities.Court;
+import com.swp391.Court_Master.RowMapper.CourtRowMapper;
 import com.swp391.Court_Master.RowMapper.CustomerFeedbackRowMapper;
 import com.swp391.Court_Master.RowMapper.DetailPageResponseDTORowMapper;
 import com.swp391.Court_Master.RowMapper.ImageResponseRowMapper;
@@ -40,10 +43,13 @@ public class DetailClubRepository {
         return jdbcTemplate.query(sql, pss, new ImageResponseRowMapper());
     }
 
-    public List<DetailPageResponseDTO> getClubInfo(String clubId){
-        String sql = "select bcl.badminton_club_name, bcl.badminton_club_id, bcl.description, \r\n" + //
+    @Transactional
+    public DetailPageResponseDTO getClubInfo(String clubId){
+        DetailPageResponseDTO detailPageResponseDTO = new DetailPageResponseDTO();
+        String sqlSelectClub = "select au.phone_number, bcl.badminton_club_name, bcl.badminton_club_id, bcl.description, \r\n" + //
                         "CONCAT(ad.unit_number,', ',ad.ward,', ',ad.district,', ',ad.province) as clubAddress from badminton_club bcl\r\n" + //
                         "inner join address ad on bcl.address_id = ad.address_id\r\n" + //
+                        "inner join authenticated_user au on au.user_id = bcl.court_manager_id\r\n" + //
                         "where bcl.badminton_club_id = ?";
         PreparedStatementSetter pss = new PreparedStatementSetter() {
 
@@ -54,7 +60,23 @@ public class DetailClubRepository {
             
         };
 
-        return jdbcTemplate.query(sql, pss, new DetailPageResponseDTORowMapper());
+        detailPageResponseDTO =  jdbcTemplate.query(sqlSelectClub, pss, new DetailPageResponseDTORowMapper()).get(0);
+
+        String sqlSelectCourt = "select bc.badminton_court_id, bc.badminton_court_name, badminton_court_status from badminton_court bc \r\n" + //
+                        "inner join badminton_club bcl on bc.badminton_club_id = bcl.badminton_club_id\r\n" + //
+                        "where bcl.badminton_club_id = ?";
+        PreparedStatementSetter pss2 = new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, clubId);
+            }
+            
+        };
+        List<Court> courtList = jdbcTemplate.query(sqlSelectCourt, pss2, new CourtRowMapper());
+        detailPageResponseDTO.setCourtList(courtList);
+
+        return detailPageResponseDTO;
     }
 
     public List<TimeFramePricingServiceDTO> getClubTimeFramePricing(String clubId){

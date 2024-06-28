@@ -17,9 +17,8 @@ public class DetailPageResponseDTORowMapper implements RowMapper<DetailPageRespo
         String clubId = arg0.getString("badminton_club_id");
         String clubName = arg0.getNString("badminton_club_name");
         String clubDescription = arg0.getNString("description");
-
-        return new DetailPageResponseDTO(clubAddress, clubName, clubId, clubDescription);
-
+        String courtManagerPhone = arg0.getString("phone_number");
+        return new DetailPageResponseDTO(clubAddress, clubName, clubId, clubDescription, courtManagerPhone);
     }
 
 }

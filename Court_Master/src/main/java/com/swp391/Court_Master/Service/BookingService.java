@@ -7,14 +7,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.uuid.Generators;
+import com.fasterxml.uuid.impl.TimeBasedGenerator;
 import com.swp391.Court_Master.Entities.BookedDTO;
+import com.swp391.Court_Master.Entities.Invoice;
 import com.swp391.Court_Master.Entities.PricingService;
 import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.Repository.BookingRepository;
+import com.swp391.Court_Master.dto.request.Request.BookingPaymentRequestDTO;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
 import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
@@ -199,6 +204,11 @@ public class BookingService {
     public List<BookingSlotResponseDTO> getAllUnpaidBooking(List<PricePerSlotRequestDTO> pricePerSlotRequestDTOs) {
         List<BookingSlotResponseDTO> unpaidBookingList = new ArrayList<>();
         for (PricePerSlotRequestDTO perSlotRequestDTO : pricePerSlotRequestDTOs) {
+            if(perSlotRequestDTO.getStartBooking().isAfter(perSlotRequestDTO.getEndBooking())){
+                LocalTime temp = perSlotRequestDTO.getStartBooking();
+                perSlotRequestDTO.setStartBooking(perSlotRequestDTO.getEndBooking());
+                perSlotRequestDTO.setEndBooking(temp);
+            }
             Integer price = getPricePerSlot(perSlotRequestDTO.getCourtId(),
                     perSlotRequestDTO.getStartBooking(),
                     perSlotRequestDTO.getEndBooking(),
@@ -236,10 +246,10 @@ public class BookingService {
      * Kiem tra xem cac booking slot co trung nhau hay khong, ham tra ve danh sach
      * cac booking slot bi trung
      */
-    public List<BookedDTO> getDuplicateBookingSlotList(List<PricePerSlotRequestDTO> pricePerSlotRequestDTOs) {
+    public List<BookedDTO> getDuplicateBookingSlotList(List<BookingSlotResponseDTO> pricePerSlotRequestDTOs) {
         List<BookedDTO> allBookingSlotsByCourtId = bookingRepository.getBookedList(pricePerSlotRequestDTOs);
         List<BookedDTO> duplicateBookingSlotList = new ArrayList<>();
-        for (PricePerSlotRequestDTO pricePerSlotRequestDTO : pricePerSlotRequestDTOs) {
+        for (BookingSlotResponseDTO pricePerSlotRequestDTO : pricePerSlotRequestDTOs) {
             int flag = 0;
             for (BookedDTO bookedDTO : allBookingSlotsByCourtId) {
                 if ((flag == 0) && (!pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId()))) {
@@ -341,4 +351,34 @@ public class BookingService {
         return list;
     }
 
+    public MessageResponse excutePaymentTransaction(BookingPaymentRequestDTO bookingPaymentRequestDTO){
+        // Goi ham insert booking schedule va lay booking_schedule_id o day
+        String scheduleId = bookingRepository.insertBookingSchedule(bookingPaymentRequestDTO.getBookingSchedule());
+
+        // Sau khi co booking_schedule_id, insert tung booking slot voi booking schedule (Ham o day)
+        bookingRepository.insertBookingSlots(bookingPaymentRequestDTO.getBookingSchedule().getBookingSlotResponseDTOs(), scheduleId);
+
+
+        // Tao invoice va insert no vao db o day
+        Invoice invoice = new Invoice(bookingPaymentRequestDTO.getClubName(), bookingPaymentRequestDTO.getCourtManagerPhone(), bookingPaymentRequestDTO.getBookingSchedule().getCustomerPhoneNumber(), bookingPaymentRequestDTO.getClubId(), scheduleId);
+        String invoiceId = bookingRepository.insertInvoice(invoice);
+
+        // Tao payment va insert no vao db o day
+        UUID timeBasedGenerator = Generators.timeBasedEpochGenerator().generate();
+        String paymentId = String.valueOf(timeBasedGenerator);
+        bookingPaymentRequestDTO.getPaymentDetail().setPaymentId(paymentId);
+        bookingPaymentRequestDTO.getPaymentDetail().setInvoiceId(invoiceId);
+        bookingPaymentRequestDTO.getPaymentDetail().setUserId(bookingPaymentRequestDTO.getBookingSchedule().getCustomerId());
+        bookingRepository.insertPaymentDetail(bookingPaymentRequestDTO.getPaymentDetail());
+
+
+
+
+
+        return new MessageResponse("Payment success full");
+
+
+
+        
+    }
 }
