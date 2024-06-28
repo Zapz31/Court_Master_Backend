@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,9 +63,10 @@ public class BadmintonClubController {
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/detail/{clubId}")
-    public ResponseEntity<DetailPageResponseDTO> getDetailPageResponse(@PathVariable("clubId") String clubId) throws IOException {
-        DetailPageResponseDTO detailPageResponseDTO = detailPageService.detailPageBuild(clubId);
+    @GetMapping("/detail/{clubId}/{userId}")
+    @PreAuthorize("hasAuthority('USER_CUSTOMER') or hasAuthority('USER_COURT_MANAGER')")
+    public ResponseEntity<DetailPageResponseDTO> getDetailPageResponse(@PathVariable("clubId") String clubId, @PathVariable("userId") String userId) throws IOException {
+        DetailPageResponseDTO detailPageResponseDTO = detailPageService.detailPageBuild(clubId, userId);
         return ResponseEntity.ok().body(detailPageResponseDTO);
     }
 

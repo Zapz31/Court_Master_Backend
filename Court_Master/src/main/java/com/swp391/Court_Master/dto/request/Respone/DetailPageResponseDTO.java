@@ -1,5 +1,6 @@
 package com.swp391.Court_Master.dto.request.Respone;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import com.swp391.Court_Master.Entities.Court;
@@ -15,9 +16,8 @@ public class DetailPageResponseDTO {
     private List<CustomerFeedback> feedbacks;
     private String courtManagerPhone;
     private List<Court> courtList;
-    
-
-    
+    private LocalTime customerPlayableTime;
+        
     public DetailPageResponseDTO(String clubAddress, String clubName, String clubId, String clubDescription, String courtManagerPhone) {
         this.clubAddress = clubAddress;
         this.clubName = clubName;
@@ -130,6 +130,13 @@ public class DetailPageResponseDTO {
 
     public void setCourtList(List<Court> courtList) {
         this.courtList = courtList;
+    }
+    public LocalTime getCustomerPlayableTime() {
+        return customerPlayableTime;
+    }
+
+    public void setCustomerPlayableTime(LocalTime customerPlayableTime) {
+        this.customerPlayableTime = customerPlayableTime;
     }
 
 

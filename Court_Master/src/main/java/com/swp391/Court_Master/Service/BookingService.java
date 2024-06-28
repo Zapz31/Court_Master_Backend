@@ -369,6 +369,7 @@ public class BookingService {
         bookingPaymentRequestDTO.getPaymentDetail().setPaymentId(paymentId);
         bookingPaymentRequestDTO.getPaymentDetail().setInvoiceId(invoiceId);
         bookingPaymentRequestDTO.getPaymentDetail().setUserId(bookingPaymentRequestDTO.getBookingSchedule().getCustomerId());
+        bookingPaymentRequestDTO.getPaymentDetail().setAmount(bookingPaymentRequestDTO.getPaymentDetail().getAmount()/100);
         bookingRepository.insertPaymentDetail(bookingPaymentRequestDTO.getPaymentDetail());
 
 

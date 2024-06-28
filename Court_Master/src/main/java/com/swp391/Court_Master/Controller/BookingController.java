@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,6 +56,7 @@ public class BookingController {
     // } 
 
     @PostMapping("/payment-handle")
+    @PreAuthorize("hasAuthority('USER_CUSTOMER')")
     public ResponseEntity<MessageResponse> handlePayment(@RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO){
         MessageResponse messageResponse = new MessageResponse("Payment successfully");
         if(bookingPaymentRequestDTO.getBookingSchedule().getStartDate().isAfter(bookingPaymentRequestDTO.getBookingSchedule().getEndDate())){

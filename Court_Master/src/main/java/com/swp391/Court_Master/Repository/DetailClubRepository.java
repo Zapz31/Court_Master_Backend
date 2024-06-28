@@ -2,6 +2,7 @@ package com.swp391.Court_Master.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,7 +45,7 @@ public class DetailClubRepository {
     }
 
     @Transactional
-    public DetailPageResponseDTO getClubInfo(String clubId){
+    public DetailPageResponseDTO getClubInfo(String clubId, String userId){
         DetailPageResponseDTO detailPageResponseDTO = new DetailPageResponseDTO();
         String sqlSelectClub = "select au.phone_number, bcl.badminton_club_name, bcl.badminton_club_id, bcl.description, \r\n" + //
                         "CONCAT(ad.unit_number,', ',ad.ward,', ',ad.district,', ',ad.province) as clubAddress from badminton_club bcl\r\n" + //
@@ -61,6 +62,14 @@ public class DetailClubRepository {
         };
 
         detailPageResponseDTO =  jdbcTemplate.query(sqlSelectClub, pss, new DetailPageResponseDTORowMapper()).get(0);
+
+        String sqlGetPlayableTime = "select cpt.playable_time from badminton_club bcl\r\n" + //
+                        "inner join customer_playable_time cpt on bcl.badminton_club_id = cpt.badminton_club_id\r\n" + //
+                        "where cpt.customer_id = ?";
+
+        LocalTime userPlayableTime = jdbcTemplate.queryForObject(sqlGetPlayableTime, LocalTime.class, userId);
+        detailPageResponseDTO.setCustomerPlayableTime(userPlayableTime);
+
 
         String sqlSelectCourt = "select bc.badminton_court_id, bc.badminton_court_name, badminton_court_status from badminton_court bc \r\n" + //
                         "inner join badminton_club bcl on bc.badminton_club_id = bcl.badminton_club_id\r\n" + //

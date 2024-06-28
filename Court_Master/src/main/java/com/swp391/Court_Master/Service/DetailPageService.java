@@ -80,12 +80,12 @@ public class DetailPageService {
         return timeFrames;
     }
 
-    public DetailPageResponseDTO detailPageBuild(String clubId) throws IOException {
+    public DetailPageResponseDTO detailPageBuild(String clubId, String userId) throws IOException {
         File clubImages = new File("club-image");
         String clubImageAbsolutePath = clubImages.getAbsolutePath() + "/";  
         File userImages = new File("user-image");
         String userImageAbsolutePath = userImages.getAbsolutePath() + "/";        
-        DetailPageResponseDTO detailPageResponseDTO = detailClubRepository.getClubInfo(clubId);
+        DetailPageResponseDTO detailPageResponseDTO = detailClubRepository.getClubInfo(clubId, userId);
         List<ImageResponseDTO> listImages = detailClubRepository.getAllImageName(clubId);
         List<CustomerFeedback> feedbacks = detailClubRepository.getFeedBacks(clubId);
 
