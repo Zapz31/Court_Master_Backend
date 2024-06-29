@@ -90,18 +90,15 @@ public class AuthenticatedUserController {
 
     UserDetailsImbl userDetails = (UserDetailsImbl) authentication.getPrincipal();
 
+    String jwt = jwtUtils.generateTokenFromUsername(userDetails.getUsername());
+
     ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-
- 
-
-    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-        .body(new UserInfoResponse(userDetails.getUserId(),                                 
-                                    userDetails.getBirthDay(), 
-                                    userDetails.getRegisterDate(), 
-                                    userDetails.getEmail(), 
-                                    userDetails.getPhoneNumber(), 
-                                    loginRequest.getRoleName(loginRequest.getRoleId()), 
-                                    user.getAvatarImageUrl(), user.getFirstName(), user.getLastName()));
+    UserInfoResponse userInfoResponse = new UserInfoResponse(userDetails.getUserId(), userDetails.getBirthDay(), userDetails.getRegisterDate(), userDetails.getEmail(), userDetails.getPhoneNumber(), user.getRoleNameAuthenticate(user.getRole()), user.getAvatarImageUrl(), user.getFirstName(), user.getLastName());
+    userInfoResponse.setToken(jwt);
+    return ResponseEntity.ok()
+        .header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With")
+        .header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS")
+        .body(userInfoResponse);
   }
 
   @PostMapping("/signout")

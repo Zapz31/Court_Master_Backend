@@ -69,7 +69,7 @@ public class WebSecurityConfig {
                                                                                                             // các
                                                                                                             // phương
                                                                                                             // thức HTTP
-                        config.setAllowedHeaders(Arrays.asList("*", "Set-Cookie")); // Cho phép tất cả các header
+                        config.setAllowedHeaders(Arrays.asList("*", "Set-Cookie", "Access-Control-Allow-Credentials")); // Cho phép tất cả các header
                         config.setAllowCredentials(true);
                         return config;
                     };

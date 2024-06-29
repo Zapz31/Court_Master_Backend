@@ -30,6 +30,21 @@ public class ClubHomePageResponse {
         this.courtManagerPhone = courtManagerPhone;
     }
 
+    
+
+
+    public ClubHomePageResponse(String clubId, String clubName, String clubAddress, int averagePrice,
+            String clubImageName) {
+        this.clubId = clubId;
+        this.clubName = clubName;
+        this.clubAddress = clubAddress;
+        AveragePrice = averagePrice;
+        this.clubImageName = clubImageName;
+    }
+
+
+
+
     public String getClubName() {
         return clubName;
     }

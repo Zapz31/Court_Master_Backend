@@ -11,6 +11,7 @@ public class UserInfoResponse {
     private String imageUrlString;
     private String firstName;
     private String lastName;
+    private String token;
 
     private String role;
 
@@ -29,6 +30,8 @@ public class UserInfoResponse {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
+    
 
     
 
@@ -102,6 +105,14 @@ public class UserInfoResponse {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     

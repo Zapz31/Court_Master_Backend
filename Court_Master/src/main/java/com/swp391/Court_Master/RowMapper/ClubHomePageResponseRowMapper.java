@@ -18,8 +18,7 @@ public class ClubHomePageResponseRowMapper implements RowMapper<ClubHomePageResp
          String clubAddress = arg0.getString("clubAddress");
          String clubImageName = arg0.getString("clubImageName");
          int averagePrice = arg0.getInt("averagePrice");
-         String courtManagerPhone = arg0.getString("phone_number");
-        return new ClubHomePageResponse(clubId, clubName, clubAddress, averagePrice, clubImageName, courtManagerPhone);
+        return new ClubHomePageResponse(clubId, clubName, clubAddress, averagePrice, clubImageName);
     }
 
 
