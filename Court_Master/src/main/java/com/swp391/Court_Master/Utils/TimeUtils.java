@@ -7,4 +7,11 @@ public class TimeUtils {
         int minutes = Integer.parseInt(parts[1]);
         return hours * 60 + minutes;
     }
+
+    public static String convertMinutestoTimeFormat(int TotalMinutes){
+        int hours = TotalMinutes/60;
+        int minutes = TotalMinutes % 60;
+        String formattedTime = String.format("%02d:%02d", hours, minutes);
+        return formattedTime;
+    }
 }

@@ -3,6 +3,8 @@ package com.swp391.Court_Master.Entities;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class BookedDTO {
     private LocalTime startTime;
     private LocalTime endTime;
@@ -12,8 +14,13 @@ public class BookedDTO {
     private String bookingSlotId;
     private int isCheckIn;
     private int price;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String userFullName;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String userId;
+    
     public BookedDTO() {
     }
     
@@ -27,6 +34,20 @@ public class BookedDTO {
         this.bookingSlotId = bookingSlotId;
     }
 
+    
+
+
+    public BookedDTO(LocalTime startTime, LocalTime endTime, LocalDate bookingDate, String courtId, String courtName,
+            String bookingSlotId, int isCheckIn, int price) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.bookingDate = bookingDate;
+        this.courtId = courtId;
+        this.courtName = courtName;
+        this.bookingSlotId = bookingSlotId;
+        this.isCheckIn = isCheckIn;
+        this.price = price;
+    }
 
     public BookedDTO(LocalTime startTime, LocalTime endTime, LocalDate bookingDate, String courtId, String courtName,
             String bookingSlotId, int isCheckIn, int price, String userFullName, String userId) {

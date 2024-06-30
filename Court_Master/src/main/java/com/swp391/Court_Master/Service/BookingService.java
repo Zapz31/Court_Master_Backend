@@ -17,12 +17,14 @@ import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Entities.Invoice;
+import com.swp391.Court_Master.Entities.PaymentDetail;
 import com.swp391.Court_Master.Entities.PricingService;
 import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Utils.TimeUtils;
 import com.swp391.Court_Master.dto.request.Request.BookingPaymentRequestDTO;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
+import com.swp391.Court_Master.dto.request.Respone.BookingScheduleHistory;
 import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
@@ -379,15 +381,17 @@ public class BookingService {
         }
         
         bookingRepository.insertPaymentDetail(bookingPaymentRequestDTO.getPaymentDetail());
-
-
-
-
-
-        return new MessageResponse("Payment success full");
-
-
-
-        
+        return new MessageResponse("Payment success full");      
     }
+
+    public List<PaymentDetail> getPaymentDetailsHistory(String scheduleId, String scheduleType){
+        List<PaymentDetail> paymentDetails = bookingRepository.getPaymentDetails(scheduleId, scheduleType);
+        if(scheduleType.equals("Flexible")){
+            for(PaymentDetail paymentDetail: paymentDetails){
+                paymentDetail.setAmountHourString(TimeUtils.convertMinutestoTimeFormat(paymentDetail.getAmount()));
+            }
+        }
+        return paymentDetails;
+    }
+
 }

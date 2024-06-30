@@ -9,6 +9,7 @@ public class PaymentDetail {
     private LocalDateTime paymentTime;
     private String userId;
     private String invoiceId;
+    private String amountHourString;
     public PaymentDetail() {
     }
     public PaymentDetail(String paymentId, int amount, String paymentMethod, LocalDateTime paymentTime, String userId,
@@ -20,6 +21,14 @@ public class PaymentDetail {
         this.userId = userId;
         this.invoiceId = invoiceId;
     }
+    
+    public PaymentDetail(String paymentId, int amount, String paymentMethod, LocalDateTime paymentTime) {
+        this.paymentId = paymentId;
+        this.amount = amount;
+        this.paymentMethod = paymentMethod;
+        this.paymentTime = paymentTime;
+    }
+    
     public String getPaymentId() {
         return paymentId;
     }
@@ -55,6 +64,12 @@ public class PaymentDetail {
     }
     public void setInvoiceId(String invoiceId) {
         this.invoiceId = invoiceId;
+    }
+    public String getAmountHourString() {
+        return amountHourString;
+    }
+    public void setAmountHourString(String amountHourString) {
+        this.amountHourString = amountHourString;
     }
     
 

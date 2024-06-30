@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
+import com.swp391.Court_Master.Entities.PaymentDetail;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Service.BookingService;
+import com.swp391.Court_Master.Utils.TimeUtils;
 import com.swp391.Court_Master.dto.request.Request.BookingPaymentRequestDTO;
 import com.swp391.Court_Master.dto.request.Request.CheckValidBooking;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
+import com.swp391.Court_Master.dto.request.Respone.BookingScheduleHistory;
 import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.UnpaidBookingInfo;
 
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/booking")
@@ -91,7 +96,32 @@ public class BookingController {
             }
         }
         return ResponseEntity.ok().body(messageResponse);
-    } 
+    }
+    
+    
+    @GetMapping("/history/schedule")
+    public List<BookingScheduleHistory> bookingScheduleHistories(@RequestParam("customerId") String customerId){
+        List<BookingScheduleHistory> list = bookingRepository.getBookingScheduleHistories(customerId);
+        for(BookingScheduleHistory bookingScheduleHistory: list){
+            if(bookingScheduleHistory.getScheduleType().equals("Flexible")){
+                bookingScheduleHistory.setTotalPlayingTimeString(TimeUtils.convertMinutestoTimeFormat(bookingScheduleHistory.getTotalPlayingTime()));
+            }
+        }
+        return list;
+
+    }
+
+    @GetMapping("/history/slots")
+    public List<BookedDTO> bookingSlotHistories(@RequestParam("scheduleId") String scheduleId){
+        return bookingRepository.getBookingSlotsHistories(scheduleId);
+    }
+
+    @GetMapping("/history/payment-detail")
+    public List<PaymentDetail> bookingPaymentDetailHistories(@RequestParam("scheduleId") String scheduleId, @RequestParam("scheduleType") String scheduleType){
+        return bookingService.getPaymentDetailsHistory(scheduleId, scheduleType);
+    }
+
+    
 
     
    

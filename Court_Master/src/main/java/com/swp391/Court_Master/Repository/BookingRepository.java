@@ -21,11 +21,15 @@ import com.swp391.Court_Master.Entities.BookingSchedule;
 import com.swp391.Court_Master.Entities.Invoice;
 import com.swp391.Court_Master.Entities.PaymentDetail;
 import com.swp391.Court_Master.Entities.TimeFrame;
+import com.swp391.Court_Master.RowMapper.BookedDTOHistoryRowMapper;
 import com.swp391.Court_Master.RowMapper.BookedDTOResponseOMRowMapper;
 import com.swp391.Court_Master.RowMapper.BookedDTORowMapper;
+import com.swp391.Court_Master.RowMapper.BookingScheduleHistoryRowMapper;
+import com.swp391.Court_Master.RowMapper.PaymentDetailHistoryRowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFramePricingServiceRowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFrameRowMapperWithoutId;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
+import com.swp391.Court_Master.dto.request.Respone.BookingScheduleHistory;
 import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
 
@@ -305,5 +309,59 @@ public class BookingRepository {
         return isEnough;
     }
 
+    // LAY DANH SACH LICH SU DAT CUA BOOKING SCHEDULE DUA VAO CUSTOMER ID   
+    public List<BookingScheduleHistory> getBookingScheduleHistories(String customerId){
+        String sql="select iv.badminton_club_name, iv.court_manager_phone, bs.booking_schedule_id, bs.booking_schedule_status, bs.start_date, bs.end_date, bs.schedule_type, bs.total_price, bs.total_playing_time from booking_schedule bs\r\n" + //
+                        "inner join invoice iv on bs.booking_schedule_id = iv.booking_schedule_id\r\n" + //
+                        "where bs.customer_id = ?";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, customerId);
+            }
+            
+        };
+
+        return jdbcTemplate.query(sql, pss, new BookingScheduleHistoryRowMapper());
+    }
+
+    // LAY DANH SACH LICH SU DAT CUA BOOKING SLOT DUA VAO SCHEDULE ID
+    public List<BookedDTO> getBookingSlotsHistories(String scheduleId){
+        String sql = "select bs.booking_slot_id, bs.start_time, bs.end_time, bs.booking_date, bs.is_check_in, price, bs.badminton_court_id, bc.badminton_court_name from  booking_slot bs\r\n" + //
+                        "inner join badminton_court bc on bs.badminton_court_id = bc.badminton_court_id\r\n" + //
+                        "where booking_schedule_id = ?";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, scheduleId);
+            }
+            
+        };
+        return jdbcTemplate.query(sql, pss, new BookedDTOHistoryRowMapper());
+    }
+
+    // LAY CHI TIET HOA DON THANH TOAN DUA VAO SCHEDULE ID VA SCHEDULE TYPE
+    public List<PaymentDetail> getPaymentDetails(String scheduleId, String scheduleType){
+        String sql = "select pd.payment_id, pd.amount, pd.payment_time, pd.payment_method from booking_schedule bsd\r\n" + //
+                        "inner join invoice iv on bsd.booking_schedule_id = iv.booking_schedule_id\r\n" + //
+                        "inner join payment_detail pd on iv.invoice_id = pd.invoice_id\r\n" + //
+                        "where bsd.booking_schedule_id = ?";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, scheduleId);
+            }
+            
+        };
+        return jdbcTemplate.query(sql, pss, new PaymentDetailHistoryRowMapper());
+    }
+
+
+
+
+ 
 
 }
