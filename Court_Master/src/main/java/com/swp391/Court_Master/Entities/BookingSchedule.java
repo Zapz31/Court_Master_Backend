@@ -16,6 +16,7 @@ public class BookingSchedule {
     private String customerId;
     private int totalPrice;
     private int isView;
+    private String totalPlayingTime;
     private List<BookingSlotResponseDTO> bookingSlotResponseDTOs;
     
    
@@ -36,6 +37,8 @@ public class BookingSchedule {
         this.isView = isView;
         this.bookingSlotResponseDTOs = bookingSlotResponseDTOs;
     }
+
+    
     public BookingSchedule() {
     }
     public String getBookKingScheduleId() {
@@ -103,6 +106,16 @@ public class BookingSchedule {
     }
     public void setBookingSlotResponseDTOs(List<BookingSlotResponseDTO> bookingSlotResponseDTOs) {
         this.bookingSlotResponseDTOs = bookingSlotResponseDTOs;
+    }
+
+
+    public String getTotalPlayingTime() {
+        return totalPlayingTime;
+    }
+
+
+    public void setTotalPlayingTime(String totalPlayingTime) {
+        this.totalPlayingTime = totalPlayingTime;
     }
     
 }

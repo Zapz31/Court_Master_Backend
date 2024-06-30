@@ -56,7 +56,7 @@ public class BookingController {
     // } 
 
     @PostMapping("/payment-handle")
-    @PreAuthorize("hasAuthority('USER_CUSTOMER')")
+    // @PreAuthorize("hasAuthority('USER_CUSTOMER')")
     public ResponseEntity<MessageResponse> handlePayment(@RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO){
         MessageResponse messageResponse = new MessageResponse("Payment successfully");
         if(bookingPaymentRequestDTO.getBookingSchedule().getStartDate().isAfter(bookingPaymentRequestDTO.getBookingSchedule().getEndDate())){
@@ -71,7 +71,13 @@ public class BookingController {
                 messageResponse.setMassage(invalidMess.toString());
             } else {
                 // Ham insert trong day (Chac chan thanh toan se thanh cong moi di vao luong nay)
-                messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
+                // Khi nguoi dung dat lich ngay hoac fixed
+                if(!bookingPaymentRequestDTO.getBookingSchedule().getScheduleType().equals("Flexible")){
+                    messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
+                } else {
+                    // Khi nguoi dung dat lich kieu flexible
+                }
+                
             }
         }
         return ResponseEntity.ok().body(messageResponse);

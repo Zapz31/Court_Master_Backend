@@ -63,13 +63,20 @@ public class DetailClubRepository {
 
         detailPageResponseDTO =  jdbcTemplate.query(sqlSelectClub, pss, new DetailPageResponseDTORowMapper()).get(0);
 
-        String sqlGetPlayableTime = "select cpt.playable_time from badminton_club bcl\r\n" + //
-                        "inner join customer_playable_time cpt on bcl.badminton_club_id = cpt.badminton_club_id\r\n" + //
-                        "where cpt.customer_id = ?";
+        String sqlGetPlayableTime = "select playable_time from customer_playable_time\r\n" + //
+                        "where customer_id = ? and badminton_club_id = ?";
 
-        LocalTime userPlayableTime = jdbcTemplate.queryForObject(sqlGetPlayableTime, LocalTime.class, userId);
-        detailPageResponseDTO.setCustomerPlayableTime(userPlayableTime);
-
+        String playingTime = "";
+        try {
+        int minutesPlayTime = jdbcTemplate.queryForObject(sqlGetPlayableTime, Integer.class, userId, clubId);
+        int hours = minutesPlayTime / 60;
+        int minutes = minutesPlayTime % 60;
+        playingTime = String.format("%02d:%02d", hours, minutes);
+        detailPageResponseDTO.setCustomerPlayableTime(playingTime);
+        } catch (Exception e) {
+            detailPageResponseDTO.setCustomerPlayableTime("00:00");
+        }
+        
 
         String sqlSelectCourt = "select bc.badminton_court_id, bc.badminton_court_name, badminton_court_status from badminton_court bc \r\n" + //
                         "inner join badminton_club bcl on bc.badminton_club_id = bcl.badminton_club_id\r\n" + //

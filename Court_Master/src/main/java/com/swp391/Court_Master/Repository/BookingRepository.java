@@ -159,9 +159,14 @@ public class BookingRepository {
 
     @Transactional
     public String insertBookingSchedule(BookingSchedule bookingSchedule){
-        String insertSQL = "insert into booking_schedule(customer_fullname, customer_phone_number, booking_schedule_status, start_date, end_date, schedule_type, customer_id, total_price)\r\n" + //
-                        "values(?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertSQL = "insert into booking_schedule(customer_fullname, customer_phone_number, booking_schedule_status, start_date, end_date, schedule_type, customer_id, total_price, total_playing_time)\r\n" + //
+                        "values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+        String totalPlayHours = bookingSchedule.getTotalPlayingTime();
+        String[] parts = totalPlayHours.split(":");
+        int hours = Integer.parseInt(parts[0]);
+        int minutes = Integer.parseInt(parts[1]);
+        int totalPlayTime = hours*60 + minutes;
         PreparedStatementSetter pss = new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
@@ -173,6 +178,8 @@ public class BookingRepository {
                ps.setString(6, bookingSchedule.getScheduleType());
                ps.setString(7, bookingSchedule.getCustomerId());
                ps.setInt(8, bookingSchedule.getTotalPrice());
+               ps.setInt(9, totalPlayTime);
+               
             }
             
         };
@@ -255,6 +262,13 @@ public class BookingRepository {
         jdbcTemplate.update(sql, pss);
         
     }
+
+    // @Transactional
+    // public boolean isEnoughTime(String totalBookingPlayhours, String customerId, String clubId){
+    //     boolean isEnough = true;
+
+
+    // }
 
 
 }

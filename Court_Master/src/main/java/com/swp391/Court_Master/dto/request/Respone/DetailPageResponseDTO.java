@@ -16,7 +16,7 @@ public class DetailPageResponseDTO {
     private List<CustomerFeedback> feedbacks;
     private String courtManagerPhone;
     private List<Court> courtList;
-    private LocalTime customerPlayableTime;
+    private String customerPlayableTime;
         
     public DetailPageResponseDTO(String clubAddress, String clubName, String clubId, String clubDescription, String courtManagerPhone) {
         this.clubAddress = clubAddress;
@@ -131,13 +131,12 @@ public class DetailPageResponseDTO {
     public void setCourtList(List<Court> courtList) {
         this.courtList = courtList;
     }
-    public LocalTime getCustomerPlayableTime() {
+    public String getCustomerPlayableTime() {
         return customerPlayableTime;
     }
-
-    public void setCustomerPlayableTime(LocalTime customerPlayableTime) {
+    public void setCustomerPlayableTime(String customerPlayableTime) {
         this.customerPlayableTime = customerPlayableTime;
     }
-
+    
 
 }
