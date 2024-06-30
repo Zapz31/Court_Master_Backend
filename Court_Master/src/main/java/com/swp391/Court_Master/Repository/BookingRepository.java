@@ -179,7 +179,6 @@ public class BookingRepository {
                ps.setString(7, bookingSchedule.getCustomerId());
                ps.setInt(8, bookingSchedule.getTotalPrice());
                ps.setInt(9, totalPlayTime);
-               
             }
             
         };
@@ -263,12 +262,48 @@ public class BookingRepository {
         
     }
 
-    // @Transactional
-    // public boolean isEnoughTime(String totalBookingPlayhours, String customerId, String clubId){
-    //     boolean isEnough = true;
+    @Transactional
+    public boolean isEnoughTime(String totalBookingPlayhoursString, String userId, String clubId){
+        boolean isEnough = true;
+        int customerPlayingTime;
+        String[] totalBookingPlayhoursPart = totalBookingPlayhoursString.split(":"); 
+        int totalBookingHours = Integer.parseInt(totalBookingPlayhoursPart[0]);
+        int totalBookingMinute = Integer.parseInt(totalBookingPlayhoursPart[1]);
+        int totalBookingPlaytime = totalBookingHours*60 + totalBookingMinute;
 
+        String sqlGetPlayableTime = "select playable_time from customer_playable_time\r\n" + //
+                        "where customer_id = ? and badminton_club_id = ?";
 
-    // }
+        try {
+        customerPlayingTime = jdbcTemplate.queryForObject(sqlGetPlayableTime, Integer.class, userId, clubId);
+        } catch (Exception e) {
+            customerPlayingTime = 0;
+        }
+        if(customerPlayingTime < totalBookingPlaytime){
+            isEnough = false;
+            return isEnough;
+        }
+        int updateCustomerPlayingTime = customerPlayingTime - totalBookingPlaytime;
+
+        String sqlUpdatePlayingTime = "update customer_playable_time\r\n" + //
+                        "set playable_time = ?\r\n" + //
+                        "where customer_id = ? and badminton_club_id = ?";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setInt(1, updateCustomerPlayingTime);
+                ps.setString(2, userId);
+                ps.setString(3,clubId);
+            }
+            
+        };
+        int updateRow = jdbcTemplate.update(sqlUpdatePlayingTime, pss);
+        if(updateRow == 0){
+            isEnough = false;
+        }
+        return isEnough;
+    }
 
 
 }

@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import com.swp391.Court_Master.Entities.Invoice;
 import com.swp391.Court_Master.Entities.PricingService;
 import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.Repository.BookingRepository;
+import com.swp391.Court_Master.Utils.TimeUtils;
 import com.swp391.Court_Master.dto.request.Request.BookingPaymentRequestDTO;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
 import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
@@ -369,7 +371,13 @@ public class BookingService {
         bookingPaymentRequestDTO.getPaymentDetail().setPaymentId(paymentId);
         bookingPaymentRequestDTO.getPaymentDetail().setInvoiceId(invoiceId);
         bookingPaymentRequestDTO.getPaymentDetail().setUserId(bookingPaymentRequestDTO.getBookingSchedule().getCustomerId());
-        bookingPaymentRequestDTO.getPaymentDetail().setAmount(bookingPaymentRequestDTO.getPaymentDetail().getAmount()/100);
+        if(!bookingPaymentRequestDTO.getBookingSchedule().getScheduleType().equals("Flexible")){
+            bookingPaymentRequestDTO.getPaymentDetail().setAmount(bookingPaymentRequestDTO.getPaymentDetail().getAmount()/100);
+        } else {
+            int amountMinutes = TimeUtils.convertTimeFormatToMinutes(bookingPaymentRequestDTO.getBookingSchedule().getTotalPlayingTime());
+            bookingPaymentRequestDTO.getPaymentDetail().setAmount(amountMinutes);
+        }
+        
         bookingRepository.insertPaymentDetail(bookingPaymentRequestDTO.getPaymentDetail());
 
 

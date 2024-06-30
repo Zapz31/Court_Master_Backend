@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
+import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Service.BookingService;
 import com.swp391.Court_Master.dto.request.Request.BookingPaymentRequestDTO;
 import com.swp391.Court_Master.dto.request.Request.CheckValidBooking;
@@ -28,6 +29,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class BookingController {
     @Autowired
     private BookingService bookingService;
+
+    @Autowired 
+    private BookingRepository bookingRepository;
 
     @PostMapping("/unpaidbookings")
     public ResponseEntity<UnpaidBookingInfo> viewAllUnPaidBooking(@RequestBody List<PricePerSlotRequestDTO> list) {
@@ -76,6 +80,12 @@ public class BookingController {
                     messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
                 } else {
                     // Khi nguoi dung dat lich kieu flexible
+                    // Kiem tra xem nguoi dung co du gio choi hay khong 
+                    if(bookingRepository.isEnoughTime(bookingPaymentRequestDTO.getBookingSchedule().getTotalPlayingTime(), bookingPaymentRequestDTO.getBookingSchedule().getCustomerId(), bookingPaymentRequestDTO.getClubId())){
+                        messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);                                                
+                    } else {
+                        messageResponse.setMassage("Số giờ chơi đăng ký của bạn không đủ để thực hiện giao dịch");
+                    }
                 }
                 
             }
