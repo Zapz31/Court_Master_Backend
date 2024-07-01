@@ -420,13 +420,34 @@ public class BookingService {
 
     // THANH TOAN CAP NHAT TRANG THAI CUA BOOKING SLOT
 
-    // public boolean isUpdateBookingSchStatus(PaymentUpdateBookingSchedule paymentUpdateBookingSchedule){
-    //     // updata booking schedule status
+    public boolean isUpdateBookingSchStatus(PaymentUpdateBookingSchedule paymentUpdateBookingSchedule){
+        // updata booking schedule status
+        boolean isUpdateStatus;
+        try {
+             isUpdateStatus = bookingRepository.isUpdateStatus(paymentUpdateBookingSchedule.getBookingScheduleId(), paymentUpdateBookingSchedule.getBookingScheduleStatus());
+        } catch (Exception e) {
+            System.out.println("Error at isUpdateStatus: "+e);
+            return false;
+        }
+        
+        // inseart invoice
+        String bookingScheduleId = paymentUpdateBookingSchedule.getBookingScheduleId();
+        paymentUpdateBookingSchedule.getInvoice().setBookingScheduleId(bookingScheduleId);
+        String invoiceId = bookingRepository.insertInvoice(paymentUpdateBookingSchedule.getInvoice());
+        // inseart payment detail
+        UUID timeBasedGenerator = Generators.timeBasedEpochGenerator().generate();
+        String paymentId = String.valueOf(timeBasedGenerator);
+        paymentUpdateBookingSchedule.getPaymentDetail().setPaymentId(paymentId);
+        paymentUpdateBookingSchedule.getPaymentDetail().setInvoiceId(invoiceId);
+        paymentUpdateBookingSchedule.getPaymentDetail().setAmount(paymentUpdateBookingSchedule.getPaymentDetail().getAmount()/100);
+        bookingRepository.insertPaymentDetail(paymentUpdateBookingSchedule.getPaymentDetail());
+        if(isUpdateStatus){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-    //     // inseart invoice
 
-    //     // inseart payment detail
-
-    // }
 
 }

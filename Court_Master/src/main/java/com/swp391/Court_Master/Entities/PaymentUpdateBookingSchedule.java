@@ -2,8 +2,17 @@ package com.swp391.Court_Master.Entities;
 
 public class PaymentUpdateBookingSchedule {
     private String bookingScheduleId;
+    private String bookingScheduleStatus;
     private Invoice invoice;
     private PaymentDetail paymentDetail;
+    
+    public PaymentUpdateBookingSchedule(String bookingScheduleId, String bookingScheduleStatus, Invoice invoice,
+            PaymentDetail paymentDetail) {
+        this.bookingScheduleId = bookingScheduleId;
+        this.bookingScheduleStatus = bookingScheduleStatus;
+        this.invoice = invoice;
+        this.paymentDetail = paymentDetail;
+    }
     public PaymentUpdateBookingSchedule() {
     }
     public String getBookingScheduleId() {
@@ -24,10 +33,11 @@ public class PaymentUpdateBookingSchedule {
     public void setPaymentDetail(PaymentDetail paymentDetail) {
         this.paymentDetail = paymentDetail;
     }
-    public PaymentUpdateBookingSchedule(String bookingScheduleId, Invoice invoice, PaymentDetail paymentDetail) {
-        this.bookingScheduleId = bookingScheduleId;
-        this.invoice = invoice;
-        this.paymentDetail = paymentDetail;
+    public String getBookingScheduleStatus() {
+        return bookingScheduleStatus;
+    }
+    public void setBookingScheduleStatus(String bookingScheduleStatus) {
+        this.bookingScheduleStatus = bookingScheduleStatus;
     }
 
     

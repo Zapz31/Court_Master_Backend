@@ -21,7 +21,8 @@ public class BookingScheduleHistoryRowMapper implements RowMapper<BookingSchedul
         String scheduleType = arg0.getString("schedule_type");
         int totalPrice = arg0.getInt("total_price");
         int totalPlayingTime = arg0.getInt("total_playing_time");
-        return new BookingScheduleHistory(clubName, courtManagerPhone, bookingScheduleId, bookingScheduleStatus, startDate, endDate, scheduleType, totalPrice, totalPlayingTime);
+        String bookingPhoneNumber = arg0.getString("booking_phone_number"); 
+        return new BookingScheduleHistory(clubName, courtManagerPhone, bookingScheduleId, bookingScheduleStatus, startDate, endDate, scheduleType, totalPrice, totalPlayingTime, bookingPhoneNumber);
     }
 
 }

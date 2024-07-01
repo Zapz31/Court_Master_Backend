@@ -13,11 +13,14 @@ public class BookingScheduleHistory {
     private int totalPrice;
     private int totalPlayingTime;
     private String totalPlayingTimeString;
+    private String bookingPhoneNumber;
+    
+    
     
     
     public BookingScheduleHistory(String clubName, String courtManagerPhone, String bookingScheduleId,
             String bookingScheduleStatus, LocalDate startDate, LocalDate endDate, String scheduleType, int totalPrice,
-            int totalPlayingTime) {
+            int totalPlayingTime, String bookingPhoneNumber) {
         this.clubName = clubName;
         this.courtManagerPhone = courtManagerPhone;
         this.bookingScheduleId = bookingScheduleId;
@@ -27,8 +30,8 @@ public class BookingScheduleHistory {
         this.scheduleType = scheduleType;
         this.totalPrice = totalPrice;
         this.totalPlayingTime = totalPlayingTime;
+        this.bookingPhoneNumber = bookingPhoneNumber;
     }
-    
     public BookingScheduleHistory() {
     }
     public String getClubName() {
@@ -92,6 +95,14 @@ public class BookingScheduleHistory {
 
     public void setTotalPlayingTimeString(String totalPlayingTimeString) {
         this.totalPlayingTimeString = totalPlayingTimeString;
+    }
+
+    public String getBookingPhoneNumber() {
+        return bookingPhoneNumber;
+    }
+
+    public void setBookingPhoneNumber(String bookingPhoneNumber) {
+        this.bookingPhoneNumber = bookingPhoneNumber;
     }
     
 }

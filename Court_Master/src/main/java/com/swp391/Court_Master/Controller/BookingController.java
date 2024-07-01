@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Entities.PaymentDetail;
+import com.swp391.Court_Master.Entities.PaymentUpdateBookingSchedule;
 import com.swp391.Court_Master.Entities.PlayableTimePayment;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Service.BookingService;
@@ -68,7 +69,7 @@ public class BookingController {
     @PostMapping("/payment-handle")
     // @PreAuthorize("hasAuthority('USER_CUSTOMER')")
     public ResponseEntity<MessageResponse> handlePayment(@RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO){
-        MessageResponse messageResponse = new MessageResponse("Payment successfully");
+        MessageResponse messageResponse = new MessageResponse("Payment success");
         if(bookingPaymentRequestDTO.getBookingSchedule().getStartDate().isAfter(bookingPaymentRequestDTO.getBookingSchedule().getEndDate())){
             messageResponse.setMassage("Invalid start and end dates");
         } else {
@@ -127,8 +128,22 @@ public class BookingController {
         MessageResponse mess = bookingService.executePlayTimePayment(entity);       
         return ResponseEntity.ok().body(mess);
     }
+
+    @PostMapping("/payment-installment")
+    public ResponseEntity<MessageResponse> paymentInstallment(@RequestBody  PaymentUpdateBookingSchedule paymentUpdateBookingSchedule) {
+        boolean isPaymentSuccess = bookingService.isUpdateBookingSchStatus(paymentUpdateBookingSchedule);
+        MessageResponse messageResponse = new MessageResponse("");
+        if(isPaymentSuccess){
+            messageResponse.setMassage("Payment success");
+        } else {
+            messageResponse.setMassage("Payment failed");
+        }
+        
+        return ResponseEntity.ok().body(messageResponse);
+    }
     
     
+
     
 
     
