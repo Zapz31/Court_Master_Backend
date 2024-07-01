@@ -20,6 +20,7 @@ import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Entities.BookingSchedule;
 import com.swp391.Court_Master.Entities.Invoice;
 import com.swp391.Court_Master.Entities.PaymentDetail;
+import com.swp391.Court_Master.Entities.PlayableTimePayment;
 import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.RowMapper.BookedDTOHistoryRowMapper;
 import com.swp391.Court_Master.RowMapper.BookedDTOResponseOMRowMapper;
@@ -359,8 +360,108 @@ public class BookingRepository {
         return jdbcTemplate.query(sql, pss, new PaymentDetailHistoryRowMapper());
     }
 
+    // NAP TIEN THANH TOAN GIO CHOI
+    @Transactional
+    public boolean isPayment(PlayableTimePayment playableTimePayment){
+        boolean isAddPaymentDetail = false;
+        boolean isAddminutes = false;
+        int minutes;
+        
+        String sqlAddPaymentDetail = "insert into playable_time_payment(payment_id, amount, minute_amount, payment_method, payment_time, customer_id, badminton_club_id, badminton_club_name)\r\n" + //
+                        "values(?, ?, ?, ?, ?, ?, ?, ?)";
+                        //aaaa', 123000, 800, 'ATM', '2024-07-01 09:18:20', 'STF000002', 'C0000002', 'Cho Nhannnnn
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
 
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, playableTimePayment.getPaymentId());
+                ps.setInt(2, playableTimePayment.getAmount());
+                ps.setInt(3, playableTimePayment.getMinuteAmount());
+                ps.setString(4, playableTimePayment.getPaymentMethod());
+                ps.setTimestamp(5, Timestamp.valueOf(playableTimePayment.getPaymentTime()));
+                ps.setString(6, playableTimePayment.getCustomerId());
+                ps.setString(7, playableTimePayment.getBadmintonClubId());
+                ps.setNString(8, playableTimePayment.getBadmintonClubName());
+            }
+            
+        };
+        int insertRow = jdbcTemplate.update(sqlAddPaymentDetail, pss);
+        if(insertRow > 0){
+            isAddPaymentDetail = true;
+        }
 
+        try {
+            String sqlGetAmont = "select playable_time from customer_playable_time\r\n" + //
+                                "where customer_id = ? and badminton_club_id = ?";
+            minutes = jdbcTemplate.queryForObject(sqlGetAmont, Integer.class, playableTimePayment.getCustomerId(), playableTimePayment.getBadmintonClubId());
+        } catch (Exception e) {
+            minutes = 0;
+        }
+        if(minutes==0){
+            String sqlAddCusPlayTime = "insert into customer_playable_time(customer_id, badminton_club_id, playable_time)\r\n" + //
+                                "values(?, ?, ?)";
+            PreparedStatementSetter pss3 = new PreparedStatementSetter() {
+
+                @Override
+                public void setValues(PreparedStatement ps) throws SQLException {
+                    ps.setString(1, playableTimePayment.getCustomerId());
+                    ps.setString(2, playableTimePayment.getBadmintonClubId());
+                    ps.setInt(3, playableTimePayment.getMinuteAmount());
+                }
+                
+            };
+
+            int addRow = jdbcTemplate.update(sqlAddCusPlayTime, pss3);
+            if(addRow > 0){
+                isAddminutes = true;
+            }
+        } else {
+            int updateMinuteAmount= minutes + playableTimePayment.getMinuteAmount();
+            String sqlUpdateCusPlayTime = "update customer_playable_time\r\n" + //
+                                "set playable_time = ?\r\n" + //
+                                "where customer_id = ? and badminton_club_id = ?";
+            PreparedStatementSetter pss4 =new PreparedStatementSetter() {
+
+                @Override
+                public void setValues(PreparedStatement ps) throws SQLException {
+                    ps.setInt(1, updateMinuteAmount);
+                    ps.setString(2, playableTimePayment.getCustomerId());
+                    ps.setString(3, playableTimePayment.getBadmintonClubId());
+                }
+                
+            };
+            int updateRow =jdbcTemplate.update(sqlUpdateCusPlayTime, pss4);
+            if(updateRow > 0){
+                isAddminutes = true;
+            }
+        }
+        if(isAddPaymentDetail && isAddminutes){
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    // LAY TIEN THANH TOAN GIO CHOI CHO KIEU FLEXIBLE 
+    public int getFlexiblePrice(String clubId){
+        String sql = "select flexible from badminton_club bcl \r\n" + //
+                        "inner join time_frame tf on bcl.badminton_club_id = tf.badminton_club_id\r\n" + //
+                        "inner join pricing_rule pr on tf.time_frame_id = pr.time_frame_id\r\n" + //
+                        "where bcl.badminton_club_id = ?\r\n" + //
+                        "group by flexible";
+
+        int price = jdbcTemplate.queryForObject(sql, Integer.class, clubId);
+        return price;
+    }
+
+    // updata booking schedule status
+    // public boolean isUpdateStatus(String bookingScheduleId, String bookingScheduleType){
+    //     String sql = "update booking_schedule\r\n" + //
+    //                     "set booking_schedule_status = ?\r\n" + //
+    //                     "where booking_schedule_id = ?";
+        
+    // }
 
  
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Entities.PaymentDetail;
+import com.swp391.Court_Master.Entities.PlayableTimePayment;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Service.BookingService;
 import com.swp391.Court_Master.Utils.TimeUtils;
@@ -121,6 +122,13 @@ public class BookingController {
         return bookingService.getPaymentDetailsHistory(scheduleId, scheduleType);
     }
 
+    @PostMapping("/payment-play-time")
+    public ResponseEntity<MessageResponse> paymentPlayableTime(@RequestBody PlayableTimePayment entity) {
+        MessageResponse mess = bookingService.executePlayTimePayment(entity);       
+        return ResponseEntity.ok().body(mess);
+    }
+    
+    
     
 
     

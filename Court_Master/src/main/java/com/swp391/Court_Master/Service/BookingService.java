@@ -8,23 +8,22 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.uuid.Generators;
-import com.fasterxml.uuid.impl.TimeBasedGenerator;
 import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Entities.Invoice;
 import com.swp391.Court_Master.Entities.PaymentDetail;
+import com.swp391.Court_Master.Entities.PaymentUpdateBookingSchedule;
+import com.swp391.Court_Master.Entities.PlayableTimePayment;
 import com.swp391.Court_Master.Entities.PricingService;
 import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Utils.TimeUtils;
 import com.swp391.Court_Master.dto.request.Request.BookingPaymentRequestDTO;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
-import com.swp391.Court_Master.dto.request.Respone.BookingScheduleHistory;
 import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
@@ -393,5 +392,41 @@ public class BookingService {
         }
         return paymentDetails;
     }
+
+    public MessageResponse executePlayTimePayment(PlayableTimePayment playableTimePayment){
+        MessageResponse mess = new MessageResponse("Payment Fail !");
+        /*
+         * private String paymentId;
+    private int amount;
+    private int minuteAmount;
+    private String paymentMethod;
+    private LocalDateTime paymentTime;
+    private String customerId;
+    private String badmintonClubId;
+    private String badmintonClubName;
+    private String playHoursMinuteString;
+        */
+        int minuteAmount = TimeUtils.convertTimeFormatToMinutes(playableTimePayment.getPlayHoursMinuteString());
+        UUID timeBasedGenerator = Generators.timeBasedEpochGenerator().generate();
+        String paymentId = String.valueOf(timeBasedGenerator);
+        playableTimePayment.setMinuteAmount(minuteAmount);
+        playableTimePayment.setPaymentId(paymentId);
+        if(bookingRepository.isPayment(playableTimePayment)){
+            mess.setMassage("Payment successfully !");
+        }
+        return mess;
+
+    }
+
+    // THANH TOAN CAP NHAT TRANG THAI CUA BOOKING SLOT
+
+    // public boolean isUpdateBookingSchStatus(PaymentUpdateBookingSchedule paymentUpdateBookingSchedule){
+    //     // updata booking schedule status
+
+    //     // inseart invoice
+
+    //     // inseart payment detail
+
+    // }
 
 }
