@@ -19,9 +19,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.swp391.Court_Master.Entities.FilterHistorySchedule;
 import com.swp391.Court_Master.Service.AddressService;
 import com.swp391.Court_Master.Service.FilterService;
+import com.swp391.Court_Master.Utils.TimeUtils;
 import com.swp391.Court_Master.dto.request.Request.FilterRequstDTO;
+import com.swp391.Court_Master.dto.request.Respone.BookingScheduleHistory;
 import com.swp391.Court_Master.dto.request.Respone.ClubHomePageResponse;
 import com.swp391.Court_Master.dto.request.Respone.DistrictFullNameResponse;
 import com.swp391.Court_Master.dto.request.Respone.ProvincesFullNameResponse;
@@ -123,5 +126,17 @@ public class FilterController {
 
         return ResponseEntity.ok().body(list);
     }
+
+    @PostMapping("/history/booking-schedules")
+    public ResponseEntity<List<BookingScheduleHistory>> filterBookingScheduleHistory(@RequestBody  FilterHistorySchedule filterHistorySchedule) {
+        List<BookingScheduleHistory> list = filterService.getFilterBookingScheduleHis(filterHistorySchedule);
+        for(BookingScheduleHistory bookingScheduleHistory: list){
+            if(bookingScheduleHistory.getScheduleType().equals("Flexible")){
+                bookingScheduleHistory.setTotalPlayingTimeString(TimeUtils.convertMinutestoTimeFormat(bookingScheduleHistory.getTotalPlayingTime()));
+            }
+        }
+        return ResponseEntity.ok().body(list);
+    }
+    
 
 }

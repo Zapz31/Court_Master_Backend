@@ -46,7 +46,7 @@ public class BookingService {
 
         for (TimeFrame tf : timeFrames) {
             if ((startBooking.equals(tf.getStarTime())
-                    || startBooking.isAfter(tf.getStarTime()) && startBooking.isBefore(tf.getEndTime()))
+                    || startBooking.isAfter(tf.getStarTime()) && startBooking.isBefore(tf.getEndTime())) //
                     && (endBooking.equals(tf.getEndTime()) || endBooking.isBefore(tf.getEndTime()))) {
                 // PricingService selectedPricingService = new PricingService();
                 int pricePerHours = -1;
@@ -57,7 +57,13 @@ public class BookingService {
                         break;
                     }
                 }
-                double timeDiffBooking = calculateTimeDifference(startBooking, endBooking);
+                double timeDiffBooking = 0;
+                LocalTime midNight = LocalTime.of(23, 59, 59);
+                if (endBooking.equals(midNight)) {
+                    timeDiffBooking = TimeUtils.getTimeDiffMidnight(startBooking);
+                } else {
+                    timeDiffBooking = calculateTimeDifference(startBooking, endBooking);
+                }
                 totalPrice = (int) (pricePerHours * timeDiffBooking);
 
             } else if ((startBooking.equals(tf.getStarTime())
@@ -75,7 +81,7 @@ public class BookingService {
                 double timeDiffBooking = calculateTimeDifference(startBooking, tf.getEndTime());
                 totalPrice += (int) (timeDiffBooking * pricePerHours);
 
-            } else if (startBooking.isBefore(tf.getStarTime()) && (endBooking.isAfter(tf.getStarTime())
+            } else if (startBooking.isBefore(tf.getStarTime()) && (endBooking.isAfter(tf.getStarTime()) //
                     && (endBooking.equals(tf.getEndTime()) || endBooking.isBefore(tf.getEndTime())))) {
                 int pricePerHours = -1;
                 for (PricingService ps : tf.getPricingServiceList()) {
@@ -86,7 +92,15 @@ public class BookingService {
                         break;
                     }
                 }
-                double timeDiffBooking = calculateTimeDifference(tf.getStarTime(), endBooking);
+                // double timeDiffBooking = calculateTimeDifference(tf.getStarTime(),
+                // endBooking);
+                double timeDiffBooking = 0;
+                LocalTime midNight = LocalTime.of(23, 59, 59);
+                if (endBooking.equals(midNight)) {
+                    timeDiffBooking = TimeUtils.getTimeDiffMidnight(tf.getStarTime());
+                } else {
+                    timeDiffBooking = calculateTimeDifference(tf.getStarTime(), endBooking);
+                }
                 totalPrice += (int) (timeDiffBooking * pricePerHours);
             } else if (startBooking.isBefore(tf.getStarTime()) && endBooking.isAfter(tf.getEndTime())) {
                 int pricePerHours = -1;
@@ -119,7 +133,7 @@ public class BookingService {
                 return tfps.getFlexible();
             case "fixed":
                 return tfps.getFixed();
-            case "one_time_play":
+            case "one-time play":
                 return tfps.getOneTimePlay();
             default:
                 return 0;
@@ -187,10 +201,16 @@ public class BookingService {
     public String getTotalHoursAllSlot(List<PricePerSlotRequestDTO> bookingSlotList) {
         Duration totalDuration = Duration.ZERO;
         for (PricePerSlotRequestDTO perSlotRequestDTO : bookingSlotList) {
-            Duration duration = Duration.between(perSlotRequestDTO.getStartBooking(),
-                    perSlotRequestDTO.getEndBooking());
-            totalDuration = totalDuration.plus(duration);
-
+            LocalTime midNight = LocalTime.of(23, 59, 59);
+            if (!perSlotRequestDTO.getEndBooking().equals(midNight)) {
+                Duration duration = Duration.between(perSlotRequestDTO.getStartBooking(),
+                        perSlotRequestDTO.getEndBooking());
+                totalDuration = totalDuration.plus(duration);
+            } else {
+                Duration duration = Duration.between(perSlotRequestDTO.getStartBooking(),
+                perSlotRequestDTO.getEndBooking()).plusMinutes(1);
+                totalDuration = totalDuration.plus(duration);
+            }
         }
         return formatDuration(totalDuration);
     }
@@ -207,7 +227,7 @@ public class BookingService {
     public List<BookingSlotResponseDTO> getAllUnpaidBooking(List<PricePerSlotRequestDTO> pricePerSlotRequestDTOs) {
         List<BookingSlotResponseDTO> unpaidBookingList = new ArrayList<>();
         for (PricePerSlotRequestDTO perSlotRequestDTO : pricePerSlotRequestDTOs) {
-            if(perSlotRequestDTO.getStartBooking().isAfter(perSlotRequestDTO.getEndBooking())){
+            if (perSlotRequestDTO.getStartBooking().isAfter(perSlotRequestDTO.getEndBooking())) {
                 LocalTime temp = perSlotRequestDTO.getStartBooking();
                 perSlotRequestDTO.setStartBooking(perSlotRequestDTO.getEndBooking());
                 perSlotRequestDTO.setEndBooking(temp);
@@ -217,9 +237,16 @@ public class BookingService {
                     perSlotRequestDTO.getEndBooking(),
                     perSlotRequestDTO.getBookingDate(),
                     perSlotRequestDTO.getBookingType());
-            Duration duration = Duration.between(perSlotRequestDTO.getStartBooking(),
-                    perSlotRequestDTO.getEndBooking());
-            String playTime = formatDuration(duration);
+            String playTime = "";
+            LocalTime midNight = LocalTime.of(23, 59, 59);
+            if (!perSlotRequestDTO.getEndBooking().equals(midNight)) {
+                Duration duration = Duration.between(perSlotRequestDTO.getStartBooking(),
+                        perSlotRequestDTO.getEndBooking());
+                playTime = formatDuration(duration);
+            } else {
+                playTime = TimeUtils.getTimeDiffMidNightString(perSlotRequestDTO.getStartBooking());
+            }
+            // String playTime = formatDuration(duration);
             unpaidBookingList.add(new BookingSlotResponseDTO(perSlotRequestDTO.getCourtId(),
                     perSlotRequestDTO.getStartBooking(),
                     perSlotRequestDTO.getEndBooking(),
@@ -293,10 +320,10 @@ public class BookingService {
     /*
      * Kiem tra tinh hop le cua thoi gian dat san so voi time frame
      */
-    public List<MessageResponse> checkValidBookingSlot(String clubId, List<PricePerSlotRequestDTO> pricePerSlotRequestDTOs) {
+    public List<MessageResponse> checkValidBookingSlot(String clubId,
+            List<PricePerSlotRequestDTO> pricePerSlotRequestDTOs) {
         List<MessageResponse> invalidMessages = new ArrayList<>();
         List<TimeFrame> timeFrames = bookingRepository.getTimeFrameByClubId(clubId);
-        
 
         for (PricePerSlotRequestDTO perSlotRequestDTO : pricePerSlotRequestDTOs) {
             List<TimeFrame> rangeTimeFrames = new ArrayList<>();
@@ -318,52 +345,60 @@ public class BookingService {
                     isValidEndTime = true;
                     rangeTimeFrames.add(tf);
                 }
-                if(perSlotRequestDTO.getStartBooking().isBefore(tf.getStarTime()) && perSlotRequestDTO.getEndBooking().isAfter(tf.getEndTime())){
+                if (perSlotRequestDTO.getStartBooking().isBefore(tf.getStarTime())
+                        && perSlotRequestDTO.getEndBooking().isAfter(tf.getEndTime())) {
                     rangeTimeFrames.add(tf);
                 }
             }
             List<TimeFrame> uniqueTimeFrames = new ArrayList<>();
-            for(TimeFrame tf: rangeTimeFrames){
-                if(!uniqueTimeFrames.contains(tf)){
+            for (TimeFrame tf : rangeTimeFrames) {
+                if (!uniqueTimeFrames.contains(tf)) {
                     uniqueTimeFrames.add(tf);
                 }
             }
-            if((uniqueTimeFrames.size() > 1)){
+            if ((uniqueTimeFrames.size() > 1)) {
                 TimeFrame preTime = uniqueTimeFrames.get(0);
-                for(int i = 1; i < uniqueTimeFrames.size(); i++){
-                    if(!preTime.getEndTime().equals(uniqueTimeFrames.get(i).getStarTime())){
+                for (int i = 1; i < uniqueTimeFrames.size(); i++) {
+                    if (!preTime.getEndTime().equals(uniqueTimeFrames.get(i).getStarTime())) {
                         isContinous = false;
                     }
                     preTime = uniqueTimeFrames.get(i);
                 }
             }
-            if(isValidStartTime == false || isValidEndTime == false || isContinous == false){
-                invalidMessages.add(new MessageResponse("The booking from " + perSlotRequestDTO.getStartBooking() + " to "+perSlotRequestDTO.getEndBooking()+" is invalid. You can go back schedule to check." ));
+            if (isValidStartTime == false || isValidEndTime == false || isContinous == false) {
+                invalidMessages.add(new MessageResponse("The booking from " + perSlotRequestDTO.getStartBooking()
+                        + " to " + perSlotRequestDTO.getEndBooking()
+                        + " is invalid. You can go back schedule to check."));
             }
-            
+
         }
         return invalidMessages;
 
     }
 
     /*
-     * Lay danh sach tat ca cac booking_slot de hien thi ra man hinh dat lich (onMount)
-    */
-    public List<BookedDTO> getAllBookingSlot(String clubId){
+     * Lay danh sach tat ca cac booking_slot de hien thi ra man hinh dat lich
+     * (onMount)
+     */
+    public List<BookedDTO> getAllBookingSlot(String clubId) {
         List<BookedDTO> list = bookingRepository.getAllBookingSlotByClubId(clubId);
         return list;
     }
 
-    public MessageResponse excutePaymentTransaction(BookingPaymentRequestDTO bookingPaymentRequestDTO){
+    public MessageResponse excutePaymentTransaction(BookingPaymentRequestDTO bookingPaymentRequestDTO) {
         // Goi ham insert booking schedule va lay booking_schedule_id o day
         String scheduleId = bookingRepository.insertBookingSchedule(bookingPaymentRequestDTO.getBookingSchedule());
 
-        // Sau khi co booking_schedule_id, insert tung booking slot voi booking schedule (Ham o day)
-        bookingRepository.insertBookingSlots(bookingPaymentRequestDTO.getBookingSchedule().getBookingSlotResponseDTOs(), scheduleId);
-
+        // Sau khi co booking_schedule_id, insert tung booking slot voi booking schedule
+        // (Ham o day)
+        bookingRepository.insertBookingSlots(bookingPaymentRequestDTO.getBookingSchedule().getBookingSlotResponseDTOs(),
+                scheduleId);
 
         // Tao invoice va insert no vao db o day
-        Invoice invoice = new Invoice(bookingPaymentRequestDTO.getClubName(), bookingPaymentRequestDTO.getCourtManagerPhone(), bookingPaymentRequestDTO.getBookingSchedule().getCustomerPhoneNumber(), bookingPaymentRequestDTO.getClubId(), scheduleId);
+        Invoice invoice = new Invoice(bookingPaymentRequestDTO.getClubName(),
+                bookingPaymentRequestDTO.getCourtManagerPhone(),
+                bookingPaymentRequestDTO.getBookingSchedule().getCustomerPhoneNumber(),
+                bookingPaymentRequestDTO.getClubId(), scheduleId);
         String invoiceId = bookingRepository.insertInvoice(invoice);
 
         // Tao payment va insert no vao db o day
@@ -371,47 +406,50 @@ public class BookingService {
         String paymentId = String.valueOf(timeBasedGenerator);
         bookingPaymentRequestDTO.getPaymentDetail().setPaymentId(paymentId);
         bookingPaymentRequestDTO.getPaymentDetail().setInvoiceId(invoiceId);
-        bookingPaymentRequestDTO.getPaymentDetail().setUserId(bookingPaymentRequestDTO.getBookingSchedule().getCustomerId());
-        if(!bookingPaymentRequestDTO.getBookingSchedule().getScheduleType().equals("Flexible")){
-            bookingPaymentRequestDTO.getPaymentDetail().setAmount(bookingPaymentRequestDTO.getPaymentDetail().getAmount()/100);
+        bookingPaymentRequestDTO.getPaymentDetail()
+                .setUserId(bookingPaymentRequestDTO.getBookingSchedule().getCustomerId());
+        if (!bookingPaymentRequestDTO.getBookingSchedule().getScheduleType().equals("Flexible")) {
+            bookingPaymentRequestDTO.getPaymentDetail()
+                    .setAmount(bookingPaymentRequestDTO.getPaymentDetail().getAmount() / 100);
         } else {
-            int amountMinutes = TimeUtils.convertTimeFormatToMinutes(bookingPaymentRequestDTO.getBookingSchedule().getTotalPlayingTime());
+            int amountMinutes = TimeUtils
+                    .convertTimeFormatToMinutes(bookingPaymentRequestDTO.getBookingSchedule().getTotalPlayingTime());
             bookingPaymentRequestDTO.getPaymentDetail().setAmount(amountMinutes);
         }
-        
+
         bookingRepository.insertPaymentDetail(bookingPaymentRequestDTO.getPaymentDetail());
-        return new MessageResponse("Payment success full");      
+        return new MessageResponse("Payment success full");
     }
 
-    public List<PaymentDetail> getPaymentDetailsHistory(String scheduleId, String scheduleType){
+    public List<PaymentDetail> getPaymentDetailsHistory(String scheduleId, String scheduleType) {
         List<PaymentDetail> paymentDetails = bookingRepository.getPaymentDetails(scheduleId, scheduleType);
-        if(scheduleType.equals("Flexible")){
-            for(PaymentDetail paymentDetail: paymentDetails){
+        if (scheduleType.equals("Flexible")) {
+            for (PaymentDetail paymentDetail : paymentDetails) {
                 paymentDetail.setAmountHourString(TimeUtils.convertMinutestoTimeFormat(paymentDetail.getAmount()));
             }
         }
         return paymentDetails;
     }
 
-    public MessageResponse executePlayTimePayment(PlayableTimePayment playableTimePayment){
+    public MessageResponse executePlayTimePayment(PlayableTimePayment playableTimePayment) {
         MessageResponse mess = new MessageResponse("Payment Fail !");
         /*
          * private String paymentId;
-    private int amount;
-    private int minuteAmount;
-    private String paymentMethod;
-    private LocalDateTime paymentTime;
-    private String customerId;
-    private String badmintonClubId;
-    private String badmintonClubName;
-    private String playHoursMinuteString;
-        */
+         * private int amount;
+         * private int minuteAmount;
+         * private String paymentMethod;
+         * private LocalDateTime paymentTime;
+         * private String customerId;
+         * private String badmintonClubId;
+         * private String badmintonClubName;
+         * private String playHoursMinuteString;
+         */
         int minuteAmount = TimeUtils.convertTimeFormatToMinutes(playableTimePayment.getPlayHoursMinuteString());
         UUID timeBasedGenerator = Generators.timeBasedEpochGenerator().generate();
         String paymentId = String.valueOf(timeBasedGenerator);
         playableTimePayment.setMinuteAmount(minuteAmount);
         playableTimePayment.setPaymentId(paymentId);
-        if(bookingRepository.isPayment(playableTimePayment)){
+        if (bookingRepository.isPayment(playableTimePayment)) {
             mess.setMassage("Payment successfully !");
         }
         return mess;
@@ -420,16 +458,17 @@ public class BookingService {
 
     // THANH TOAN CAP NHAT TRANG THAI CUA BOOKING SLOT
 
-    public boolean isUpdateBookingSchStatus(PaymentUpdateBookingSchedule paymentUpdateBookingSchedule){
+    public boolean isUpdateBookingSchStatus(PaymentUpdateBookingSchedule paymentUpdateBookingSchedule) {
         // updata booking schedule status
         boolean isUpdateStatus;
         try {
-             isUpdateStatus = bookingRepository.isUpdateStatus(paymentUpdateBookingSchedule.getBookingScheduleId(), paymentUpdateBookingSchedule.getBookingScheduleStatus());
+            isUpdateStatus = bookingRepository.isUpdateStatus(paymentUpdateBookingSchedule.getBookingScheduleId(),
+                    paymentUpdateBookingSchedule.getBookingScheduleStatus());
         } catch (Exception e) {
-            System.out.println("Error at isUpdateStatus: "+e);
+            System.out.println("Error at isUpdateStatus: " + e);
             return false;
         }
-        
+
         // inseart invoice
         String bookingScheduleId = paymentUpdateBookingSchedule.getBookingScheduleId();
         paymentUpdateBookingSchedule.getInvoice().setBookingScheduleId(bookingScheduleId);
@@ -439,15 +478,13 @@ public class BookingService {
         String paymentId = String.valueOf(timeBasedGenerator);
         paymentUpdateBookingSchedule.getPaymentDetail().setPaymentId(paymentId);
         paymentUpdateBookingSchedule.getPaymentDetail().setInvoiceId(invoiceId);
-        paymentUpdateBookingSchedule.getPaymentDetail().setAmount(paymentUpdateBookingSchedule.getPaymentDetail().getAmount()/100);
+        paymentUpdateBookingSchedule.getPaymentDetail()
+                .setAmount(paymentUpdateBookingSchedule.getPaymentDetail().getAmount() / 100);
         bookingRepository.insertPaymentDetail(paymentUpdateBookingSchedule.getPaymentDetail());
-        if(isUpdateStatus){
+        if (isUpdateStatus) {
             return true;
         } else {
             return false;
         }
     }
-
-
-
 }

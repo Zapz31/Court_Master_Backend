@@ -4,7 +4,12 @@ package com.swp391.Court_Master.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import com.swp391.Court_Master.Entities.FIlterHistorySchedule;
+import com.swp391.Court_Master.Entities.FilterHistorySchedule;
+import com.swp391.Court_Master.RowMapper.BookingScheduleHistoryRowMapper;
 import com.swp391.Court_Master.RowMapper.ClubHomePageResponseRowMapper;
+import com.swp391.Court_Master.dto.request.Respone.BookingScheduleHistory;
 import com.swp391.Court_Master.dto.request.Respone.ClubHomePageResponse;
 
 import java.sql.Time;
@@ -140,4 +145,40 @@ public class FilterService {
         return jdbcTemplate.query(query, params.toArray(), new ClubHomePageResponseRowMapper());
 
     }
+
+    /*
+     * Filter bookingSchedule trong booking history 
+    */
+    public List<BookingScheduleHistory> getFilterBookingScheduleHis(FilterHistorySchedule filterHistorySchedule){
+        StringBuilder sqlFilter = new StringBuilder("select iv.badminton_club_name, iv.court_manager_phone, bs.booking_schedule_id, bs.booking_schedule_status, bs.start_date, bs.end_date, bs.schedule_type, bs.total_price, bs.total_playing_time, iv.booking_phone_number from booking_schedule bs\r\n" + //
+                        "inner join invoice iv on bs.booking_schedule_id = iv.booking_schedule_id\r\n" + //
+                        "where bs.customer_id = ?");
+        List<Object> params = new ArrayList<>();
+        params.add(filterHistorySchedule.getCustomerId());
+
+        if(filterHistorySchedule.getClubNameOrCMPhone()!=null){
+            sqlFilter.append(" and (iv.badminton_club_name like ? or iv.court_manager_phone like ?)");
+            params.add("%"+filterHistorySchedule.getClubNameOrCMPhone()+"%");
+            params.add("%"+filterHistorySchedule.getClubNameOrCMPhone()+"%");
+        }
+
+        if(filterHistorySchedule.getStartDate()!=null){
+            sqlFilter.append(" and bs.start_date = ?");
+            params.add(filterHistorySchedule.getStartDate());
+        }
+
+        if(filterHistorySchedule.getEndDate()!=null){
+            sqlFilter.append(" and bs.end_date = ?");
+            params.add(filterHistorySchedule.getEndDate());
+        }
+        if(filterHistorySchedule.getScheduleType()!=null){
+            sqlFilter.append(" and bs.schedule_type = ?");
+            params.add(filterHistorySchedule.getScheduleType());
+        }
+
+        String query = sqlFilter.toString();
+        return jdbcTemplate.query(query, params.toArray(), new BookingScheduleHistoryRowMapper());
+
+    }
+
 }
