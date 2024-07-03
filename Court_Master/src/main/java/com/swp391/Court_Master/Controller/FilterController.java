@@ -10,6 +10,8 @@ import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,7 @@ import com.swp391.Court_Master.dto.request.Request.FilterRequstDTO;
 import com.swp391.Court_Master.dto.request.Respone.BookingScheduleHistory;
 import com.swp391.Court_Master.dto.request.Respone.ClubHomePageResponse;
 import com.swp391.Court_Master.dto.request.Respone.DistrictFullNameResponse;
+import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.ProvincesFullNameResponse;
 import com.swp391.Court_Master.dto.request.Respone.WardsFullNameResponse;
 
@@ -137,6 +140,20 @@ public class FilterController {
         }
         return ResponseEntity.ok().body(list);
     }
+
+    @PostMapping("/history/remove/booking-schedule")
+    public ResponseEntity<MessageResponse> postMethodName(@RequestBody Map<String, List<String>> bookingScheduleMap) {
+        MessageResponse mess = new MessageResponse("");
+        List<String> bookingScheduleIDs = bookingScheduleMap.get("bookingScheduleIds");
+        if(filterService.removeBookingScheduleHistories(bookingScheduleIDs)){
+            mess.setMassage("Remove success !");
+        } else {
+            mess.setMassage("Remove Failed");
+        }
+        
+        return ResponseEntity.ok().body(mess);
+    }
+    
     
 
 }
