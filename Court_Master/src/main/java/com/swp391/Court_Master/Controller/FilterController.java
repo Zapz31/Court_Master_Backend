@@ -21,6 +21,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.swp391.Court_Master.Entities.BookedDTO;
+import com.swp391.Court_Master.Entities.BookingSlotFilterRequest;
 import com.swp391.Court_Master.Entities.FilterHistorySchedule;
 import com.swp391.Court_Master.Service.AddressService;
 import com.swp391.Court_Master.Service.FilterService;
@@ -153,6 +155,15 @@ public class FilterController {
         
         return ResponseEntity.ok().body(mess);
     }
+
+
+    // FILTER CHO BOOKING SLOTS 
+    @PostMapping("/history/booking-slots")
+    public ResponseEntity<List<BookedDTO>> getFilterBookingSlots(@RequestBody BookingSlotFilterRequest bookingSlotFilterRequest) {
+        List<BookedDTO> list = filterService.getFilterBookingSlots(bookingSlotFilterRequest);
+        return ResponseEntity.ok().body(list);
+    }
+    
     
     
 

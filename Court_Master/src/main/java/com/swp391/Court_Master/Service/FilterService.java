@@ -5,8 +5,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.swp391.Court_Master.Entities.BookedDTO;
+import com.swp391.Court_Master.Entities.BookingSlotFilterRequest;
 import com.swp391.Court_Master.Entities.FilterHistorySchedule;
 import com.swp391.Court_Master.Entities.FilterHistorySchedule;
+import com.swp391.Court_Master.RowMapper.BookedDTOHistoryRowMapper;
 import com.swp391.Court_Master.RowMapper.BookingScheduleHistoryRowMapper;
 import com.swp391.Court_Master.RowMapper.ClubHomePageResponseRowMapper;
 import com.swp391.Court_Master.dto.request.Respone.BookingScheduleHistory;
@@ -15,6 +18,8 @@ import com.swp391.Court_Master.dto.request.Respone.ClubHomePageResponse;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -224,6 +229,47 @@ public class FilterService {
             return false;
         }
 
+    }
+
+    // Filter cho booking slot
+    public List<BookedDTO> getFilterBookingSlots(BookingSlotFilterRequest bookingSlotFilterRequest){
+        StringBuilder sqlFilter = new StringBuilder("select bs.booking_slot_id, bs.start_time, bs.end_time, bs.booking_date, bs.is_check_in, price, bs.badminton_court_id, bc.badminton_court_name from  booking_slot bs\r\n" + //
+                        "inner join badminton_court bc on bs.badminton_court_id = bc.badminton_court_id\r\n" + //
+                        "where booking_schedule_id = ?");
+        List<Object> params = new ArrayList<>();
+        params.add(bookingSlotFilterRequest.getBookingScheduleId());
+
+        if(bookingSlotFilterRequest.getStartTime()!=null){
+            sqlFilter.append(" and bs.start_time = ?");
+            params.add(bookingSlotFilterRequest.getStartTime());
+        }
+
+        if(bookingSlotFilterRequest.getEndTime()!=null){
+            sqlFilter.append(" and bs.end_time = ?");
+            params.add(bookingSlotFilterRequest.getEndTime());
+        }
+        
+        if(bookingSlotFilterRequest.getBookingDate() != null){
+            sqlFilter.append(" and bs.booking_date = ?");
+            params.add(bookingSlotFilterRequest.getBookingDate());
+        }
+
+        if(bookingSlotFilterRequest.getIsCheckIn() != 2){
+            sqlFilter.append(" and bs.is_check_in = ?");
+            params.add(bookingSlotFilterRequest.getIsCheckIn());
+        }
+
+        List<BookedDTO> list = jdbcTemplate.query(sqlFilter.toString(), params.toArray(), new BookedDTOHistoryRowMapper());
+
+        Collections.sort(list, new Comparator<BookedDTO>() {
+
+            @Override
+            public int compare(BookedDTO o1, BookedDTO o2) {
+                return o1.getStartTime().compareTo(o2.getStartTime());
+            }
+            
+        });
+        return list;
     }
 
 }
