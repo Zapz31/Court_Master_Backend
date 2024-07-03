@@ -133,7 +133,7 @@ public class BookingService {
                 return tfps.getFlexible();
             case "fixed":
                 return tfps.getFixed();
-            case "one-time play":
+            case "one_time_play":
                 return tfps.getOneTimePlay();
             default:
                 return 0;
