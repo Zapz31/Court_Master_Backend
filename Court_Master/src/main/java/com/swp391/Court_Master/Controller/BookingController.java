@@ -69,6 +69,9 @@ public class BookingController {
     @PostMapping("/payment-handle")
     // @PreAuthorize("hasAuthority('USER_CUSTOMER')")
     public ResponseEntity<MessageResponse> handlePayment(@RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO){
+        if(bookingPaymentRequestDTO.getBookingSchedule().getEndDate() == null){
+            bookingPaymentRequestDTO.getBookingSchedule().setEndDate(bookingPaymentRequestDTO.getBookingSchedule().getStartDate());
+        }
         MessageResponse messageResponse = new MessageResponse("Payment success");
         if(bookingPaymentRequestDTO.getBookingSchedule().getStartDate().isAfter(bookingPaymentRequestDTO.getBookingSchedule().getEndDate())){
             messageResponse.setMassage("Invalid start and end dates");
