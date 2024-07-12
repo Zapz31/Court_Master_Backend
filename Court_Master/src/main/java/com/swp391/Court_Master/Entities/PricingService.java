@@ -5,6 +5,7 @@ public class PricingService {
     private int flexible;
     private int fixed;
     private int oneTimePlay;
+    private String timeFrameId;
 
     
     
@@ -16,6 +17,15 @@ public class PricingService {
         this.fixed = fixed;
         this.oneTimePlay = oneTimePlay;
     }
+    
+    public PricingService(String dateOfWeek, int flexible, int fixed, int oneTimePlay, String timeFrameId) {
+        this.dateOfWeek = dateOfWeek;
+        this.flexible = flexible;
+        this.fixed = fixed;
+        this.oneTimePlay = oneTimePlay;
+        this.timeFrameId = timeFrameId;
+    }
+    
     public String getDateOfWeek() {
         return dateOfWeek;
     }
@@ -39,6 +49,12 @@ public class PricingService {
     }
     public void setOneTimePlay(int oneTimePlay) {
         this.oneTimePlay = oneTimePlay;
+    }
+    public String getTimeFrameId() {
+        return timeFrameId;
+    }
+    public void setTimeFrameId(String timeFrameId) {
+        this.timeFrameId = timeFrameId;
     }
 
     

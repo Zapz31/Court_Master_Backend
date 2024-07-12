@@ -67,7 +67,7 @@ public class FilterService {
         }
 
         if (district != null) {
-            queryBuilder.append("and ad.district like N'%' + ? + '%'");
+            queryBuilder.append("and ad.district like N'%' + ? + '%'"); //and ad.district like N'%' + ? + '%'
             params.add(district);
         }
 

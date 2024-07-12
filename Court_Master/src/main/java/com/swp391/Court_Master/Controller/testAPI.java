@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.swp391.Court_Master.Entities.BadmintonClubImage;
 import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Entities.BookingSchedule;
 import com.swp391.Court_Master.Entities.TimeFrame;
@@ -11,18 +13,23 @@ import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Repository.ClubRepository;
 import com.swp391.Court_Master.Repository.DetailClubRepository;
 import com.swp391.Court_Master.Service.BookingService;
+import com.swp391.Court_Master.Service.ClubRegisterService;
 import com.swp391.Court_Master.Service.DetailPageService;
 import com.swp391.Court_Master.dto.request.Request.BookingSlotRequest;
+import com.swp391.Court_Master.dto.request.Request.ClubRegisterDTO;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
 import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.ImageResponseDTO;
+import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +41,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 
 @RestController
 @RequestMapping("/api/test")
@@ -53,6 +61,12 @@ public class testAPI {
 
     @Autowired
     private ClubRepository clubRepository;
+
+    @Autowired
+    private ClubRegisterService clubRegisterService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @GetMapping("/all")
     public String allAccess() {
@@ -120,26 +134,29 @@ public class testAPI {
         return ResponseEntity.ok().body(playTimeTotal);
     }
 
-    @PostMapping("/uploadclubimage")
-    public ResponseEntity<String> uploadClubImages(@RequestParam("image") MultipartFile file,
-            @RequestParam("isMainAvatar") int isMainAvatar, @RequestParam("clubId") String clubId) {
-        File clubImages = new File("club-image");
-        String clubImagesAbsolutePath = clubImages.getAbsolutePath() + "/";
-        try {
-            // Lưu tệp ảnh vào thư mục đã định nghĩa
-            String fileName = file.getOriginalFilename();
-            Path path = Paths.get(clubImagesAbsolutePath, fileName);
-            Files.write(path, file.getBytes());
+    /*
+     * Ham goc dung de luu hinh anh vao file hinh anh
+     */
+    // @PostMapping("/uploadclubimage")
+    // public ResponseEntity<String> uploadClubImages(@RequestParam("image") MultipartFile file,
+    //         @RequestParam("isMainAvatar") int isMainAvatar, @RequestParam("clubId") String clubId) {
+    //     File clubImages = new File("club-image");
+    //     String clubImagesAbsolutePath = clubImages.getAbsolutePath() + "/";
+    //     try {
+    //         // Lưu tệp ảnh vào thư mục đã định nghĩa
+    //         String fileName = file.getOriginalFilename();
+    //         Path path = Paths.get(clubImagesAbsolutePath, fileName);
+    //         Files.write(path, file.getBytes());
 
-            // Lưu tên ảnh và định dạng vào cơ sở dữ liệu
-            String result = clubRepository.saveImageNameToDB(fileName, isMainAvatar, clubId);
+    //         // Lưu tên ảnh và định dạng vào cơ sở dữ liệu
+    //         String result = clubRepository.saveImageNameToDB(fileName, isMainAvatar, clubId);
 
-            return ResponseEntity.ok(result);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Lỗi khi tải lên ảnh: " + e.getMessage());
-        }
-    }
+    //         return ResponseEntity.ok(result);
+    //     } catch (IOException e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //                 .body("Lỗi khi tải lên ảnh: " + e.getMessage());
+    //     }
+    // }
 
     @PostMapping("/getBookedListByCourtId")
     public ResponseEntity<List<BookedDTO>> getBookedListByCourtId(
@@ -180,6 +197,56 @@ public class testAPI {
         bookingRepository.insertBookingSlots(entity.getBookingSlotResponseDTOs(), "SD0000003");
         return ResponseEntity.ok().body("insert successfully");
     }
+
+    @PostMapping("/register-club")
+    public ResponseEntity<MessageResponse> postMethodName(@RequestPart("clubData") String clubDataJson,
+                                 @RequestParam("images") List<MultipartFile> images,
+                                 @RequestParam("avatar") MultipartFile avatar) throws IOException{
+        
+        String decodedBody = URLDecoder.decode(clubDataJson, "UTF-8");
+        
+        ClubRegisterDTO clubRegisterDTO = objectMapper.readValue(decodedBody, ClubRegisterDTO.class);
+
+        MessageResponse mess = new MessageResponse("ok");
+        List<BadmintonClubImage> imageList = new ArrayList<>();
+        BadmintonClubImage avatarImage = new BadmintonClubImage(avatar.getOriginalFilename());
+        if(!images.isEmpty() || images != null){
+            for(int i = 0; i < images.size(); i++){
+                MultipartFile image = images.get(i);
+                String imageName = image.getOriginalFilename();
+                imageList.add( new BadmintonClubImage(imageName));
+                uploadClubImages(image);
+            }
+        }
+        if(avatar != null || !avatar.isEmpty()){
+            uploadClubImages(avatar);
+        }
+
+        boolean isInsert = clubRegisterService.isRegisterClub(clubRegisterDTO, imageList, avatarImage);
+        if(isInsert){
+            mess.setMassage("Register club success");
+        } else {
+            mess.setMassage("Register club failed");
+        }   
+        return ResponseEntity.ok().body(mess);
+    }
+
+
+    public void uploadClubImages(MultipartFile file) {
+        File clubImages = new File("club-image");
+        String clubImagesAbsolutePath = clubImages.getAbsolutePath() + "/";
+        try {
+            // Lưu tệp ảnh vào thư mục đã định nghĩa
+            String fileName = file.getOriginalFilename();
+            Path path = Paths.get(clubImagesAbsolutePath, fileName);
+            Files.write(path, file.getBytes());
+
+
+        } catch (IOException e) {
+            System.out.println("Error at uploadClubImages in testAPI: " + e.getMessage());
+        }
+    }
+    
 
   
 

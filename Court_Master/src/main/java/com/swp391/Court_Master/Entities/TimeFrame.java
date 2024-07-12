@@ -8,6 +8,8 @@ public class TimeFrame {
     private LocalTime starTime;
     private LocalTime endTime;
     private List<PricingService> PricingServiceList;
+    private List<PricingService> clubPricingRegister;
+    private String clubId;
 
     
     public TimeFrame() {
@@ -19,6 +21,7 @@ public class TimeFrame {
         this.endTime = endTime;
     }
     
+
     public String getTimeFrameId() {
         return timeFrameId;
     }
@@ -44,6 +47,22 @@ public class TimeFrame {
 
     public void setPricingServiceList(List<PricingService> pricingServiceList) {
         PricingServiceList = pricingServiceList;
+    }
+
+    public List<PricingService> getClubPricingRegister() {
+        return clubPricingRegister;
+    }
+
+    public void setClubPricingRegister(List<PricingService> clubPricingRegister) {
+        this.clubPricingRegister = clubPricingRegister;
+    }
+
+    public String getClubId() {
+        return clubId;
+    }
+
+    public void setClubId(String clubId) {
+        this.clubId = clubId;
     }
 
     
