@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 
 @RestController
 @RequestMapping("/api/test")
@@ -198,55 +197,6 @@ public class testAPI {
         return ResponseEntity.ok().body("insert successfully");
     }
 
-    @PostMapping("/register-club")
-    public ResponseEntity<MessageResponse> postMethodName(@RequestPart("clubData") String clubDataJson,
-                                 @RequestParam("images") List<MultipartFile> images,
-                                 @RequestParam("avatar") MultipartFile avatar) throws IOException{
-        
-        String decodedBody = URLDecoder.decode(clubDataJson, "UTF-8");
-        
-        ClubRegisterDTO clubRegisterDTO = objectMapper.readValue(decodedBody, ClubRegisterDTO.class);
-
-        MessageResponse mess = new MessageResponse("ok");
-        List<BadmintonClubImage> imageList = new ArrayList<>();
-        BadmintonClubImage avatarImage = new BadmintonClubImage(avatar.getOriginalFilename());
-        if(!images.isEmpty() || images != null){
-            for(int i = 0; i < images.size(); i++){
-                MultipartFile image = images.get(i);
-                String imageName = image.getOriginalFilename();
-                imageList.add( new BadmintonClubImage(imageName));
-                uploadClubImages(image);
-            }
-        }
-        if(avatar != null || !avatar.isEmpty()){
-            uploadClubImages(avatar);
-        }
-
-        boolean isInsert = clubRegisterService.isRegisterClub(clubRegisterDTO, imageList, avatarImage);
-        if(isInsert){
-            mess.setMassage("Register club success");
-        } else {
-            mess.setMassage("Register club failed");
-        }   
-        return ResponseEntity.ok().body(mess);
-    }
-
-
-    public void uploadClubImages(MultipartFile file) {
-        File clubImages = new File("club-image");
-        String clubImagesAbsolutePath = clubImages.getAbsolutePath() + "/";
-        try {
-            // Lưu tệp ảnh vào thư mục đã định nghĩa
-            String fileName = file.getOriginalFilename();
-            Path path = Paths.get(clubImagesAbsolutePath, fileName);
-            Files.write(path, file.getBytes());
-
-
-        } catch (IOException e) {
-            System.out.println("Error at uploadClubImages in testAPI: " + e.getMessage());
-        }
-    }
-    
     @PostMapping("/staffCheckIn")
     public String postMethodName(@RequestParam("slotId") String slotId) {
         //TODO: process POST request

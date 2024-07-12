@@ -11,9 +11,9 @@ import com.swp391.Court_Master.Entities.BadmintonClubImage;
 import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.Entities.PricingService;
 import com.swp391.Court_Master.Entities.TimeFrame;
-import com.swp391.Court_Master.FunctionTest.PricingRuleDTO;
 import com.swp391.Court_Master.Repository.ClubRegisterRepository;
 import com.swp391.Court_Master.dto.request.Request.ClubRegisterDTO;
+import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 
 @Service
 public class ClubRegisterService {
@@ -21,9 +21,17 @@ public class ClubRegisterService {
     private ClubRegisterRepository clubRegisterRepository;
 
     @Transactional
-    public boolean isRegisterClub(ClubRegisterDTO clubRegisterDTO, List<BadmintonClubImage> images, BadmintonClubImage mainAvatar){
-        boolean isRegiter = true;
+    public MessageResponse isRegisterClub(ClubRegisterDTO clubRegisterDTO, List<BadmintonClubImage> images, BadmintonClubImage mainAvatar){
+        MessageResponse mess = new MessageResponse("register success");
         List<TimeFrame> setTimeFrames = new ArrayList<>();
+
+        //============================== KIEM TRA XEM COURTMANAGER DO CO DANG KY CLUB NAO CHUA==========================
+         List<String> clubIdOfMng = clubRegisterRepository.isClubExList(clubRegisterDTO.getBadmintonClub().getCourtManagerId());
+         if(!clubIdOfMng.isEmpty()){
+            mess.setMassage("clubExist:" + clubIdOfMng.get(0));
+            return mess;
+         }
+
         //============================== SETUP FOREIGN KEY==========================
         // 1> Lay tat ca danh sach cac id can thiet
         List<String> addressIdList = clubRegisterRepository.getAllAddressIds();
@@ -84,7 +92,7 @@ public class ClubRegisterService {
         //     System.out.println("Error at isRegisterClub in clubRegisterService: " + e.getMessage());
         //     return false;
         // }
-        return isRegiter;
+        return mess;
     }
 
     // Ham lay ra id lon nhat (danh sach id, tien to truoc id, do dai id)

@@ -187,11 +187,14 @@ public class ClubRegisterRepository {
         } catch (Exception e) {
             System.out.println("Error at insertTimeFrame in ClubRegisterRepository: " + e.getMessage());
         }
-        
-
-
-
     }
 
+    public List<String> isClubExList(String courtManagerId){
+        String sql = "select bcl.badminton_club_name from authenticated_user au \r\n" + //
+                        "inner join badminton_club bcl on au.user_id = bcl.court_manager_id\r\n" + //
+                        "where au.user_id = ?";
+        return jdbcTemplate.queryForList(sql, String.class, courtManagerId);
+    }
+    
 
 }
