@@ -247,7 +247,16 @@ public class testAPI {
         }
     }
     
-
+    @PostMapping("/staffCheckIn")
+    public String postMethodName(@RequestParam("slotId") String slotId) {
+        //TODO: process POST request
+        
+        if(bookingRepository.isUpdateCheckIn(slotId)){
+            return "success";
+        }
+        return "false";
+    }
+    
   
 
     
