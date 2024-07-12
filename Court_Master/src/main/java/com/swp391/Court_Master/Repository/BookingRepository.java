@@ -496,5 +496,9 @@ public class BookingRepository {
             return false;
         }
     }
+    //Staff xac nhan khach da check in
+    public boolean isUpdateCheckIn(){
+        return true;
+    }
 
 }
