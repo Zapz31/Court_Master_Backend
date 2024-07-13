@@ -508,7 +508,7 @@ public class BookingRepository {
             }
         };
         int updateRow = jdbcTemplate.update(sql, pss);
-        if(updateRow>0){
+        if(updateRow > 0){
             return true;
         } else {
             return false;
