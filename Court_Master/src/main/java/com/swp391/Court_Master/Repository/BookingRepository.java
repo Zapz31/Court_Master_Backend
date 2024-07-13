@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Entities.BookingSchedule;
+import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.Entities.Invoice;
 import com.swp391.Court_Master.Entities.PaymentDetail;
 import com.swp391.Court_Master.Entities.PlayableTimePayment;
@@ -513,6 +515,11 @@ public class BookingRepository {
         } else {
             return false;
         }
+    }
+
+    //Staff kiem tra san trong
+    public List<Court> bookedCourts (String clubId, LocalTime startTime, LocalTime endTime, LocalDate booking_date){
+        return null;
     }
 
 }
