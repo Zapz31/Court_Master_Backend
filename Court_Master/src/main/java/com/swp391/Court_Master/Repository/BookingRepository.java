@@ -517,9 +517,6 @@ public class BookingRepository {
         }
     }
 
-    //Staff kiem tra san trong
-    public List<Court> bookedCourts (String clubId, LocalTime startTime, LocalTime endTime, LocalDate booking_date){
-        return null;
-    }
+
 
 }
