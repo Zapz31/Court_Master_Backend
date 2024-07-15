@@ -21,6 +21,25 @@ public class StaffRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+        //Staff xac nhan khach da check in
+        public boolean isUpdateCheckIn(String bookingSlotId){
+            String sql = "UPDATE booking_slot\r\n" + //
+                            "SET is_check_in ='1'\r\n" + //
+                            "wHERE booking_slot_id = ?";
+            PreparedStatementSetter pss = new PreparedStatementSetter() {        
+                @Override
+                public void setValues(PreparedStatement ps) throws SQLException{
+                    ps.setString(1, bookingSlotId);
+                }
+            };
+            int updateRow = jdbcTemplate.update(sql, pss);
+            if(updateRow > 0){
+                return true;
+            } else {
+                return false;
+            }
+        }
+
     // Staff kiem tra san trong
     public List<Court> bookedCourts(String clubId, LocalDate booking_date, LocalTime start_time, LocalTime end_time) {
         String sql = "SELECT \r\n" + //

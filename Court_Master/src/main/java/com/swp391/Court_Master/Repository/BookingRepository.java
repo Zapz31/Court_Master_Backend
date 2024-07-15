@@ -498,25 +498,5 @@ public class BookingRepository {
             return false;
         }
     }
-    //Staff xac nhan khach da check in
-    public boolean isUpdateCheckIn(String bookingSlotId){
-        String sql = "UPDATE booking_slot\r\n" + //
-                        "SET is_check_in ='1'\r\n" + //
-                        "wHERE booking_slot_id = ?";
-        PreparedStatementSetter pss = new PreparedStatementSetter() {        
-            @Override
-            public void setValues(PreparedStatement ps) throws SQLException{
-                ps.setString(1, bookingSlotId);
-            }
-        };
-        int updateRow = jdbcTemplate.update(sql, pss);
-        if(updateRow > 0){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
 
 }
