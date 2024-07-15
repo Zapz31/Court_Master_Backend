@@ -12,6 +12,7 @@ import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Repository.ClubRepository;
 import com.swp391.Court_Master.Repository.DetailClubRepository;
+import com.swp391.Court_Master.Repository.StaffRepository;
 import com.swp391.Court_Master.Service.BookingService;
 import com.swp391.Court_Master.Service.ClubRegisterService;
 import com.swp391.Court_Master.Service.DetailPageService;
@@ -54,6 +55,9 @@ public class testAPI {
 
     @Autowired
     private BookingRepository bookingRepository;
+
+    @Autowired
+    private StaffRepository staffRepository;
 
     @Autowired
     private BookingService bookingService;
@@ -201,7 +205,7 @@ public class testAPI {
     public String postMethodName(@RequestParam("slotId") String slotId) {
         //TODO: process POST request
         
-        if(bookingRepository.isUpdateCheckIn(slotId)){
+        if(staffRepository.isUpdateCheckIn(slotId)){
             return "success";
         }
         return "false";
