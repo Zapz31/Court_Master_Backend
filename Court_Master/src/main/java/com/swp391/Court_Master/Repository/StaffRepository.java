@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
+import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Entities.Court;
+import com.swp391.Court_Master.RowMapper.BookedDTORowMapper;
 
 @Repository
 public class StaffRepository {
@@ -41,7 +43,7 @@ public class StaffRepository {
         }
 
     // Staff kiem tra san trong
-    public List<Court> bookedCourts(String clubId, LocalDate booking_date, LocalTime start_time, LocalTime end_time) {
+    public List<BookedDTO> bookedCourts(String clubId, LocalDate booking_date, LocalTime start_time, LocalTime end_time) {
         String sql = "SELECT \r\n" + //
                 "    bs.badminton_court_id,\r\n" + //
                 "    bc.badminton_court_name,\r\n" + //
@@ -77,8 +79,7 @@ public class StaffRepository {
 
             }
         };
-        // return jdbcTemplate.query(sql,pss,      );
-        return null;
+        return jdbcTemplate.query(sql,pss,new BookedDTORowMapper());
     }
 
 }
