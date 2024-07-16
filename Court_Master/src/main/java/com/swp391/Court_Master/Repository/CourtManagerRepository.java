@@ -18,27 +18,61 @@ public class CourtManagerRepository {
 
     // Staff quan ly thong tin cua club
     // Update thong tin cua club
-    public String updateClubInfo(String name, String description, int status, String clubId) {
-        String notice = "Update club information failed";
-        String updateSQL = "UPDATE badminton_club\r\n" + //
-                "SET badminton_club_name='?',\r\n" + //
-                "description='?',\r\n" + //
-                "badminton_club_status=?\r\n" + //
-                "WHERE badminton_club_id='?'";
+    public boolean updateClubInfo(String name, String description, Integer status, String clubId) {
+        StringBuilder updateSQL = new StringBuilder("UPDATE badminton_club SET ");
+        boolean first = true;
+
+        if (name != null) {
+            updateSQL.append("badminton_club_name = ?");
+            first = false;
+        }
+
+        if (description != null) {
+            if (!first) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("description = ?");
+            first = false;
+        }
+
+        if (status != null) {
+            if (!first) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("badminton_club_status = ?");
+            first = false;
+        }
+
+        // If no parameters are set to update, return false
+        if (first) {
+            return false;
+        }
+
+        updateSQL.append(" WHERE badminton_club_id = ?");
+
         PreparedStatementSetter pss = new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
-                ps.setString(1, name);
-                ps.setString(2, description);
-                ps.setInt(3, status);
-                ps.setString(4, clubId);
+                int index = 1;
+
+                if (name != null) {
+                    ps.setString(index++, name);
+                }
+                if (description != null) {
+                    ps.setString(index++, description);
+                }
+                if (status != null) {
+                    ps.setInt(index++, status);
+                }
+    
+                ps.setString(index, clubId);
             }
         };
-        int updateRow = jdbcTemplate.update(updateSQL, pss);
+        int updateRow = jdbcTemplate.update(updateSQL.toString(), pss);
         if (updateRow > 0) {
-            return notice ="Update club information succcessfully";
+            return true;
         } else {
-            return notice;
+            return false;
         }
     }
 

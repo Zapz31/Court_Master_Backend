@@ -8,9 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swp391.Court_Master.Entities.BadmintonClubImage;
 import com.swp391.Court_Master.Entities.BookedDTO;
 import com.swp391.Court_Master.Entities.BookingSchedule;
+import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Repository.ClubRepository;
+import com.swp391.Court_Master.Repository.CourtManagerRepository;
 import com.swp391.Court_Master.Repository.DetailClubRepository;
 import com.swp391.Court_Master.Repository.StaffRepository;
 import com.swp391.Court_Master.Service.BookingService;
@@ -62,6 +64,9 @@ public class testAPI {
 
     @Autowired
     private StaffRepository staffRepository;
+    
+    @Autowired
+    private CourtManagerRepository courtManagerRepository;
 
     @Autowired
     private BookingService bookingService;
@@ -206,14 +211,15 @@ public class testAPI {
     }
 
     @PostMapping("/staffCheckIn")
-    public String postMethodName(@RequestParam("slotId") String slotId) {
-        //TODO: process POST request
+    public String staffCheckin(@RequestParam("slotId") String slotId) {
         
         if(staffRepository.isUpdateCheckIn(slotId)){
             return "success";
         }
         return "false";
     }
+
+
 
     @PostMapping("/staffAvailability")
     //Ham nay gui 4 tham so va yeu cau tra ve danh sach cac slot nam trong khoang thoi gian cua court
@@ -223,6 +229,17 @@ public class testAPI {
         return ResponseEntity.ok().body("check availability successfully");
 
     }
+
+    //phai de request body, k dc de 4 tham so
+    @PostMapping("/managerUpdateInfo")
+    public String managerUpdateInfo(@RequestParam("name") String name,@RequestParam("description") String description,
+    @RequestParam("status") Integer status,@RequestParam("clubId") String clubId) {
+        if(courtManagerRepository.updateClubInfo(name, description, status, clubId)){
+            return "true";
+        };
+        return "false";
+    }
+    
   
     }
     
