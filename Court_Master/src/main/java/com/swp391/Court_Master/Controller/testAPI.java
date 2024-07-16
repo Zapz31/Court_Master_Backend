@@ -30,6 +30,10 @@ import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -210,10 +214,15 @@ public class testAPI {
         }
         return "false";
     }
-    
+
+    @PostMapping("/staffAvailability")
+    //Ham nay gui 4 tham so va yeu cau tra ve danh sach cac slot nam trong khoang thoi gian cua court
+    public ResponseEntity<String> checkAvailability(@RequestBody BookedDTO Entity){
+        //Con phai sua
+        staffRepository.bookedCourts("C0000001", LocalDate.of(2024, 7, 9),LocalTime.of(18, 0,0),LocalTime.of(23, 0, 0));
+        return ResponseEntity.ok().body("check availability successfully");
+
+    }
   
-
+    }
     
-    
-
-}

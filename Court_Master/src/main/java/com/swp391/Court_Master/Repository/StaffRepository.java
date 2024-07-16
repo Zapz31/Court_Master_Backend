@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
-import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.RowMapper.BookedDTORowMapper;
 
 @Repository
@@ -81,5 +80,6 @@ public class StaffRepository {
         };
         return jdbcTemplate.query(sql,pss,new BookedDTORowMapper());
     }
+
 
 }
