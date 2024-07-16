@@ -18,6 +18,8 @@ public class CourtManagerRepository {
 
     // Staff quan ly thong tin cua club
     // Update thong tin cua club
+    //Phai them phan cap nhat dia chi cho club
+    //La post clubId get AddressID, sua dia chi trong table Address
     public boolean updateClubInfo(String name, String description, Integer status, String clubId) {
         StringBuilder updateSQL = new StringBuilder("UPDATE badminton_club SET ");
         boolean first = true;
