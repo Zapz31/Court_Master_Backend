@@ -78,4 +78,8 @@ public class CourtManagerRepository {
         }
     }
 
+    public boolean updateClubAddress(String clubId, String addressId){
+        return false;
+    }
+
 }
