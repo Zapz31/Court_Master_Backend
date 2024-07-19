@@ -18,35 +18,35 @@ public class CourtManagerRepository {
 
     // Staff quan ly thong tin cua club
     // Update thong tin cua club
-    //Phai them phan cap nhat dia chi cho club
-    //La post clubId get AddressID, sua dia chi trong table Address
+    // Phai them phan cap nhat dia chi cho club
+    // La post clubId get AddressID, sua dia chi trong table Address
     public boolean updateClubInfo(String name, String description, Integer status, String clubId) {
-        StringBuilder updateSQL = new StringBuilder("UPDATE badminton_club SET ");
-        boolean first = true;
+        StringBuilder updateSQL = new StringBuilder("UPDATE [Court_Master].[dbo].[badminton_club] SET ");
+        boolean end = true;
 
         if (name != null) {
             updateSQL.append("badminton_club_name = ?");
-            first = false;
+            end = false;
         }
 
         if (description != null) {
-            if (!first) {
+            if (!end) {
                 updateSQL.append(", ");
             }
             updateSQL.append("description = ?");
-            first = false;
+            end = false;
         }
 
         if (status != null) {
-            if (!first) {
+            if (!end) {
                 updateSQL.append(", ");
             }
             updateSQL.append("badminton_club_status = ?");
-            first = false;
+            end = false;
         }
 
         // If no parameters are set to update, return false
-        if (first) {
+        if (end) {
             return false;
         }
 
@@ -66,7 +66,7 @@ public class CourtManagerRepository {
                 if (status != null) {
                     ps.setInt(index++, status);
                 }
-    
+
                 ps.setString(index, clubId);
             }
         };
@@ -78,8 +78,75 @@ public class CourtManagerRepository {
         }
     }
 
-    public boolean updateClubAddress(String clubId, String addressId){
-        return false;
+    public boolean updateClubAddress(String addressId, String unit_number, String ward, String district,
+            String province) {
+        StringBuilder updateSQL = new StringBuilder("UPDATE [Court_Master].[dbo].[address] SET ");
+        boolean end = true;
+
+        if (unit_number != null) {
+            updateSQL.append("unit_number = ?");
+            end = false;
+        }
+
+        if (ward != null) {
+            if (!end) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("ward = ?");
+            end = false;
+        }
+
+        if (district != null) {
+            if (!end) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("district = ?");
+            end = false;
+        }
+
+        if (province != null) {
+            if (!end) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("province = ?");
+            end = false;
+        }
+
+        // If no parameters are set to update, return false
+        if (end) {
+            return false;
+        }
+
+        updateSQL.append(" WHERE address_id = ?");
+
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                int index = 1;
+
+                if (unit_number != null) {
+                    ps.setString(index++, unit_number);
+                }
+                if (ward != null) {
+                    ps.setString(index++, ward);
+                }
+                if (district != null) {
+                    ps.setString(index++, district);
+                }
+                if (province != null) {
+                    ps.setString(index++, province);
+                }
+
+                ps.setString(index, addressId);
+
+            }
+        };
+        int updateRow = jdbcTemplate.update(updateSQL.toString(), pss);
+        if (updateRow > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
