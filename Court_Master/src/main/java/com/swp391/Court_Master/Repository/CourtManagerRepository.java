@@ -149,4 +149,8 @@ public class CourtManagerRepository {
         }
     }
 
+    public boolean updateCourtInfo(){
+        return false;
+    }
+
 }
