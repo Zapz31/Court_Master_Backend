@@ -26,10 +26,14 @@ import com.swp391.Court_Master.dto.request.Request.PasswordResetTokenRequest;
 import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.UserInfoResponse;
 import com.swp391.Court_Master.security.jwt.JwtUtils;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -99,18 +103,6 @@ public class AuthenticatedUserController {
         .body(new MessageResponse("You've been signed out!"));
   }
 
-    // @GetMapping("/userById")
-    // public ResponseEntity<AuthenticatedUser> getUserById( @RequestBody @Valid
-    // UserCreateRequest userGet) {
-    // AuthenticatedUser user = userService.getUserById(userGet.getUserId());
-    // return new ResponseEntity<>(user, HttpStatus.CREATED);
-    // }
-
-    // String body = "<html><body>"
-    //     + "<h2>Example Email with a Link</h2>"
-    //     + "<p>Click <a href='https://www.example.com'>here</a> to visit the example website.</p>"
-    //     + "</body></html>";
-
     @PostMapping("/forgotpassword/{email}")
     public ResponseEntity<MessageResponse> postMethodName(@PathVariable("email") String email) throws IOException {
         //TODO: process POST request
@@ -156,6 +148,17 @@ public class AuthenticatedUserController {
         //TODO: process PUT request
         userService.updatePassword(changePasswordDTO.getPassword(), changePasswordDTO.getEmail());
         return new ResponseEntity<>(new MessageResponse("Update successfully"), HttpStatus.ACCEPTED);
+    }
+
+     @GetMapping("/validate-token")
+    public ResponseEntity<?> validateToken(HttpServletRequest request) {
+        String jwt = jwtUtils.getJwtFromCookies(request);
+        
+        if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+            return ResponseEntity.ok().body("Token is valid");
+        } else {
+            return ResponseEntity.status(401).body("Token is invalid or expired");
+        }
     }
   
 }

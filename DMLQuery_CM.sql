@@ -321,7 +321,7 @@ inner join badminton_club bcl on au.user_id = bcl.court_manager_id
 	      and ad.province like N'%%' 
 	      and ad.district like N'%%' 
 	      and ad.ward like N'%%'
-	 	 --and tf.start_time = '06:30'
+	 	 and tf.start_time = '06:30'
 	 	 and bc.badminton_court_id not in (
 	 	    Select bc.badminton_court_id from badminton_club bcl 
 	 		inner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id
@@ -862,4 +862,146 @@ select * from pricing_rule
 insert into pricing_rule(day_of_week, time_frame_id, flexible, fixed, one_time_play)
 values('Mon', 'TF000015', 25000, 25000, 25000)
 
+select * from time_frame tf
+where tf.badminton_club_id = 'C0000003'
+order by tf.start_time
+
+-- Kiem tra xem courtmanager da co cau lac bo nao chua truoc khi dang ky cau lac bo moi 
+
+select bcl.badminton_club_name from authenticated_user au 
+inner join badminton_club bcl on au.user_id = bcl.court_manager_id
+where au.user_id = 'STF000007 '
+
+--========================= DASHBOARD ====================================
+-- Tinh tong tien 
+
+
+--lay ra chi tiet hoa don
+
+
+-- Lay ra danh sach cac payment trong 2 thang duoc chi dinh
+select pd.payment_time, pd.amount from badminton_club bcl
+inner join invoice iv on bcl.badminton_club_id = iv.badminton_club_id
+inner join payment_detail pd on iv.invoice_id = pd.invoice_id
+where bcl.badminton_club_id = 'C0000001' AND (MONTH(pd.payment_time) = 6 OR MONTH(pd.payment_time) = 7) AND (YEAR(pd.payment_time) = 2024 OR YEAR(pd.payment_time) = 2024)
+order by pd.payment_time
+group by bcl.badminton_club_id
+
+select * from payment_detail
+
+-- test tong tien
+select SUM(pd.amount) from badminton_club bcl
+inner join invoice iv on bcl.badminton_club_id = iv.badminton_club_id
+inner join payment_detail pd on iv.invoice_id = pd.invoice_id
+where bcl.badminton_club_id = 'C0000001' AND (MONTH(pd.payment_time) = 8 OR MONTH(pd.payment_time) = 8) AND (YEAR(pd.payment_time) = 2024 OR YEAR(pd.payment_time) = 2024)
+group by bcl.badminton_club_id
+
+
+select pd.amount from badminton_club bcl
+inner join invoice iv on bcl.badminton_club_id = iv.badminton_club_id
+inner join payment_detail pd on iv.invoice_id = pd.invoice_id
+
+
+
+--  TINH TONG SO BOOKING SLOT TRONG VONG MOT NGAY
+select * from badminton_club bcl
+inner join invoice iv on bcl.badminton_club_id = iv.badminton_club_id
+inner join booking_schedule bsl on iv.booking_schedule_id = bsl.booking_schedule_id
+inner join booking_slot bs on bs.booking_schedule_id = bsl.booking_schedule_id
+where bsl.booking_schedule_id = 'SD0000007'
+
+select * from booking_schedule
+select * from booking_slot
+--=============================== DEM SO LUONG BOOKING SLOT 
+select MONTH(booking_date), COUNT(*) FROM(
+
+select bs.booking_date from badminton_club bcl 
+inner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id
+inner join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id
+where bcl.badminton_club_id = 'C0000001' AND (MONTH(bs.booking_date) = 7 or MONTH(bs.booking_date) = 8) AND (YEAR(bs.booking_date) = 2024 OR YEAR(bs.booking_date) = 2024)
+
+) as t1
+where MONTH(t1.booking_date) in (7, 8) AND YEAR(t1.booking_date) = 2024
+group by MONTH(booking_date)
+
+
+--================= DEM SO KHAC HANG DANG KY SAN TRONG 1 THANG ========================
+select count(*) as cus_num, t1.re_month from (
+select au.user_id, MONTH(pd.payment_time) as re_month from badminton_club bcl 
+inner join invoice iv on bcl.badminton_club_id = iv.badminton_club_id
+inner join payment_detail pd on pd.invoice_id = iv.invoice_id
+inner join authenticated_user au on au.user_id = pd.user_id
+where bcl.badminton_club_id = 'C0000001' AND (MONTH(pd.payment_time) = 7 or MONTH(pd.payment_time) = 8) AND (YEAR(pd.payment_time) = 2024 OR YEAR(pd.payment_time) = 2024) 
+group by au.user_id, MONTH(pd.payment_time)
+) as t1
+group by t1.re_month
+
+
+
+
+select bcl.badminton_club_id, bc.badminton_court_id, bc.badminton_court_name, MONTH(bs.booking_date) AS month, bs.booking_date, bs.start_time, bs.end_time from badminton_club bcl 
+inner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id
+left join booking_slot bs on bs.badminton_court_id = bc.badminton_court_id
+where bcl.badminton_club_id = 'C0000001'
+
+select * from authenticated_user
+
+alter table authenticated_user
+drop column birth_day
+
+select * from booking_schedule
+where booking_schedule_id = 'SD0000013'
+select * from booking_slot
+where booking_schedule_id = 'SD0000009'
+select * from invoice
+where booking_schedule_id = 'SD0000013'
+select * from payment_detail
+select * from customer_playable_time
+select * from booking_slot
+
+delete payment_detail
+where invoice_id = 'IN000012'
+
+delete booking_slot
+where booking_schedule_id = 'SD0000013'
+
+delete invoice
+where invoice_id = 'IN000012'
+
+delete booking_schedule
+where booking_schedule_id = 'SD0000013'
+
+delete invoice
+--where badminton_club_id = 'C0000002'
+
+delete booking_slot
+where badminton_court_id in ('CO000005', 'CO000011', 'CO000012', 'CO000004')
+
+delete booking_schedule
+--where customer_fullname = N'AB'  
+where booking_schedule_id in ('SD0000003', 'SD0000004', 'SD0000005', 'SD0000006', 'SD0000002')
+
+
+--=================== LAY THONG TIN SO LUONG BOOKING SLOT MOI NGAY DE HIEN THI LEN BIEU DO 
+select t1.booking_date, COUNT(*) as number_of_booking from (
+select bs.booking_date from badminton_club bcl 
+inner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id
+inner join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id
+where bcl.badminton_club_id = 'C0000001' AND (MONTH(bs.booking_date) = 8 or MONTH(bs.booking_date) = 8) AND (YEAR(bs.booking_date) = 2024 OR YEAR(bs.booking_date) = 2024)
+) as t1
+group by t1.booking_date
+
+
+select * from authenticated_user
+select bcl.badminton_club_id, au.user_id from authenticated_user au
+inner join badminton_club bcl on au.user_id = bcl.court_manager_id
+where bcl.badminton_club_id = 'C0000001'
+--au.user_id = 'STF000002 '
+
+-- tinh tong doanh thu hang ngay
+select DAY(pd.payment_time), SUM(pd.amount) from badminton_club bcl
+inner join invoice iv on bcl.badminton_club_id = iv.badminton_club_id
+inner join payment_detail pd on iv.invoice_id = pd.invoice_id
+where bcl.badminton_club_id = 'C0000001' AND (MONTH(pd.payment_time) = 8 OR MONTH(pd.payment_time) = 8) AND (YEAR(pd.payment_time) = 2024 OR YEAR(pd.payment_time) = 2024)
+group by DAY(pd.payment_time)
 

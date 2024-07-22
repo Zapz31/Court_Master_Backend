@@ -64,15 +64,10 @@ public class BadmintonClubController {
     }
 
     @GetMapping("/detail/{clubId}/{userId}")
-    @PreAuthorize("hasAuthority('USER_CUSTOMER') or hasAuthority('USER_COURT_MANAGER')")
+    // @PreAuthorize("hasAuthority('USER_CUSTOMER') or hasAuthority('USER_COURT_MANAGER')")
     public ResponseEntity<DetailPageResponseDTO> getDetailPageResponse(@PathVariable("clubId") String clubId, @PathVariable("userId") String userId) throws IOException {
         DetailPageResponseDTO detailPageResponseDTO = detailPageService.detailPageBuild(clubId, userId);
         return ResponseEntity.ok().body(detailPageResponseDTO);
     }
 
-    
-    
-    
-
-    
 }

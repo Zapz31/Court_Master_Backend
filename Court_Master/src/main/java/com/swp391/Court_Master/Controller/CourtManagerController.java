@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swp391.Court_Master.Entities.BadmintonClubImage;
+import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryBookingSlotMapper;
+import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryTotalRevenueMapper;
+import com.swp391.Court_Master.Repository.CourtManagerRepository;
 import com.swp391.Court_Master.Service.ClubRegisterService;
+import com.swp391.Court_Master.Service.CourtManagerService;
 import com.swp391.Court_Master.dto.request.Request.ClubRegisterDTO;
+import com.swp391.Court_Master.dto.request.Request.DashBoardRequest;
 import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
+import com.swp391.Court_Master.dto.request.Respone.DashBoardResponse.TotalBookingSlotInformation;
+import com.swp391.Court_Master.dto.request.Respone.DashBoardResponse.TotalCustomerInformation;
+import com.swp391.Court_Master.dto.request.Respone.DashBoardResponse.TotalRevenueInformation;
+
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+
+
 
 @RestController
 @RequestMapping("/courtmanager")
@@ -29,6 +43,12 @@ public class CourtManagerController {
 
     @Autowired
     private ClubRegisterService clubRegisterService;
+
+    @Autowired
+    private CourtManagerService courtManagerService;
+
+    @Autowired 
+    private CourtManagerRepository courtManagerRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -77,4 +97,47 @@ public class CourtManagerController {
             System.out.println("Error at uploadClubImages in testAPI: " + e.getMessage());
         }
     }
+
+    // View dash board here 
+    @PostMapping("/gettotalrevenueinfor")
+    public ResponseEntity<TotalRevenueInformation> postMethodName(@RequestBody DashBoardRequest dashBoardRequest) {
+        TotalRevenueInformation totalRevenueInformation = courtManagerService.getTotalRevenueInfo(dashBoardRequest);
+        return ResponseEntity.ok().body(totalRevenueInformation);
+    }
+
+    @PostMapping("/gettotalbookinginfor")
+    public ResponseEntity<TotalBookingSlotInformation> getTotalBS(@RequestBody DashBoardRequest dashBoardRequest) {
+        TotalBookingSlotInformation totalBookingSlotInformation = courtManagerService.getTotalBookingSlot(dashBoardRequest);
+        return ResponseEntity.ok().body(totalBookingSlotInformation);
+    }
+
+    @PostMapping("/gettotalcustomernumber")
+    public ResponseEntity<TotalCustomerInformation> getTotalCusNumber(@RequestBody DashBoardRequest dashBoardRequest) {
+        TotalCustomerInformation totalCustomerInformation = courtManagerService.getTotalCustomerInfo(dashBoardRequest);
+        return ResponseEntity.ok().body(totalCustomerInformation);
+    }
+
+    @PostMapping("/get-daily-revenue")
+    public ResponseEntity<List<QueryTotalRevenueMapper>> getDailyRevenue(@RequestBody DashBoardRequest dashBoardRequest) {
+        List<QueryTotalRevenueMapper> list = courtManagerService.getDailyRevenue(dashBoardRequest);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @PostMapping("/get-daily-booking")
+    public ResponseEntity<List<QueryBookingSlotMapper>> getDailyBooking(@RequestBody DashBoardRequest dashBoardRequest) {
+        List<QueryBookingSlotMapper> list = courtManagerService.getDailyBooking(dashBoardRequest);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/get-clubId-by-cId")
+    public ResponseEntity<HashMap<String, String>> getMethodName(@RequestParam("userId") String courtManagerId) {
+        HashMap<String, String> map = courtManagerService.getClubIdByUserId(courtManagerId);
+        return ResponseEntity.ok().body(map);
+    }
+    
+
+    
+
+
+    
 }
