@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 @Entity
 @NamedNativeQuery(
     name = "User.findUserByPhone",
-    query = "select email, phone_number as phoneNumber,user_id as userId, password, birth_day as birthDay, \r\n" + //
+    query = "select email, phone_number as phoneNumber,user_id as userId, password, birthday as birthDay, \r\n" + //
                 "register_date as registerDate, role, avatar_image_url as avatarImageUrl, \r\n" + //
                 "first_name as firstName, last_name as lastName from authenticated_user\r\n" + //
                 "where email = :userInput or phone_number = :userInput",
