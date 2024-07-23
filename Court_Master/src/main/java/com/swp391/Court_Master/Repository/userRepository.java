@@ -30,4 +30,6 @@ public interface UserRepository extends JpaRepository<AuthenticatedUser, String>
     Optional<AuthenticatedUser> findByEmailOrPhoneNumberPRT(@Param("userInput") String emailOrPhoneNumber);
 
     
+
+    
 }
