@@ -204,16 +204,6 @@ public class testAPI {
         return ResponseEntity.ok().body("insert successfully");
     }
 
-    @PostMapping("/staffCheckIn")
-    public String staffCheckin(@RequestParam("slotId") String slotId) {
-        
-        if(staffRepository.isUpdateCheckIn(slotId)){
-            return "success";
-        }
-        return "false";
-    }
-
-
 
     @PostMapping("/staffAvailability")
     //Ham nay gui 4 tham so va yeu cau tra ve danh sach cac slot nam trong khoang thoi gian cua court

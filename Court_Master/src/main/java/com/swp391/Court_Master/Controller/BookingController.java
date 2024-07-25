@@ -166,6 +166,6 @@ public class BookingController {
         List<BookedDTO> list = bookingService.getDuplicateBookingSlotList(pricePerSlotRequestDTOList);
         return ResponseEntity.ok().body(list);
     }
-    /
+    
 
 }

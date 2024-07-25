@@ -24,27 +24,28 @@ public class StaffRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-        //Staff xac nhan khach da check in
-        public boolean isUpdateCheckIn(String bookingSlotId){
-            String sql = "UPDATE booking_slot\r\n" + //
-                            "SET is_check_in ='1'\r\n" + //
-                            "wHERE booking_slot_id = ?";
-            PreparedStatementSetter pss = new PreparedStatementSetter() {        
-                @Override
-                public void setValues(PreparedStatement ps) throws SQLException{
-                    ps.setString(1, bookingSlotId);
-                }
-            };
-            int updateRow = jdbcTemplate.update(sql, pss);
-            if(updateRow > 0){
-                return true;
-            } else {
-                return false;
+    // Staff xac nhan khach da check in
+    public boolean isUpdateCheckIn(String bookingSlotId) {
+        String sql = "UPDATE booking_slot\r\n" + //
+                "SET is_check_in ='1'\r\n" + //
+                "wHERE booking_slot_id = ?";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, bookingSlotId);
             }
+        };
+        int updateRow = jdbcTemplate.update(sql, pss);
+        if (updateRow > 0) {
+            return true;
+        } else {
+            return false;
         }
+    }
 
     // Staff kiem tra san trong
-    public List<BookedDTO> bookedCourts(String clubId, LocalDate booking_date, LocalTime start_time, LocalTime end_time) {
+    public List<BookedDTO> bookedCourts(String clubId, LocalDate booking_date, LocalTime start_time,
+            LocalTime end_time) {
         String sql = "SELECT \r\n" + //
                 "    bs.badminton_court_id,\r\n" + //
                 "    bc.badminton_court_name,\r\n" + //
@@ -80,18 +81,29 @@ public class StaffRepository {
 
             }
         };
-        return jdbcTemplate.query(sql,pss,new BookedDTORowMapper());
+        return jdbcTemplate.query(sql, pss, new BookedDTORowMapper());
     }
 
     // Hien thi cac booking slot chua check in o man hinh staff
-    public List<StaffViewBookingSlotDTO> getUncheckInBS(String clubId){
-        String sql = "select bsl.customer_phone_number, bsl.customer_fullname, bc.badminton_court_name, bs.start_time, bs.end_time, bs.booking_date, bs.is_check_in, bs.price from badminton_club bcl \r\n" + //
-                        "inner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id\r\n" + //
-                        "inner join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id\r\n" + //
-                        "inner join booking_schedule bsl on bs.booking_schedule_id = bsl.booking_schedule_id\r\n" + //
-                        "where bcl.badminton_club_id = ? and bs.is_check_in = 0";
-        return jdbcTemplate.query(sql, new StaffViewBookingSlotRowMapper(), clubId)
+    public List<StaffViewBookingSlotDTO> getUncheckInBS(String clubId) {
+        String sql = "select bsl.customer_phone_number, bsl.customer_fullname, bc.badminton_court_name, bs.start_time, bs.end_time, bs.booking_date, bs.is_check_in, bs.price from badminton_club bcl \r\n"
+                + //
+                "inner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id\r\n" + //
+                "inner join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id\r\n" + //
+                "inner join booking_schedule bsl on bs.booking_schedule_id = bsl.booking_schedule_id\r\n" + //
+                "where bcl.badminton_club_id = ? and bs.is_check_in = 0";
+        return jdbcTemplate.query(sql, new StaffViewBookingSlotRowMapper(), clubId);
     }
 
+    // Hien thi cac booking slot da check in
+    public List<StaffViewBookingSlotDTO> getCheckedInBS(String clubId) {
+        String sql = "select bsl.customer_phone_number, bsl.customer_fullname, bc.badminton_court_name, bs.start_time, bs.end_time, bs.booking_date, bs.is_check_in, bs.price from badminton_club bcl \r\n"
+                + //
+                "inner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id\r\n" + //
+                "inner join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id\r\n" + //
+                "inner join booking_schedule bsl on bs.booking_schedule_id = bsl.booking_schedule_id\r\n" + //
+                "where bcl.badminton_club_id = ? and bs.is_check_in = 1";
+        return jdbcTemplate.query(sql, new StaffViewBookingSlotRowMapper(), clubId);
+    }
 
 }

@@ -18,5 +18,8 @@ public class StaffService {
         return unCheckInBSList;
     }
 
-    public List<StaffViewBookingSlotDTO> getAllCheckInBsList(String )
+    public List<StaffViewBookingSlotDTO> getAllCheckInBsList(String clubId){
+        List<StaffViewBookingSlotDTO> checkInBSList = staffRepository.getCheckedInBS(clubId);
+        return checkInBSList;
+    }
 }
