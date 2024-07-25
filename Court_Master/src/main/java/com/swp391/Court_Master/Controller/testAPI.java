@@ -177,12 +177,6 @@ public class testAPI {
         return ResponseEntity.ok().body(list);
     }
 
-    @PostMapping("/getDuplicateBookingSlot")
-    public ResponseEntity<List<BookedDTO>> getDuplicateBookingSlotList(
-            @RequestBody List<BookingSlotResponseDTO> pricePerSlotRequestDTOList) {
-                List<BookedDTO> list = bookingService.getDuplicateBookingSlotList(pricePerSlotRequestDTOList);
-        return ResponseEntity.ok().body(list);
-    }
 
     @GetMapping("/get-timeframe-by-{clubId}")
     public ResponseEntity<List<TimeFrame>> getAllTimeFrameByCourtId(@PathVariable("clubId") String clubId) {
