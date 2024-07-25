@@ -22,4 +22,9 @@ public class StaffService {
         List<StaffViewBookingSlotDTO> checkInBSList = staffRepository.getCheckedInBS(clubId);
         return checkInBSList;
     }
+
+    // get clubId by StaffId
+    public String getClubIdByStaffId(String staffId){
+        return staffRepository.getClubIdByStaffId(staffId);
+    }
 }

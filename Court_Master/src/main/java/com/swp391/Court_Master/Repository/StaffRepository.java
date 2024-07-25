@@ -106,4 +106,12 @@ public class StaffRepository {
         return jdbcTemplate.query(sql, new StaffViewBookingSlotRowMapper(), clubId);
     }
 
+    // get club id by staffId
+    public String getClubIdByStaffId(String staffId){
+        String sql = "select bcl.badminton_club_id from authenticated_user au \r\n" + //
+                        "inner join badminton_club bcl on au.court_manager_id = bcl.court_manager_id\r\n" + //
+                        "where user_id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, staffId);
+    }
+
 }

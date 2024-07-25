@@ -1,5 +1,6 @@
 package com.swp391.Court_Master.Controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,14 @@ public class StaffController {
         }
         return "false";
     }
+
+    @GetMapping("/get-clubId-by-userId")
+    public ResponseEntity<HashMap<String, String>> getMethodName(@RequestParam("staffId") String staffId) {
+        HashMap<String, String> response = new HashMap<>();
+        String clubId = staffService.getClubIdByStaffId(staffId);
+        response.put("clubId", clubId);
+        return ResponseEntity.ok().body(response);
+    }
+    
 
 }
