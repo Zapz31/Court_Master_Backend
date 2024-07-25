@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class StaffViewBookingSlotDTO {
+    private String bookingSlotId;
     private String customerPhoneNumber;
     private String customerFullName;
     private String badmintonCourtName;
@@ -14,8 +15,11 @@ public class StaffViewBookingSlotDTO {
     private int price;
     public StaffViewBookingSlotDTO() {
     }
-    public StaffViewBookingSlotDTO(String customerPhoneNumber, String customerFullName, String badmintonCourtName,
-            LocalTime startTime, LocalTime endTime, LocalDate bookingDate, int isCheckIn, int price) {
+
+    public StaffViewBookingSlotDTO(String bookingSlotId, String customerPhoneNumber, String customerFullName,
+            String badmintonCourtName, LocalTime startTime, LocalTime endTime, LocalDate bookingDate, int isCheckIn,
+            int price) {
+        this.bookingSlotId = bookingSlotId;
         this.customerPhoneNumber = customerPhoneNumber;
         this.customerFullName = customerFullName;
         this.badmintonCourtName = badmintonCourtName;
@@ -25,6 +29,7 @@ public class StaffViewBookingSlotDTO {
         this.isCheckIn = isCheckIn;
         this.price = price;
     }
+    
     public String getCustomerPhoneNumber() {
         return customerPhoneNumber;
     }
@@ -72,6 +77,14 @@ public class StaffViewBookingSlotDTO {
     }
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getBookingSlotId() {
+        return bookingSlotId;
+    }
+
+    public void setBookingSlotId(String bookingSlotId) {
+        this.bookingSlotId = bookingSlotId;
     }
 
     

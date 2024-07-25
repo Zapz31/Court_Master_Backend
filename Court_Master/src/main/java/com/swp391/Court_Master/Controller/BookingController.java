@@ -85,11 +85,10 @@ public class BookingController {
             List<BookedDTO> duplicateBookingList = bookingService.getDuplicateBookingSlotList(
                     bookingPaymentRequestDTO.getBookingSchedule().getBookingSlotResponseDTOs());
             if (duplicateBookingList.size() != 0) {
-                StringBuilder invalidMess = new StringBuilder(
-                        "Your booking has overlapped with the following bookings:");
+                StringBuilder invalidMess = new StringBuilder();
                 for (BookedDTO bookedDTO : duplicateBookingList) {
-                    invalidMess.append(bookedDTO.getStartTime() + " - " + bookedDTO.getEndTime() + " on "
-                            + bookedDTO.getBookingDate() + " at " + bookedDTO.getCourtName()).append("|");
+                    invalidMess.append(bookedDTO.getStartTime() + " - " + bookedDTO.getEndTime() + ","
+                            + bookedDTO.getBookingDate() + "," + bookedDTO.getCourtName()).append("|");
                 }
                 messageResponse.setMassage(invalidMess.toString());
             } else {

@@ -13,6 +13,7 @@ public class StaffViewBookingSlotRowMapper implements RowMapper<StaffViewBooking
 
     @Override
     public StaffViewBookingSlotDTO mapRow(ResultSet arg0, int arg1) throws SQLException {
+        String bookingSlotId = arg0.getString("booking_slot_id");
         String customerPhoneNumber = arg0.getString("customer_phone_number");
         String customerFullName = arg0.getNString("customer_fullname");
         String badmintonCourtName = arg0.getNString("badminton_court_name");
@@ -22,7 +23,7 @@ public class StaffViewBookingSlotRowMapper implements RowMapper<StaffViewBooking
         int isCheckIn = arg0.getInt("is_check_in");
         int price = arg0.getInt("price");
 
-        return new StaffViewBookingSlotDTO(customerPhoneNumber, customerFullName, badmintonCourtName, startTime, endTime, bookingDate, isCheckIn, price);
+        return new StaffViewBookingSlotDTO(bookingSlotId, customerPhoneNumber, customerFullName, badmintonCourtName, startTime, endTime, bookingDate, isCheckIn, price);
     }
 
 }
