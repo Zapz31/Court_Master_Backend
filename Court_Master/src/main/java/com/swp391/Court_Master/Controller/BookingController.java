@@ -90,6 +90,7 @@ public class BookingController {
                     invalidMess.append(bookedDTO.getStartTime() + " - " + bookedDTO.getEndTime() + ","
                             + bookedDTO.getBookingDate() + "," + bookedDTO.getCourtName()).append("|");
                 }
+                invalidMess.append(bookingPaymentRequestDTO.getCourtManagerPhone());
                 messageResponse.setMassage(invalidMess.toString());
             } else {
                 // Ham insert trong day (Chac chan thanh toan se thanh cong moi di vao luong
