@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class BookedDTO {
+    private String bookingScheduleId;
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate bookingDate;
@@ -62,6 +63,8 @@ public class BookedDTO {
         this.userFullName = userFullName;
         this.userId = userId;
     }
+
+    
 
     public LocalTime getStartTime() {
         return startTime;
@@ -132,6 +135,14 @@ public class BookedDTO {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getBookingScheduleId() {
+        return bookingScheduleId;
+    }
+
+    public void setBookingScheduleId(String bookingScheduleId) {
+        this.bookingScheduleId = bookingScheduleId;
     }
 
     

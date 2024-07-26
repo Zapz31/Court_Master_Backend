@@ -62,17 +62,11 @@ public class BookingController {
         return ResponseEntity.ok().body(list);
     }
 
-    // @PostMapping("/payment-handle")
-    // public ResponseEntity<BookingPaymentRequestDTO> handlePayment(@RequestBody
-    // BookingPaymentRequestDTO bookingPaymentRequestDTO){
-
-    // return ResponseEntity.ok().body(bookingPaymentRequestDTO);
-    // }
-
     @PostMapping("/payment-handle")
     // @PreAuthorize("hasAuthority('USER_CUSTOMER')")
     public ResponseEntity<MessageResponse> handlePayment(
             @RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO) {
+        // chi book 1 ngay
         if (bookingPaymentRequestDTO.getBookingSchedule().getEndDate() == null) {
             bookingPaymentRequestDTO.getBookingSchedule()
                     .setEndDate(bookingPaymentRequestDTO.getBookingSchedule().getStartDate());

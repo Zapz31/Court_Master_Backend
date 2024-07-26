@@ -101,6 +101,9 @@ public class UserService {
                 authenUser.setEmail(userEmail);
                 authenUser.setPassword(userPassword);
                 authenUser.setRegisterDate(user.getRegisterDate());
+                if(userRole == 3){
+                    authenUser.setCourtManagerId(user.getCourtManagerId());
+                }
                 userRepository.save(authenUser);
                 errorMap.put("duplicateError", "none");
             }

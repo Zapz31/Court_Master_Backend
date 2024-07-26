@@ -387,6 +387,8 @@ public class BookingService {
 
     public MessageResponse excutePaymentTransaction(BookingPaymentRequestDTO bookingPaymentRequestDTO) {
         // Goi ham insert booking schedule va lay booking_schedule_id o day
+        int remmainingAmount = bookingPaymentRequestDTO.getBookingSchedule().getTotalPrice() - (bookingPaymentRequestDTO.getPaymentDetail().getAmount()/100);
+        bookingPaymentRequestDTO.getBookingSchedule().setRemainingAmount(remmainingAmount);
         String scheduleId = bookingRepository.insertBookingSchedule(bookingPaymentRequestDTO.getBookingSchedule());
 
         // Sau khi co booking_schedule_id, insert tung booking slot voi booking schedule

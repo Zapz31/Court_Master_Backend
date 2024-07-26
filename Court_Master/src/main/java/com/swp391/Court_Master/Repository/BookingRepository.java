@@ -175,9 +175,8 @@ public class BookingRepository {
 
     @Transactional
     public String insertBookingSchedule(BookingSchedule bookingSchedule) {
-        String insertSQL = "insert into booking_schedule(customer_fullname, customer_phone_number, booking_schedule_status, start_date, end_date, schedule_type, customer_id, total_price, total_playing_time)\r\n"
-                + //
-                "values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertSQL = "insert into booking_schedule(customer_fullname, customer_phone_number, booking_schedule_status, start_date, end_date, schedule_type, customer_id, total_price, total_playing_time, remaining_amount)\r\n" + //
+                        "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         String totalPlayHours = bookingSchedule.getTotalPlayingTime();
         String[] parts = totalPlayHours.split(":");
@@ -196,6 +195,7 @@ public class BookingRepository {
                 ps.setString(7, bookingSchedule.getCustomerId());
                 ps.setInt(8, bookingSchedule.getTotalPrice());
                 ps.setInt(9, totalPlayTime);
+                ps.setInt(10, bookingSchedule.getRemainingAmount());
             }
 
         };

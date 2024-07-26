@@ -17,6 +17,7 @@ public class BookingSchedule {
     private int totalPrice;
     private int isView;
     private String totalPlayingTime;
+    private int remainingAmount;
     private List<BookingSlotResponseDTO> bookingSlotResponseDTOs;
     
    
@@ -37,7 +38,7 @@ public class BookingSchedule {
         this.isView = isView;
         this.bookingSlotResponseDTOs = bookingSlotResponseDTOs;
     }
-
+    
     
     public BookingSchedule() {
     }
@@ -116,6 +117,16 @@ public class BookingSchedule {
 
     public void setTotalPlayingTime(String totalPlayingTime) {
         this.totalPlayingTime = totalPlayingTime;
+    }
+
+
+    public int getRemainingAmount() {
+        return remainingAmount;
+    }
+
+
+    public void setRemainingAmount(int remainingAmount) {
+        this.remainingAmount = remainingAmount;
     }
     
 }
