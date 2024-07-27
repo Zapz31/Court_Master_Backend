@@ -14,10 +14,14 @@ import com.swp391.Court_Master.Entities.BadmintonClub;
 import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryBookingSlotMapper;
 import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryTotalCustomerMapper;
 import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryTotalRevenueMapper;
+import com.swp391.Court_Master.RowMapper.QueryAdminScreenRowMapper.AdminViewUserAccountsRowMapper;
+import com.swp391.Court_Master.RowMapper.QueryCourtManagerScreenRowMapper.CourtManagerViewStaffRowMapper;
 import com.swp391.Court_Master.RowMapper.QueryDashBoardRowMapper.QueryBookingSlotChartRowMapper;
 import com.swp391.Court_Master.RowMapper.QueryDashBoardRowMapper.QueryTotalCustomerRowMapper;
 import com.swp391.Court_Master.RowMapper.QueryDashBoardRowMapper.QueryTotalRevenueRowMapper;
 import com.swp391.Court_Master.dto.request.Request.DashBoardRequest;
+import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
+import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 
 @Repository
 public class CourtManagerRepository {
@@ -559,5 +563,29 @@ public class CourtManagerRepository {
 
         return jdbcTemplate.queryForObject(sql, String.class, userId);
     }
+
+    // Manager xem staff cua club
+    public List<UserAccountDTO> getAllUserAccounts() {
+        String sql = " SELECT user_id,first_name,last_name,email,phone_number,birthday,role,user_status,register_date,avatar_image_url\r\n"
+                + //
+                " FROM authenticated_user";
+
+        return jdbcTemplate.query(sql, new AdminViewUserAccountsRowMapper());
+    }
+
+    public List<StaffAccountDTO> getAllStaff(String court_manager_id) {
+        String sql = "SELECT TOP (1000) [user_id]\r\n" + //
+                "      ,[first_name]\r\n" + //
+                "      ,[last_name]\r\n" + //
+                "      ,[email]\r\n" + //
+                "      ,[phone_number]\r\n" + //
+                "      ,[birthday]\r\n" + //
+                "      ,[avatar_image_url]\r\n" + //
+                "  FROM [Court_Master].[dbo].[authenticated_user]\r\n" + //
+                "  WHERE [court_manager_id]=?";
+        return jdbcTemplate.query(sql, new CourtManagerViewStaffRowMapper());
+    }
+
+    // Search, update, delete ten, sdt
 
 }

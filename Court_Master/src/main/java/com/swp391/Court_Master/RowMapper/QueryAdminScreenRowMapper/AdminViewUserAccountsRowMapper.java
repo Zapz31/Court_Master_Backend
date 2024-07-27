@@ -3,7 +3,6 @@ package com.swp391.Court_Master.RowMapper.QueryAdminScreenRowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import org.springframework.jdbc.core.RowMapper;
 
