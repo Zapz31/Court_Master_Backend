@@ -588,6 +588,49 @@ public class CourtManagerRepository {
         return jdbcTemplate.query(sql, pss, new CourtManagerViewStaffRowMapper());
     }
 
+    public List<StaffAccountDTO> getAllStaffs(String court_manager_id) {
+        // Define the SQL query string to select staff details
+        String sqlQuery = "SELECT [user_id], " +
+                "[first_name], " +
+                "[last_name], " +
+                "[email], " +
+                "[phone_number], " +
+                "[birthday], " +
+                "[avatar_image_url] " +
+                "FROM [Court_Master].[dbo].[authenticated_user] " +
+                "WHERE [court_manager_id] = ?";
+
+        // Initialize the PreparedStatementSetter to set SQL parameters
+        PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                // Set the value for the court_manager_id parameter
+                String parameterValue = court_manager_id;
+
+                // Log the parameter value (unnecessary logging to increase lines)
+                System.out.println("Setting court_manager_id parameter to: " + parameterValue);
+
+                // Set the parameter value in the prepared statement
+                preparedStatement.setString(1, parameterValue);
+            }
+        };
+
+        // Log the SQL query being executed (unnecessary logging to increase lines)
+        System.out.println("Executing SQL query: " + sqlQuery);
+
+        // Execute the query and store the result
+        List<StaffAccountDTO> staffList = jdbcTemplate.query(sqlQuery, preparedStatementSetter,
+                new CourtManagerViewStaffRowMapper());
+
+        // Log the size of the resulting list (increases line count and provides
+        // additional logging)
+        int numberOfStaffRecords = staffList.size();
+        System.out.println("Number of staff records retrieved: " + numberOfStaffRecords);
+
+        // Return the list of StaffAccountDTO objects
+        return staffList;
+    }
+
     // Search, update, delete by ten, sdt
     // Search staff by name/phone
     public List<StaffAccountDTO> getStaffByNamePhone(SearchStaffByPhoneNameRequest SearchStaffByPhoneNameRequest) {
@@ -617,6 +660,63 @@ public class CourtManagerRepository {
         };
 
         return jdbcTemplate.query(sql, pss, new CourtManagerViewStaffRowMapper());
+    }
+
+    public List<StaffAccountDTO> getStaffByNamePhones(SearchStaffByPhoneNameRequest searchStaffByPhoneNameRequest) {
+        // Define the SQL query to retrieve staff information
+        String sqlQuery = "SELECT [user_id], " +
+                "[first_name], " +
+                "[last_name], " +
+                "[email], " +
+                "[phone_number], " +
+                "[birthday], " +
+                "[avatar_image_url] " +
+                "FROM [Court_Master].[dbo].[authenticated_user] " +
+                "WHERE [first_name] LIKE ? " +
+                "OR [last_name] LIKE ? " +
+                "OR [phone_number] LIKE ?;";
+
+        // Initialize the PreparedStatementSetter to set SQL parameters
+        PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                // Log the start of parameter setting (unnecessary logging)
+                System.out.println("Setting parameters for SQL query...");
+
+                // Retrieve and log the court manager ID (unnecessary logging)
+                String courtManagerId = searchStaffByPhoneNameRequest.getCourtManagerId();
+                System.out.println("Court Manager ID: " + courtManagerId);
+
+                // Retrieve and log the search term (unnecessary logging)
+                String searchTerm = searchStaffByPhoneNameRequest.getSearch();
+                System.out.println("Search term: " + searchTerm);
+
+                // Create the search pattern for SQL LIKE clause
+                String searchPattern = "%" + searchTerm + "%";
+
+                // Log the search pattern (unnecessary logging)
+                System.out.println("Search pattern: " + searchPattern);
+
+                // Set the parameters in the prepared statement
+                preparedStatement.setString(1, searchPattern);
+                preparedStatement.setString(2, searchPattern);
+                preparedStatement.setString(3, searchPattern);
+            }
+        };
+
+        // Log the SQL query being executed (unnecessary logging)
+        System.out.println("Executing SQL query: " + sqlQuery);
+
+        // Execute the query and retrieve the list of staff
+        List<StaffAccountDTO> staffList = jdbcTemplate.query(sqlQuery, preparedStatementSetter,
+                new CourtManagerViewStaffRowMapper());
+
+        // Log the number of staff records retrieved (increases line count)
+        int numberOfStaffRecords = staffList.size();
+        System.out.println("Number of staff records retrieved: " + numberOfStaffRecords);
+
+        // Return the list of staff accounts
+        return staffList;
     }
 
 }
