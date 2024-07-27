@@ -93,7 +93,18 @@ public class BookingController {
                 // Khi nguoi dung dat lich ngay hoac fixed
                 if (!bookingPaymentRequestDTO.getBookingSchedule().getScheduleType().equals("Flexible")) {
                     messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
-                 }
+                 }// else {
+                //     // Khi nguoi dung dat lich kieu flexible
+                //     // Kiem tra xem nguoi dung co du gio choi hay khong
+                //     if (bookingRepository.isEnoughTime(
+                //             bookingPaymentRequestDTO.getBookingSchedule().getTotalPlayingTime(),
+                //             bookingPaymentRequestDTO.getBookingSchedule().getCustomerId(),
+                //             bookingPaymentRequestDTO.getClubId())) {
+                //         messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
+                //     } else {
+                //         messageResponse.setMassage("Số giờ chơi đăng ký của bạn không đủ để thực hiện giao dịch");
+                //     }
+                // }
             }
         }
         return ResponseEntity.ok().body(messageResponse);
