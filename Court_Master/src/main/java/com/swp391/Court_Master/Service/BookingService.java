@@ -323,6 +323,60 @@ public class BookingService {
     }
 
     /*
+     * Kiem tra xem cac booking slot co trung nhau hay khong, ham tra ve danh sach cac pricePerSlotRequestDTOs bi trung 
+     * thay vi bookedDTO
+     */
+    public List<BookingSlotResponseDTO> getDupBookingSlotRequest(List<BookingSlotResponseDTO> pricePerSlotRequestDTOs) {
+        List<BookingSlotResponseDTO> duplicateBookingSlotRequests = new ArrayList<>();
+        if (!pricePerSlotRequestDTOs.isEmpty() || pricePerSlotRequestDTOs != null) {
+            List<BookedDTO> allBookingSlotsByCourtId = bookingRepository.getBookedList(pricePerSlotRequestDTOs);
+            for (BookingSlotResponseDTO pricePerSlotRequestDTO : pricePerSlotRequestDTOs) {
+                int flag = 0;
+                for (BookedDTO bookedDTO : allBookingSlotsByCourtId) {
+                    if ((flag == 0) && (!pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId()))) {
+                        continue;
+                    } else if (pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId())) {
+                        flag = 1;
+                        if (pricePerSlotRequestDTO.getBookingDate().equals(bookedDTO.getBookingDate())) {
+                            if ((pricePerSlotRequestDTO.getStartBooking().equals(bookedDTO.getStartTime())
+                                    || (pricePerSlotRequestDTO.getStartBooking().isAfter(bookedDTO.getStartTime())))
+                                    && (pricePerSlotRequestDTO.getEndBooking().equals(bookedDTO.getEndTime())
+                                            || pricePerSlotRequestDTO.getEndBooking()
+                                                    .isBefore(bookedDTO.getEndTime()))) {
+                                duplicateBookingSlotRequests.add(pricePerSlotRequestDTO);
+                                break;
+                            } else if (pricePerSlotRequestDTO.getStartBooking().isBefore(bookedDTO.getStartTime())
+                                    && (pricePerSlotRequestDTO.getEndBooking().equals(bookedDTO.getEndTime())
+                                            || pricePerSlotRequestDTO.getEndBooking().isBefore(bookedDTO.getEndTime())
+                                                    && pricePerSlotRequestDTO.getEndBooking()
+                                                            .isAfter(bookedDTO.getStartTime()))) {
+                                duplicateBookingSlotRequests.add(pricePerSlotRequestDTO);
+                                break;
+                            } else if ((pricePerSlotRequestDTO.getStartBooking().equals(bookedDTO.getStartTime())
+                                    || pricePerSlotRequestDTO.getStartBooking().isAfter(bookedDTO.getStartTime())
+                                            && pricePerSlotRequestDTO.getStartBooking()
+                                                    .isBefore(bookedDTO.getEndTime()))
+                                    && pricePerSlotRequestDTO.getEndBooking().isAfter(bookedDTO.getEndTime())) {
+                                duplicateBookingSlotRequests.add(pricePerSlotRequestDTO);
+                                break;
+                            } else if (pricePerSlotRequestDTO.getStartBooking().isBefore(bookedDTO.getStartTime())
+                                    && pricePerSlotRequestDTO.getEndBooking().isAfter(bookedDTO.getEndTime())) {
+                                duplicateBookingSlotRequests.add(pricePerSlotRequestDTO);
+                                break;
+                            }
+                        }
+                    } else if ((!pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId())) && (flag == 1)) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return duplicateBookingSlotRequests;
+
+    }
+
+    /*
      * Kiem tra tinh hop le cua thoi gian dat san so voi time frame
      */
     public List<MessageResponse> checkValidBookingSlot(String clubId,

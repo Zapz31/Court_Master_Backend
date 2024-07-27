@@ -39,12 +39,15 @@ public class StaffService {
             checkOrUncheckList = staffRepository.getCheckedInBS(clubId);
         }
         List<StaffViewBookingSlotDTO> results = new ArrayList<>();
-        for(StaffViewBookingSlotDTO bs: checkOrUncheckList){
-            if(bs.getCustomerPhoneNumber().contains(phoneNumberOrCusName) || bs.getCustomerFullName().contains(phoneNumberOrCusName)){
-                results.add(bs);
-            } 
+        if(!phoneNumberOrCusName.equals("")){
+            for(StaffViewBookingSlotDTO bs: checkOrUncheckList){
+                if(bs.getCustomerPhoneNumber().contains(phoneNumberOrCusName) || bs.getCustomerFullName().contains(phoneNumberOrCusName)){
+                    results.add(bs);
+                } 
+            }
+        } else {
+            results = checkOrUncheckList;
         }
-
         return results;
     }
 

@@ -92,23 +92,56 @@ public class BookingController {
                 // Khi nguoi dung dat lich ngay hoac fixed
                 if (!bookingPaymentRequestDTO.getBookingSchedule().getScheduleType().equals("Flexible")) {
                     messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
-                } else {
-                    // Khi nguoi dung dat lich kieu flexible
-                    // Kiem tra xem nguoi dung co du gio choi hay khong
-                    if (bookingRepository.isEnoughTime(
-                            bookingPaymentRequestDTO.getBookingSchedule().getTotalPlayingTime(),
-                            bookingPaymentRequestDTO.getBookingSchedule().getCustomerId(),
-                            bookingPaymentRequestDTO.getClubId())) {
-                        messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
-                    } else {
-                        messageResponse.setMassage("Số giờ chơi đăng ký của bạn không đủ để thực hiện giao dịch");
-                    }
-                }
+                 } // else {
+                //     // Khi nguoi dung dat lich kieu flexible
+                //     // Kiem tra xem nguoi dung co du gio choi hay khong
+                //     if (bookingRepository.isEnoughTime(
+                //             bookingPaymentRequestDTO.getBookingSchedule().getTotalPlayingTime(),
+                //             bookingPaymentRequestDTO.getBookingSchedule().getCustomerId(),
+                //             bookingPaymentRequestDTO.getClubId())) {
+                //         messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
+                //     } else {
+                //         messageResponse.setMassage("Số giờ chơi đăng ký của bạn không đủ để thực hiện giao dịch");
+                //     }
+                // }
 
             }
         }
         return ResponseEntity.ok().body(messageResponse);
     }
+
+    // Thanh toan cho kieu flexible 
+    @PostMapping("/flexible-payment")
+    public ResponseEntity<MessageResponse> executeFlexiblePayment(@RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO) {
+        // chi book 1 ngay
+        if (bookingPaymentRequestDTO.getBookingSchedule().getEndDate() == null) {
+            bookingPaymentRequestDTO.getBookingSchedule()
+                    .setEndDate(bookingPaymentRequestDTO.getBookingSchedule().getStartDate());
+        }
+        MessageResponse messageResponse = new MessageResponse("Payment success");
+        if (bookingPaymentRequestDTO.getBookingSchedule().getStartDate()
+                .isAfter(bookingPaymentRequestDTO.getBookingSchedule().getEndDate())) {
+            messageResponse.setMassage("Invalid start and end dates");
+        } else {
+            List<BookingSlotResponseDTO> duplicateBsRequest = bookingService.getDupBookingSlotRequest(bookingPaymentRequestDTO.getBookingSchedule().getBookingSlotResponseDTOs());
+            if(!duplicateBsRequest.isEmpty()){
+                messageResponse.setMassage("duplicate");
+            } else {
+                // Khong bi trung.
+                if (bookingRepository.isEnoughTime(
+                            bookingPaymentRequestDTO.getBookingSchedule().getTotalPlayingTime(),
+                            bookingPaymentRequestDTO.getBookingSchedule().getCustomerId(),
+                            bookingPaymentRequestDTO.getClubId())) {
+                        messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
+                    } else {
+                        messageResponse.setMassage("Not enough time");
+                    }
+            }
+        }
+        return ResponseEntity.ok().body(messageResponse);
+    }
+    
+
 
     @GetMapping("/history/schedule")
     public List<BookingScheduleHistory> bookingScheduleHistories(@RequestParam("customerId") String customerId) {
@@ -160,6 +193,7 @@ public class BookingController {
         List<BookedDTO> list = bookingService.getDuplicateBookingSlotList(pricePerSlotRequestDTOList);
         return ResponseEntity.ok().body(list);
     }
+    
     
 
 }
