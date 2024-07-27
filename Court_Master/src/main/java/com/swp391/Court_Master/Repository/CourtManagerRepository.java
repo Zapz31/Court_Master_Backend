@@ -20,6 +20,7 @@ import com.swp391.Court_Master.RowMapper.QueryDashBoardRowMapper.QueryBookingSlo
 import com.swp391.Court_Master.RowMapper.QueryDashBoardRowMapper.QueryTotalCustomerRowMapper;
 import com.swp391.Court_Master.RowMapper.QueryDashBoardRowMapper.QueryTotalRevenueRowMapper;
 import com.swp391.Court_Master.dto.request.Request.DashBoardRequest;
+import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
 import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 
@@ -565,16 +566,9 @@ public class CourtManagerRepository {
     }
 
     // Manager xem staff cua club
-    public List<UserAccountDTO> getAllUserAccounts() {
-        String sql = " SELECT user_id,first_name,last_name,email,phone_number,birthday,role,user_status,register_date,avatar_image_url\r\n"
-                + //
-                " FROM authenticated_user";
-
-        return jdbcTemplate.query(sql, new AdminViewUserAccountsRowMapper());
-    }
 
     public List<StaffAccountDTO> getAllStaff(String court_manager_id) {
-        String sql = "SELECT TOP (1000) [user_id]\r\n" + //
+        String sql = "SELECT [user_id]\r\n" + //
                 "      ,[first_name]\r\n" + //
                 "      ,[last_name]\r\n" + //
                 "      ,[email]\r\n" + //
@@ -583,9 +577,46 @@ public class CourtManagerRepository {
                 "      ,[avatar_image_url]\r\n" + //
                 "  FROM [Court_Master].[dbo].[authenticated_user]\r\n" + //
                 "  WHERE [court_manager_id]=?";
-        return jdbcTemplate.query(sql, new CourtManagerViewStaffRowMapper());
+
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, court_manager_id);
+            }
+        };
+
+        return jdbcTemplate.query(sql, pss, new CourtManagerViewStaffRowMapper());
     }
 
-    // Search, update, delete ten, sdt
+    // Search, update, delete by ten, sdt
+    // Search staff by name/phone
+    public List<StaffAccountDTO> getStaffByNamePhone(SearchStaffByPhoneNameRequest SearchStaffByPhoneNameRequest) {
+        String sql = "  SELECT  [user_id]\r\n" + //
+                "      ,[first_name]\r\n" + //
+                "      ,[last_name]\r\n" + //
+                "      ,[email]\r\n" + //
+                "      ,[phone_number]\r\n" + //
+                "      ,[birthday]\r\n" + //
+                "      ,[avatar_image_url]\r\n" + //
+                "  FROM [Court_Master].[dbo].[authenticated_user]\r\n" + //
+                "  WHERE [first_name] LIKE ?\r\n" + //
+                "     OR [last_name] LIKE ?\r\n" + //
+                "     OR [phone_number] LIKE ?;";
+
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                // Set the court_manager_id parameter
+                ps.setString(1, SearchStaffByPhoneNameRequest.getCourtManagerId());
+                // Set the search term for name and phone number filtering
+                String searchPattern = "%" + SearchStaffByPhoneNameRequest.getSearch() + "%";
+                ps.setString(2, searchPattern);
+                ps.setString(3, searchPattern);
+                ps.setString(4, searchPattern);
+            }
+        };
+
+        return jdbcTemplate.query(sql, pss, new CourtManagerViewStaffRowMapper());
+    }
 
 }

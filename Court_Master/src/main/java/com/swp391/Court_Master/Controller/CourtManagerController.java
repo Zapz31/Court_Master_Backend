@@ -27,6 +27,7 @@ import com.swp391.Court_Master.Service.ClubRegisterService;
 import com.swp391.Court_Master.Service.CourtManagerService;
 import com.swp391.Court_Master.dto.request.Request.ClubRegisterDTO;
 import com.swp391.Court_Master.dto.request.Request.DashBoardRequest;
+import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
 import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 import com.swp391.Court_Master.dto.request.Respone.DashBoardResponse.TotalBookingSlotInformation;
@@ -141,6 +142,13 @@ public class CourtManagerController {
     public ResponseEntity<List<StaffAccountDTO>> getAllStaff(
             @RequestParam("court_manager_id") String court_manager_id) {
         List<StaffAccountDTO> list = courtManagerService.getAllStaff(court_manager_id);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/search-staff")
+    public ResponseEntity<List<StaffAccountDTO>> getStaffByPhoneName(
+            @RequestBody SearchStaffByPhoneNameRequest SearchStaffByPhoneNameRequest) {
+        List<StaffAccountDTO> list = courtManagerService.getStaffByPhoneName(SearchStaffByPhoneNameRequest);
         return ResponseEntity.ok().body(list);
     }
 

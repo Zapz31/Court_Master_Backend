@@ -12,6 +12,7 @@ import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryBookingSlotMap
 import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryTotalCustomerMapper;
 import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryTotalRevenueMapper;
 import com.swp391.Court_Master.Repository.CourtManagerRepository;
+import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
 import com.swp391.Court_Master.dto.request.Request.DashBoardRequest;
 import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 import com.swp391.Court_Master.dto.request.Respone.DashBoardResponse.TotalBookingSlotInformation;
@@ -191,6 +192,12 @@ public class CourtManagerService {
     // Lay danh sach nhan vien
     public List<StaffAccountDTO> getAllStaff(String court_manager_id) {
         List<StaffAccountDTO> StaffList = courtManagerRepository.getAllStaff(court_manager_id);
+        return StaffList;
+    }
+
+    // Search nhan vien by name/phone
+    public List<StaffAccountDTO> getStaffByPhoneName(SearchStaffByPhoneNameRequest SearchStaffByPhoneNameRequest) {
+        List<StaffAccountDTO> StaffList = courtManagerRepository.getStaffByNamePhone(SearchStaffByPhoneNameRequest);
         return StaffList;
     }
 
