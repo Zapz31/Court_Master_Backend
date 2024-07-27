@@ -550,4 +550,9 @@ public class BookingService {
             return false;
         }
     }
+
+    public int calculatorPriceForPlayingTime(String clubId, int totalPlayingTime){
+        int pricePerHours = bookingRepository.getFlexiblePrice(clubId);
+        return totalPlayingTime * pricePerHours;
+    }
 }
