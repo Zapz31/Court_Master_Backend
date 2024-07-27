@@ -1,5 +1,7 @@
 package com.swp391.Court_Master.Controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,6 +59,22 @@ public class StaffController {
         response.put("clubId", clubId);
         return ResponseEntity.ok().body(response);
     }
-    
+
+    @GetMapping("/search-booked-list")
+    public ResponseEntity<List<StaffViewBookingSlotDTO>> searchBookedList(@RequestParam("clubId") String clubId,
+            @RequestParam("phoneOrname") String phoneNumberOrCusName, @RequestParam("isCheckIn") String isCheckInString) throws UnsupportedEncodingException {
+                String phoneNumberOrCusNameDecode = URLDecoder.decode(phoneNumberOrCusName, "UTF-8");
+                int isCheckIn = Integer.parseInt(isCheckInString);
+                List<StaffViewBookingSlotDTO> results = staffService.searchByPhonenumberOrNameUncheckIn(clubId, phoneNumberOrCusNameDecode, isCheckIn);
+        return ResponseEntity.ok().body(results);
+    }
+
+    @GetMapping("/staffUnCheckIn")
+    public String staffUnCheckin(@RequestParam("slotId") String slotId) {
+
+        return staffService.removeCheckIn(slotId);
+    }
+
+
 
 }

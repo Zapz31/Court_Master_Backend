@@ -90,7 +90,7 @@ public class StaffRepository {
                         "inner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id\r\n" + //
                         "inner join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id\r\n" + //
                         "inner join booking_schedule bsl on bs.booking_schedule_id = bsl.booking_schedule_id\r\n" + //
-                        "where bcl.badminton_club_id = ? and bs.is_check_in = 0";
+                        "where bcl.badminton_club_id = ? and bs.is_check_in = 0 and bs.is_temp != 1";
         return jdbcTemplate.query(sql, new StaffViewBookingSlotRowMapper(), clubId);
     }
 
@@ -100,7 +100,7 @@ public class StaffRepository {
                         "inner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id\r\n" + //
                         "inner join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id\r\n" + //
                         "inner join booking_schedule bsl on bs.booking_schedule_id = bsl.booking_schedule_id\r\n" + //
-                        "where bcl.badminton_club_id = ? and bs.is_check_in = 1";
+                        "where bcl.badminton_club_id = ? and bs.is_check_in = 1 and bs.is_temp != 1";
         return jdbcTemplate.query(sql, new StaffViewBookingSlotRowMapper(), clubId);
     }
 
@@ -110,6 +110,25 @@ public class StaffRepository {
                         "inner join badminton_club bcl on au.court_manager_id = bcl.court_manager_id\r\n" + //
                         "where user_id = ?";
         return jdbcTemplate.queryForObject(sql, String.class, staffId);
+    }
+
+    //Staff un check in
+    public boolean isRemoveUpdateCheckIn(String bookingSlotId) {
+        String sql = "UPDATE booking_slot\r\n" + //
+                "SET is_check_in = 0\r\n" + //
+                "wHERE booking_slot_id = ?";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, bookingSlotId);
+            }
+        };
+        int updateRow = jdbcTemplate.update(sql, pss);
+        if (updateRow > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

@@ -31,7 +31,6 @@ import com.swp391.Court_Master.RowMapper.BookingScheduleHistoryRowMapper;
 import com.swp391.Court_Master.RowMapper.PaymentDetailHistoryRowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFramePricingServiceRowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFrameRowMapperWithoutId;
-import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
 import com.swp391.Court_Master.dto.request.Respone.BookingScheduleHistory;
 import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
