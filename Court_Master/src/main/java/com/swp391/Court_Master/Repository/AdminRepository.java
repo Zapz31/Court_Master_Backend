@@ -28,6 +28,7 @@ public class AdminRepository {
     // Hien thi customer
     // Hien thi manager
     // Hien thi staff kem courtmanager id
+    // Tim bang userId,fist_name,last_name
 
     // Ban user
 }
