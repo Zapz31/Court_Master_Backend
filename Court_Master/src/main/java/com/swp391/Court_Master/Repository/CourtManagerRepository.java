@@ -202,8 +202,70 @@ public class CourtManagerRepository {
         }
     }
 
-    public boolean updateCourtInfo() {
-        return false;
+    public boolean updateCourtInfo(String badminton_court_id, String badminton_court_name,
+            String badminton_court_status) {
+        // Buoc 1 Tao StringBuilder de xay dung cau truy van SQL
+        StringBuilder updateSQL = new StringBuilder();
+        updateSQL.append("UPDATE [Court_Master].[dbo].[badminton_court] SET ");
+
+        // Buoc 2 Bien kiem tra de xac dinh co tham so nao de cap nhat
+        boolean hasParameters = true;
+
+        // Buoc 3 Xay dung phan SET cho unit_number neu ton tai
+        if (badminton_court_name != null) {
+            updateSQL.append("badminton_court_name = ?");
+            hasParameters = false;
+        }
+
+        // Buoc 4 Xay dung phan SET cho province neu ton tai
+        if (badminton_court_status != null) {
+            if (!hasParameters) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("badminton_court_status = ?");
+            hasParameters = false;
+        }
+
+        // Buoc 5 Kiem tra neu khong co tham so nao de cap nhat
+        if (hasParameters) {
+            return false;
+        }
+
+        // Buoc 6 Xay dung phan WHERE cho cau truy van SQL
+        updateSQL.append(" WHERE badminton_court_id = ?");
+
+        // Buoc 7 Tao PreparedStatementSetter de set gia tri cho cau truy van
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                int index = 1;
+
+                // Buoc 10 Set gia tri cho unit_number neu ton tai
+                if (badminton_court_name != null) {
+                    ps.setString(index++, badminton_court_name);
+                }
+
+                // Buoc 11 Set gia tri cho ward neu ton tai
+                if (badminton_court_status != null) {
+                    ps.setString(index++, badminton_court_name);
+                }
+
+                // Buoc 14 Set gia tri cho addressId
+                ps.setString(index, badminton_court_id);
+            }
+        };
+
+        // Buoc 8 Thuc thi cau truy van va kiem tra so dong duoc cap nhat
+        int updateRow = jdbcTemplate.update(updateSQL.toString(), pss);
+
+        // Buoc 9 Tra ve true neu so dong duoc cap nhat lon hon 0
+        if (updateRow > 0) {
+            return true;
+        } else {
+            // Buoc 10 Tra ve false neu khong co dong nao duoc cap nhat
+            return false;
+        }
+
     }
 
     // Query lay ra cac payment detail record cua club trong vong mot thang.
