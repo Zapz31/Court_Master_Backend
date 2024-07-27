@@ -86,25 +86,20 @@ public class FilterService {
             String ward, LocalTime openedTime, LocalTime hoursOfExpect) {
         StringBuilder queryBuilder = new StringBuilder(
                 "select t1.clubId, t1.clubName, t1.clubAddress, t1.clubImageName, t1.averagePrice from (\r\n" + //
-                        "   select bc.badminton_club_id as clubId, bc.badminton_club_name as clubName, \r\n" + //
-                        "   CONCAT(ad.unit_number,', ',ad.ward,', ',ad.district,', ',ad.province) as clubAddress, \r\n"
-                        + //
-                        "   bci.image_url as clubImageName, AVG(pr.one_time_play + pr.flexible + pr.fixed)/3 AS averagePrice from badminton_club bc\r\n"
-                        + //
-                        "   inner join badminton_club_image bci on bc.badminton_club_id = bci.badminton_club_id AND bci.is_main_avatar = 1\r\n"
-                        + //
-                        "   inner join address ad on bc.address_id = ad.address_id\r\n" + //
-                        "   inner join time_frame tf on bc.badminton_club_id = tf.badminton_club_id\r\n" + //
-                        "   inner join pricing_rule pr on tf.time_frame_id = pr.time_frame_id\r\n" + //
-                        "   group by bc.badminton_club_id, bc.badminton_club_name, CONCAT(ad.unit_number,', ',ad.ward,', ',ad.district,', ',ad.province), bci.image_url\r\n"
-                        + //
-                        ") as t1 where t1.clubId in (\r\n" + //
-                        "\t select bcl.badminton_club_id from badminton_club bcl\r\n" + //
-                        "\t inner join address ad on bcl.address_id = ad.address_id\r\n" + //
-                        "\t inner join badminton_court bc on bc.badminton_club_id = bcl.badminton_club_id \r\n" + //
-                        "\t inner join time_frame tf on tf.badminton_club_id = bcl.badminton_club_id\r\n" + //
-                        "\t left join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id\r\n" + //
-                        "\t \t where 1=1 ");
+                                        "   select bc.badminton_club_id as clubId, bc.badminton_club_name as clubName, \r\n" + //
+                                        "   CONCAT(ad.unit_number,', ',ad.ward,', ',ad.district,', ',ad.province) as clubAddress, \r\n" + //
+                                        "   bci.image_url as clubImageName, AVG(pr.one_time_play + pr.flexible + pr.fixed)/3 AS averagePrice from badminton_club bc\r\n" + //
+                                        "   inner join badminton_club_image bci on bc.badminton_club_id = bci.badminton_club_id AND bci.is_main_avatar = 1\r\n" + //
+                                        "   inner join address ad on bc.address_id = ad.address_id\r\n" + //
+                                        "   inner join time_frame tf on bc.badminton_club_id = tf.badminton_club_id\r\n" + //
+                                        "   inner join pricing_rule pr on tf.time_frame_id = pr.time_frame_id\r\n" + //
+                                        "   group by bc.badminton_club_id, bc.badminton_club_name, CONCAT(ad.unit_number,', ',ad.ward,', ',ad.district,', ',ad.province), bci.image_url\r\n" + //
+                                        ") as t1 where t1.clubId in (\r\n" + //
+                                        "\t select bcl.badminton_club_id from badminton_club bcl\r\n" + //
+                                        "\t inner join address ad on bcl.address_id = ad.address_id\r\n" + //
+                                        "\t inner join badminton_court bc on bc.badminton_club_id = bcl.badminton_club_id \r\n" + //
+                                        "\t inner join time_frame tf on tf.badminton_club_id = bcl.badminton_club_id\r\n" + //
+                                        "\t \t where 1=1");
 
         List<Object> params = new ArrayList<>();
 
@@ -142,13 +137,12 @@ public class FilterService {
             params.add(hoursOfExpectTime);
             params.add(hoursOfExpectTime);
             queryBuilder.append("and bc.badminton_court_id not in (\r\n" + //
-                    "\t \t    Select bc.badminton_court_id from badminton_club bcl \r\n" + //
-                    "\t \t\tinner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id\r\n" + //
-                    "\t \t\tleft join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id\r\n" + //
-                    "\t \t \twhere (start_time <= ? and end_time > ?)\r\n" + //
-                    "\t\t\tgroup by bc.badminton_court_id\r\n" + //
-                    "\t\t )\r\n" + //
-                    "");
+                                "\t \t    Select bc.badminton_court_id from badminton_club bcl \r\n" + //
+                                "\t \t\tinner join badminton_court bc on bcl.badminton_club_id = bc.badminton_club_id\r\n" + //
+                                "\t \t\tinner join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id and bs.is_temp != 1\r\n" + //
+                                "\t \t \twhere (start_time <= ? and end_time > ?)\r\n" + //
+                                "\t\t\tgroup by bc.badminton_court_id\r\n" + //
+                                "\t\t )");
 
         }
 

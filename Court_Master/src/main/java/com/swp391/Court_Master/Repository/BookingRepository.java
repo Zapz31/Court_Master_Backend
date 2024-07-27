@@ -108,17 +108,20 @@ public class BookingRepository {
         StringBuilder sql = new StringBuilder(
                 "select bs.booking_slot_id, bs.start_time, bs.end_time, bs.booking_date, bc.badminton_court_id, bc.badminton_court_name from booking_slot bs\r\n"
                         + //
-                        "inner join badminton_court bc on bc.badminton_court_id = bs.badminton_court_id ");
+                        " inner join badminton_court bc on bc.badminton_court_id = bs.badminton_court_id ");
 
         List<Object> params = new ArrayList<>();
         for (int i = 0; i < perSlotRequestDTOs.size(); i++) {
             if (i == 0) {
-                sql.append(" where bc.badminton_court_id = ?");
+                sql.append(" where (bc.badminton_court_id = ?");
                 params.add(perSlotRequestDTOs.get(i).getCourtId());
             } else {
                 sql.append(" or bc.badminton_court_id = ?");
                 params.add(perSlotRequestDTOs.get(i).getCourtId());
             }
+        }
+        if(!perSlotRequestDTOs.isEmpty()){
+            sql.append(") and bs.is_temp != 1");
         }
         sql.append(" order by bc.badminton_court_id");
         String sqlQuery = sql.toString();
@@ -157,7 +160,7 @@ public class BookingRepository {
                 "inner join booking_slot bs on bc.badminton_court_id = bs.badminton_court_id\r\n" + //
                 "inner join booking_schedule bsd on bs.booking_schedule_id = bsd.booking_schedule_id\r\n" + //
                 "inner join authenticated_user au on bsd.customer_id = au.user_id\r\n" + //
-                "where bcl.badminton_club_id = ?\r\n" + //
+                "where bcl.badminton_club_id = ? and bs.is_temp != 1\r\n" + //
                 "order by start_time";
 
         PreparedStatementSetter pss = new PreparedStatementSetter() {
@@ -348,7 +351,7 @@ public class BookingRepository {
         String sql = "select bs.booking_slot_id, bs.start_time, bs.end_time, bs.booking_date, bs.is_check_in, price, bs.badminton_court_id, bc.badminton_court_name from  booking_slot bs\r\n"
                 + //
                 "inner join badminton_court bc on bs.badminton_court_id = bc.badminton_court_id\r\n" + //
-                "where booking_schedule_id = ?";
+                "where booking_schedule_id = ? and bs.is_temp != 1";
         PreparedStatementSetter pss = new PreparedStatementSetter() {
 
             @Override
@@ -478,17 +481,19 @@ public class BookingRepository {
     }
 
     // updata booking schedule status
-    public boolean isUpdateStatus(String bookingScheduleId, String bookingScheduleStatus) {
+    @Transactional
+    public boolean isUpdateStatus(String bookingScheduleId, String bookingScheduleStatus, int amount) {
         String sql = "update booking_schedule\r\n" + //
-                "set booking_schedule_status = ?\r\n" + //
-                "where booking_schedule_id = ?";
+                        "set booking_schedule_status = ?, remaining_amount = remaining_amount - ?\r\n" + //
+                        "where booking_schedule_id = ?";
 
         PreparedStatementSetter pss = new PreparedStatementSetter() {
 
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 ps.setString(1, bookingScheduleStatus);
-                ps.setString(2, bookingScheduleId);
+                ps.setInt(2, amount);
+                ps.setString(3, bookingScheduleId);
             }
         };
         int updateRow = jdbcTemplate.update(sql, pss);

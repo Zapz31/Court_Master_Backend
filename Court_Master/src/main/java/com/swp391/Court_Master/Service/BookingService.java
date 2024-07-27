@@ -208,7 +208,7 @@ public class BookingService {
                 totalDuration = totalDuration.plus(duration);
             } else {
                 Duration duration = Duration.between(perSlotRequestDTO.getStartBooking(),
-                perSlotRequestDTO.getEndBooking()).plusMinutes(1);
+                        perSlotRequestDTO.getEndBooking()).plusMinutes(1);
                 totalDuration = totalDuration.plus(duration);
             }
         }
@@ -277,42 +277,47 @@ public class BookingService {
      * cac booking slot bi trung
      */
     public List<BookedDTO> getDuplicateBookingSlotList(List<BookingSlotResponseDTO> pricePerSlotRequestDTOs) {
-        List<BookedDTO> allBookingSlotsByCourtId = bookingRepository.getBookedList(pricePerSlotRequestDTOs);
         List<BookedDTO> duplicateBookingSlotList = new ArrayList<>();
-        for (BookingSlotResponseDTO pricePerSlotRequestDTO : pricePerSlotRequestDTOs) {
-            int flag = 0;
-            for (BookedDTO bookedDTO : allBookingSlotsByCourtId) {
-                if ((flag == 0) && (!pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId()))) {
-                    continue;
-                } else if (pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId())) {
-                    flag = 1;
-                    if (pricePerSlotRequestDTO.getBookingDate().equals(bookedDTO.getBookingDate())) {
-                        if ((pricePerSlotRequestDTO.getStartBooking().equals(bookedDTO.getStartTime())
-                                || (pricePerSlotRequestDTO.getStartBooking().isAfter(bookedDTO.getStartTime())))
-                                && (pricePerSlotRequestDTO.getEndBooking().equals(bookedDTO.getEndTime())
-                                        || pricePerSlotRequestDTO.getEndBooking().isBefore(bookedDTO.getEndTime()))) {
-                            duplicateBookingSlotList.add(bookedDTO);
-                        } else if (pricePerSlotRequestDTO.getStartBooking().isBefore(bookedDTO.getStartTime())
-                                && (pricePerSlotRequestDTO.getEndBooking().equals(bookedDTO.getEndTime())
-                                        || pricePerSlotRequestDTO.getEndBooking().isBefore(bookedDTO.getEndTime())
-                                                && pricePerSlotRequestDTO.getEndBooking()
-                                                        .isAfter(bookedDTO.getStartTime()))) {
-                            duplicateBookingSlotList.add(bookedDTO);
-                        } else if ((pricePerSlotRequestDTO.getStartBooking().equals(bookedDTO.getStartTime())
-                                || pricePerSlotRequestDTO.getStartBooking().isAfter(bookedDTO.getStartTime())
-                                        && pricePerSlotRequestDTO.getStartBooking().isBefore(bookedDTO.getEndTime()))
-                                && pricePerSlotRequestDTO.getEndBooking().isAfter(bookedDTO.getEndTime())) {
-                            duplicateBookingSlotList.add(bookedDTO);
-                        } else if (pricePerSlotRequestDTO.getStartBooking().isBefore(bookedDTO.getStartTime())
-                                && pricePerSlotRequestDTO.getEndBooking().isAfter(bookedDTO.getEndTime())) {
-                            duplicateBookingSlotList.add(bookedDTO);
+        if (!pricePerSlotRequestDTOs.isEmpty() || pricePerSlotRequestDTOs != null) {
+            List<BookedDTO> allBookingSlotsByCourtId = bookingRepository.getBookedList(pricePerSlotRequestDTOs);
+            for (BookingSlotResponseDTO pricePerSlotRequestDTO : pricePerSlotRequestDTOs) {
+                int flag = 0;
+                for (BookedDTO bookedDTO : allBookingSlotsByCourtId) {
+                    if ((flag == 0) && (!pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId()))) {
+                        continue;
+                    } else if (pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId())) {
+                        flag = 1;
+                        if (pricePerSlotRequestDTO.getBookingDate().equals(bookedDTO.getBookingDate())) {
+                            if ((pricePerSlotRequestDTO.getStartBooking().equals(bookedDTO.getStartTime())
+                                    || (pricePerSlotRequestDTO.getStartBooking().isAfter(bookedDTO.getStartTime())))
+                                    && (pricePerSlotRequestDTO.getEndBooking().equals(bookedDTO.getEndTime())
+                                            || pricePerSlotRequestDTO.getEndBooking()
+                                                    .isBefore(bookedDTO.getEndTime()))) {
+                                duplicateBookingSlotList.add(bookedDTO);
+                            } else if (pricePerSlotRequestDTO.getStartBooking().isBefore(bookedDTO.getStartTime())
+                                    && (pricePerSlotRequestDTO.getEndBooking().equals(bookedDTO.getEndTime())
+                                            || pricePerSlotRequestDTO.getEndBooking().isBefore(bookedDTO.getEndTime())
+                                                    && pricePerSlotRequestDTO.getEndBooking()
+                                                            .isAfter(bookedDTO.getStartTime()))) {
+                                duplicateBookingSlotList.add(bookedDTO);
+                            } else if ((pricePerSlotRequestDTO.getStartBooking().equals(bookedDTO.getStartTime())
+                                    || pricePerSlotRequestDTO.getStartBooking().isAfter(bookedDTO.getStartTime())
+                                            && pricePerSlotRequestDTO.getStartBooking()
+                                                    .isBefore(bookedDTO.getEndTime()))
+                                    && pricePerSlotRequestDTO.getEndBooking().isAfter(bookedDTO.getEndTime())) {
+                                duplicateBookingSlotList.add(bookedDTO);
+                            } else if (pricePerSlotRequestDTO.getStartBooking().isBefore(bookedDTO.getStartTime())
+                                    && pricePerSlotRequestDTO.getEndBooking().isAfter(bookedDTO.getEndTime())) {
+                                duplicateBookingSlotList.add(bookedDTO);
+                            }
                         }
+                    } else if ((!pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId())) && (flag == 1)) {
+                        break;
                     }
-                } else if ((!pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId())) && (flag == 1)) {
-                    break;
                 }
             }
         }
+
         return duplicateBookingSlotList;
 
     }
@@ -387,7 +392,8 @@ public class BookingService {
 
     public MessageResponse excutePaymentTransaction(BookingPaymentRequestDTO bookingPaymentRequestDTO) {
         // Goi ham insert booking schedule va lay booking_schedule_id o day
-        int remmainingAmount = bookingPaymentRequestDTO.getBookingSchedule().getTotalPrice() - (bookingPaymentRequestDTO.getPaymentDetail().getAmount()/100);
+        int remmainingAmount = bookingPaymentRequestDTO.getBookingSchedule().getTotalPrice()
+                - (bookingPaymentRequestDTO.getPaymentDetail().getAmount() / 100);
         bookingPaymentRequestDTO.getBookingSchedule().setRemainingAmount(remmainingAmount);
         String scheduleId = bookingRepository.insertBookingSchedule(bookingPaymentRequestDTO.getBookingSchedule());
 
@@ -465,7 +471,8 @@ public class BookingService {
         boolean isUpdateStatus;
         try {
             isUpdateStatus = bookingRepository.isUpdateStatus(paymentUpdateBookingSchedule.getBookingScheduleId(),
-                    paymentUpdateBookingSchedule.getBookingScheduleStatus());
+                    paymentUpdateBookingSchedule.getBookingScheduleStatus(),
+                    paymentUpdateBookingSchedule.getPaymentDetail().getAmount());
         } catch (Exception e) {
             System.out.println("Error at isUpdateStatus: " + e);
             return false;

@@ -136,8 +136,4 @@ public class CourtManagerController {
     }
     
 
-    
-
-
-    
 }
