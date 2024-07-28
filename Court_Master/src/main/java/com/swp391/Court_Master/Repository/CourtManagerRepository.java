@@ -22,6 +22,7 @@ import com.swp391.Court_Master.RowMapper.QueryDashBoardRowMapper.QueryTotalCusto
 import com.swp391.Court_Master.RowMapper.QueryDashBoardRowMapper.QueryTotalRevenueRowMapper;
 import com.swp391.Court_Master.dto.request.Request.DashBoardRequest;
 import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
+import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
 import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 
@@ -747,9 +748,15 @@ public class CourtManagerRepository {
     }
 
     // Update staff info: first, last name, email, phone, birthday
-    public boolean updateStaffInfo(String staffId, String courtManagerId, String firstName, String lastName,
-            String email,
-            String phoneNumber, String birthday) {
+    public boolean updateStaffInfo(UpdateStaffRequest UpdateStaffRequest) {
+
+        String staffId = UpdateStaffRequest.getStaffId();
+        String court_manager_id = UpdateStaffRequest.getCourtManagerId();
+        String firstName = UpdateStaffRequest.getFirstName();
+        String lastName = UpdateStaffRequest.getLastName();
+        String email = UpdateStaffRequest.getEmail();
+        String phoneNumber = UpdateStaffRequest.getPhoneNumber();
+        String birthday = UpdateStaffRequest.getBirthday();
 
         // Step 1: Construct SQL query to update staff information
         StringBuilder updateSQL = new StringBuilder();
@@ -843,7 +850,7 @@ public class CourtManagerRepository {
 
                 // Step 17: Set value for staffId and courtManagerId
                 ps.setString(index++, staffId);
-                ps.setString(index, courtManagerId);
+                ps.setString(index, court_manager_id);
             }
         };
 

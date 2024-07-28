@@ -62,10 +62,12 @@ public class StaffController {
 
     @GetMapping("/search-booked-list")
     public ResponseEntity<List<StaffViewBookingSlotDTO>> searchBookedList(@RequestParam("clubId") String clubId,
-            @RequestParam("phoneOrname") String phoneNumberOrCusName, @RequestParam("isCheckIn") String isCheckInString) throws UnsupportedEncodingException {
-                String phoneNumberOrCusNameDecode = URLDecoder.decode(phoneNumberOrCusName, "UTF-8");
-                int isCheckIn = Integer.parseInt(isCheckInString);
-                List<StaffViewBookingSlotDTO> results = staffService.searchByPhonenumberOrNameUncheckIn(clubId, phoneNumberOrCusNameDecode, isCheckIn);
+            @RequestParam("phoneOrname") String phoneNumberOrCusName, @RequestParam("isCheckIn") String isCheckInString)
+            throws UnsupportedEncodingException {
+        String phoneNumberOrCusNameDecode = URLDecoder.decode(phoneNumberOrCusName, "UTF-8");
+        int isCheckIn = Integer.parseInt(isCheckInString);
+        List<StaffViewBookingSlotDTO> results = staffService.searchByPhonenumberOrNameUncheckIn(clubId,
+                phoneNumberOrCusNameDecode, isCheckIn);
         return ResponseEntity.ok().body(results);
     }
 
@@ -74,7 +76,5 @@ public class StaffController {
 
         return staffService.removeCheckIn(slotId);
     }
-
-
 
 }

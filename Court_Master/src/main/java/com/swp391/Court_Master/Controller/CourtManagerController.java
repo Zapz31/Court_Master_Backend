@@ -28,6 +28,7 @@ import com.swp391.Court_Master.Service.CourtManagerService;
 import com.swp391.Court_Master.dto.request.Request.ClubRegisterDTO;
 import com.swp391.Court_Master.dto.request.Request.DashBoardRequest;
 import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
+import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
 import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 import com.swp391.Court_Master.dto.request.Respone.DashBoardResponse.TotalBookingSlotInformation;
@@ -133,7 +134,7 @@ public class CourtManagerController {
     }
 
     @GetMapping("/get-clubId-by-cId")
-    public ResponseEntity<HashMap<String, String>> getMethodName(@RequestParam("userId") String courtManagerId) {
+    public ResponseEntity<HashMap<String, String>> getCLubIdByUserId(@RequestParam("userId") String courtManagerId) {
         HashMap<String, String> map = courtManagerService.getClubIdByUserId(courtManagerId);
         return ResponseEntity.ok().body(map);
     }
@@ -152,4 +153,16 @@ public class CourtManagerController {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping("/update-staff")
+    public String updateStaffInfo(
+            @RequestBody UpdateStaffRequest UpdateStaffRequest) {
+        String result = courtManagerService.updateStaffInfo(UpdateStaffRequest);
+        return result;
+    }
+
+    @GetMapping("/delete-staff")
+    public String deleteStaff(@RequestParam("staff_id") String staff_id,
+            @RequestParam("court_manager_id") String court_manager_id) {
+        return courtManagerService.deleteStaff(staff_id, court_manager_id);
+    }
 }

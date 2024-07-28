@@ -13,6 +13,7 @@ import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryTotalCustomerM
 import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryTotalRevenueMapper;
 import com.swp391.Court_Master.Repository.CourtManagerRepository;
 import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
+import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
 import com.swp391.Court_Master.dto.request.Request.DashBoardRequest;
 import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 import com.swp391.Court_Master.dto.request.Respone.DashBoardResponse.TotalBookingSlotInformation;
@@ -201,4 +202,23 @@ public class CourtManagerService {
         return StaffList;
     }
 
+    // Delete nhan vien by id
+    public String deleteStaff(String staff_id, String court_manager_id) {
+        boolean isDeleteStaff = courtManagerRepository.isDeleteStaff(staff_id, court_manager_id);
+        if (isDeleteStaff) {
+            return "success";
+        } else {
+            return "false";
+        }
+    }
+
+    // Update info staff
+    public String updateStaffInfo(UpdateStaffRequest UpdateStaffRequest) {
+        boolean isUpdateStaff = courtManagerRepository.updateStaffInfo(UpdateStaffRequest);
+        if (isUpdateStaff) {
+            return "success";
+        } else {
+            return "false";
+        }
+    }
 }
