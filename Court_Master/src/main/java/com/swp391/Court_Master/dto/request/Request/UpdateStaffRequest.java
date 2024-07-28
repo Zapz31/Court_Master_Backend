@@ -3,25 +3,25 @@ package com.swp391.Court_Master.dto.request.Request;
 public class UpdateStaffRequest {
 
     // Declaring a private variable to hold the staff ID
-    private String staffId;
+     String staffId;
 
     // Declaring a private variable to hold the court manager ID
-    private String courtManagerId;
+     String courtManagerId;
 
     // Declaring a private variable to hold the first name
-    private String firstName;
+     String firstName;
 
     // Declaring a private variable to hold the last name
-    private String lastName;
+     String lastName;
 
     // Declaring a private variable to hold the email
-    private String email;
+     String email;
 
     // Declaring a private variable to hold the phone number
-    private String phoneNumber;
+     String phoneNumber;
 
     // Declaring a private variable to hold the birthday
-    private String birthday;
+     String birthday;
 
     // Default constructor
     public UpdateStaffRequest() {
