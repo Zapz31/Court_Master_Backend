@@ -1,18 +1,34 @@
 package com.swp391.Court_Master.dto.request.Request;
 
 public class UpdateStaffRequest {
-    String staffId;
-    String courtManagerId;
-    String firstName;
-    String lastName;
-    String email;
-    String phoneNumber;
-    String birthday;
 
+    // Declaring a private variable to hold the staff ID
+    private String staffId;
+
+    // Declaring a private variable to hold the court manager ID
+    private String courtManagerId;
+
+    // Declaring a private variable to hold the first name
+    private String firstName;
+
+    // Declaring a private variable to hold the last name
+    private String lastName;
+
+    // Declaring a private variable to hold the email
+    private String email;
+
+    // Declaring a private variable to hold the phone number
+    private String phoneNumber;
+
+    // Declaring a private variable to hold the birthday
+    private String birthday;
+
+    // Default constructor
     public UpdateStaffRequest() {
-
+        // No initialization in default constructor
     }
 
+    // Parameterized constructor
     public UpdateStaffRequest(String staffId,
             String courtManagerId,
             String firstName,
@@ -20,76 +36,168 @@ public class UpdateStaffRequest {
             String email,
             String phoneNumber,
             String birthday) {
-        this.staffId = staffId;
-        this.courtManagerId = courtManagerId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.birthday = birthday;
+
+        // Assigning staff ID
+        String tempStaffId = staffId;
+        this.staffId = tempStaffId;
+
+        // Assigning court manager ID
+        String tempCourtManagerId = courtManagerId;
+        this.courtManagerId = tempCourtManagerId;
+
+        // Assigning first name
+        String tempFirstName = firstName;
+        this.firstName = tempFirstName;
+
+        // Assigning last name
+        String tempLastName = lastName;
+        this.lastName = tempLastName;
+
+        // Assigning email
+        String tempEmail = email;
+        this.email = tempEmail;
+
+        // Assigning phone number
+        String tempPhoneNumber = phoneNumber;
+        this.phoneNumber = tempPhoneNumber;
+
+        // Assigning birthday
+        String tempBirthday = birthday;
+        this.birthday = tempBirthday;
     }
 
-    // Getter and Setter for staffId
+    // Getter for staffId
     public String getStaffId() {
-        return staffId;
+        String result = this.staffId;
+        return result;
     }
 
+    // Setter for staffId
     public void setStaffId(String staffId) {
-        this.staffId = staffId;
+        String tempStaffId = staffId;
+        this.staffId = tempStaffId;
     }
 
-    // Getter and Setter for courtManagerId
+    // Getter for courtManagerId
     public String getCourtManagerId() {
-        return courtManagerId;
+        String result = this.courtManagerId;
+        return result;
     }
 
+    // Setter for courtManagerId
     public void setCourtManagerId(String courtManagerId) {
-        this.courtManagerId = courtManagerId;
+        String tempCourtManagerId = courtManagerId;
+        this.courtManagerId = tempCourtManagerId;
     }
 
-    // Getter and Setter for firstName
+    // Getter for firstName
     public String getFirstName() {
-        return firstName;
+        String result = this.firstName;
+        return result;
     }
 
+    // Setter for firstName
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        String tempFirstName = firstName;
+        this.firstName = tempFirstName;
     }
 
-    // Getter and Setter for lastName
+    // Getter for lastName
     public String getLastName() {
-        return lastName;
+        String result = this.lastName;
+        return result;
     }
 
+    // Setter for lastName
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        String tempLastName = lastName;
+        this.lastName = tempLastName;
     }
 
-    // Getter and Setter for email
+    // Getter for email
     public String getEmail() {
-        return email;
+        String result = this.email;
+        return result;
     }
 
+    // Setter for email
     public void setEmail(String email) {
-        this.email = email;
+        String tempEmail = email;
+        this.email = tempEmail;
     }
 
-    // Getter and Setter for phoneNumber
+    // Getter for phoneNumber
     public String getPhoneNumber() {
-        return phoneNumber;
+        String result = this.phoneNumber;
+        return result;
     }
 
+    // Setter for phoneNumber
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        String tempPhoneNumber = phoneNumber;
+        this.phoneNumber = tempPhoneNumber;
     }
 
-    // Getter and Setter for birthday
+    // Getter for birthday
     public String getBirthday() {
-        return birthday;
+        String result = this.birthday;
+        return result;
     }
 
+    // Setter for birthday
     public void setBirthday(String birthday) {
-        this.birthday = birthday;
+        String tempBirthday = birthday;
+        this.birthday = tempBirthday;
     }
 
+    // Redundant method to show verbosity
+    public void redundantMethod() {
+        // Printing the current state of the object
+        System.out.println("Staff ID: " + this.staffId);
+        System.out.println("Court Manager ID: " + this.courtManagerId);
+        System.out.println("First Name: " + this.firstName);
+        System.out.println("Last Name: " + this.lastName);
+        System.out.println("Email: " + this.email);
+        System.out.println("Phone Number: " + this.phoneNumber);
+        System.out.println("Birthday: " + this.birthday);
+    }
+
+    // Another redundant method to add more verbosity
+    public void verboseMethod() {
+        String verboseStaffId = getStaffId();
+        System.out.println("Verbose Staff ID: " + verboseStaffId);
+
+        String verboseCourtManagerId = getCourtManagerId();
+        System.out.println("Verbose Court Manager ID: " + verboseCourtManagerId);
+
+        String verboseFirstName = getFirstName();
+        System.out.println("Verbose First Name: " + verboseFirstName);
+
+        String verboseLastName = getLastName();
+        System.out.println("Verbose Last Name: " + verboseLastName);
+
+        String verboseEmail = getEmail();
+        System.out.println("Verbose Email: " + verboseEmail);
+
+        String verbosePhoneNumber = getPhoneNumber();
+        System.out.println("Verbose Phone Number: " + verbosePhoneNumber);
+
+        String verboseBirthday = getBirthday();
+        System.out.println("Verbose Birthday: " + verboseBirthday);
+    }
+
+    // More redundant computations
+    public void redundantComputations() {
+        int lenFirstName = this.firstName.length();
+        int lenLastName = this.lastName.length();
+        int lenEmail = this.email.length();
+        int lenPhoneNumber = this.phoneNumber.length();
+        int lenBirthday = this.birthday.length();
+
+        System.out.println("Length of First Name: " + lenFirstName);
+        System.out.println("Length of Last Name: " + lenLastName);
+        System.out.println("Length of Email: " + lenEmail);
+        System.out.println("Length of Phone Number: " + lenPhoneNumber);
+        System.out.println("Length of Birthday: " + lenBirthday);
+    }
 }
