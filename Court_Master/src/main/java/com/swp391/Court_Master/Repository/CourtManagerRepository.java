@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.MergedAnnotations.Search;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
@@ -634,17 +635,18 @@ public class CourtManagerRepository {
     // Search, update, delete by ten, sdt
     // Search staff by name/phone
     public List<StaffAccountDTO> getStaffByNamePhone(SearchStaffByPhoneNameRequest SearchStaffByPhoneNameRequest) {
-        String sql = "  SELECT  [user_id]\r\n" + //
-                "      ,[first_name]\r\n" + //
-                "      ,[last_name]\r\n" + //
-                "      ,[email]\r\n" + //
-                "      ,[phone_number]\r\n" + //
-                "      ,[birthday]\r\n" + //
-                "      ,[avatar_image_url]\r\n" + //
-                "  FROM [Court_Master].[dbo].[authenticated_user]\r\n" + //
-                "  WHERE [first_name] LIKE ?\r\n" + //
-                "     OR [last_name] LIKE ?\r\n" + //
-                "     OR [phone_number] LIKE ?;";
+        String sql = "SELECT [user_id],\r\n" + //
+                "       [first_name],\r\n" + //
+                "       [last_name],\r\n" + //
+                "       [email],\r\n" + //
+                "       [phone_number],\r\n" + //
+                "       [birthday],\r\n" + //
+                "       [avatar_image_url]\r\n" + //
+                "FROM [Court_Master].[dbo].[authenticated_user]\r\n" + //
+                "WHERE [court_manager_id] = ?\r\n" + //
+                "  AND ([first_name] LIKE ?\r\n" + //
+                "       OR [last_name] LIKE ?\r\n" + //
+                "       OR [phone_number] LIKE ?);";
 
         PreparedStatementSetter pss = new PreparedStatementSetter() {
             @Override
@@ -653,6 +655,8 @@ public class CourtManagerRepository {
                 ps.setString(1, SearchStaffByPhoneNameRequest.getCourtManagerId());
                 // Set the search term for name and phone number filtering
                 String searchPattern = "%" + SearchStaffByPhoneNameRequest.getSearch() + "%";
+                String court_manager_id = SearchStaffByPhoneNameRequest.getCourtManagerId();
+                ps.setString(1, court_manager_id);
                 ps.setString(2, searchPattern);
                 ps.setString(3, searchPattern);
                 ps.setString(4, searchPattern);
@@ -664,17 +668,18 @@ public class CourtManagerRepository {
 
     public List<StaffAccountDTO> getStaffByNamePhones(SearchStaffByPhoneNameRequest searchStaffByPhoneNameRequest) {
         // Define the SQL query to retrieve staff information
-        String sqlQuery = "SELECT [user_id], " +
-                "[first_name], " +
-                "[last_name], " +
-                "[email], " +
-                "[phone_number], " +
-                "[birthday], " +
-                "[avatar_image_url] " +
-                "FROM [Court_Master].[dbo].[authenticated_user] " +
-                "WHERE [first_name] LIKE ? " +
-                "OR [last_name] LIKE ? " +
-                "OR [phone_number] LIKE ?;";
+        String sqlQuery = "SELECT [user_id],\r\n" + //
+                "       [first_name],\r\n" + //
+                "       [last_name],\r\n" + //
+                "       [email],\r\n" + //
+                "       [phone_number],\r\n" + //
+                "       [birthday],\r\n" + //
+                "       [avatar_image_url]\r\n" + //
+                "FROM [Court_Master].[dbo].[authenticated_user]\r\n" + //
+                "WHERE [court_manager_id] = ?\r\n" + //
+                "  AND ([first_name] LIKE ?\r\n" + //
+                "       OR [last_name] LIKE ?\r\n" + //
+                "       OR [phone_number] LIKE ?);";
 
         // Initialize the PreparedStatementSetter to set SQL parameters
         PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
@@ -698,9 +703,10 @@ public class CourtManagerRepository {
                 System.out.println("Search pattern: " + searchPattern);
 
                 // Set the parameters in the prepared statement
-                preparedStatement.setString(1, searchPattern);
+                preparedStatement.setString(1, courtManagerId);
                 preparedStatement.setString(2, searchPattern);
                 preparedStatement.setString(3, searchPattern);
+                preparedStatement.setString(4, searchPattern);
             }
         };
 
@@ -717,6 +723,140 @@ public class CourtManagerRepository {
 
         // Return the list of staff accounts
         return staffList;
+    }
+
+    // Delete a staff by staff id, staff co courtmanagerid la id cua courtmanager
+    public boolean isDeleteStaff(String staff_id, String court_manager_id) {
+        String sql = "DELETE FROM [Court_Master].[dbo].[authenticated_user]\r\n" + //
+                "WHERE [user_id] = ?\r\n" + //
+                "AND [court_manager_id] = ?;\r\n" + //
+                "";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, staff_id);
+                ps.setString(2, court_manager_id);
+            }
+        };
+        int updateRow = jdbcTemplate.update(sql, pss);
+        if (updateRow > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Update staff info: first, last name, email, phone, birthday
+    public boolean updateStaffInfo(String staffId, String courtManagerId, String firstName, String lastName,
+            String email,
+            String phoneNumber, String birthday) {
+
+        // Step 1: Construct SQL query to update staff information
+        StringBuilder updateSQL = new StringBuilder();
+
+        // Step 2: Initial SQL query construction
+        updateSQL.append("UPDATE [Court_Master].[dbo].[authenticated_user] SET ");
+
+        // Step 3: Flag to check if any column needs to be updated
+        boolean hasParameters = false;
+
+        // Step 4: Construct SET clause for first name if present
+        if (firstName != null) {
+            updateSQL.append("first_name = ?");
+            hasParameters = true;
+        }
+
+        // Step 5: Construct SET clause for last name if present
+        if (lastName != null) {
+            if (hasParameters) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("last_name = ?");
+            hasParameters = true;
+        }
+
+        // Step 6: Construct SET clause for email if present
+        if (email != null) {
+            if (hasParameters) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("email = ?");
+            hasParameters = true;
+        }
+
+        // Step 7: Construct SET clause for phone number if present
+        if (phoneNumber != null) {
+            if (hasParameters) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("phone_number = ?");
+            hasParameters = true;
+        }
+
+        // Step 8: Construct SET clause for birthday if present
+        if (birthday != null) {
+            if (hasParameters) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("birthday = ?");
+            hasParameters = true;
+        }
+
+        // Step 9: Check if no parameters are present for update
+        if (!hasParameters) {
+            return false;
+        }
+
+        // Step 10: Construct WHERE clause for the SQL query
+        updateSQL.append(" WHERE user_id = ? AND court_manager_id = ?");
+
+        // Step 11: Create PreparedStatementSetter to set the values for the query
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                int index = 1;
+
+                // Step 12: Set value for first name if present
+                if (firstName != null) {
+                    ps.setString(index++, firstName);
+                }
+
+                // Step 13: Set value for last name if present
+                if (lastName != null) {
+                    ps.setString(index++, lastName);
+                }
+
+                // Step 14: Set value for email if present
+                if (email != null) {
+                    ps.setString(index++, email);
+                }
+
+                // Step 15: Set value for phone number if present
+                if (phoneNumber != null) {
+                    ps.setString(index++, phoneNumber);
+                }
+
+                // Step 16: Set value for birthday if present
+                if (birthday != null) {
+                    ps.setString(index++, birthday);
+                }
+
+                // Step 17: Set value for staffId and courtManagerId
+                ps.setString(index++, staffId);
+                ps.setString(index, courtManagerId);
+            }
+        };
+
+        // Step 18: Execute the query and check the number of rows updated
+        int updateRow = jdbcTemplate.update(updateSQL.toString(), pss);
+
+        // Step 19: Return true if rows were updated
+        if (updateRow > 0) {
+            return true;
+        } else {
+            // Step 20: Return false if no rows were updated
+            return false;
+        }
     }
 
 }
