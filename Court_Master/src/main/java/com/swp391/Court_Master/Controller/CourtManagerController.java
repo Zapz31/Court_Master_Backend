@@ -146,7 +146,7 @@ public class CourtManagerController {
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/search-staff")
+    @PostMapping("/search-staff")
     public ResponseEntity<List<StaffAccountDTO>> getStaffByPhoneName(
             @RequestBody SearchStaffByPhoneNameRequest SearchStaffByPhoneNameRequest) {
         List<StaffAccountDTO> list = courtManagerService.getStaffByPhoneName(SearchStaffByPhoneNameRequest);
