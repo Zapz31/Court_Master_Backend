@@ -9,6 +9,8 @@ public class BookingPaymentRequestDTO {
     private String clubName;
     private BookingSchedule bookingSchedule;
     private PaymentDetail paymentDetail;
+    private TempBookingSlot tempBookingSlot;
+    private String scheduleAndSlotIdTemp; // Lay id de cap nhat trang thai cho booking slot va them cac du lieu thanh toan va hoa don cho booking schedule
     public BookingPaymentRequestDTO() {
     }
      
@@ -22,7 +24,18 @@ public class BookingPaymentRequestDTO {
     }
 
 
+    public BookingPaymentRequestDTO(String courtManagerPhone, String clubId, String clubName,
+            BookingSchedule bookingSchedule, PaymentDetail paymentDetail, TempBookingSlot tempBookingSlot) {
+        this.courtManagerPhone = courtManagerPhone;
+        this.clubId = clubId;
+        this.clubName = clubName;
+        this.bookingSchedule = bookingSchedule;
+        this.paymentDetail = paymentDetail;
+        this.tempBookingSlot = tempBookingSlot;
+    }
 
+    
+    
     public BookingSchedule getBookingSchedule() {
         return bookingSchedule;
     }
@@ -58,6 +71,22 @@ public class BookingPaymentRequestDTO {
 
     public void setClubName(String clubName) {
         this.clubName = clubName;
+    }
+
+    public TempBookingSlot getTempBookingSlot() {
+        return tempBookingSlot;
+    }
+
+    public void setTempBookingSlot(TempBookingSlot tempBookingSlot) {
+        this.tempBookingSlot = tempBookingSlot;
+    }
+
+    public String getScheduleAndSlotIdTemp() {
+        return scheduleAndSlotIdTemp;
+    }
+
+    public void setScheduleAndSlotIdTemp(String scheduleAndSlotIdTemp) {
+        this.scheduleAndSlotIdTemp = scheduleAndSlotIdTemp;
     }
 
     

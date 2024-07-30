@@ -231,7 +231,7 @@ public class testAPI {
     // Lay nhung booking duoc yeu cau dat nhung chua thanh toan ma bi danh dau la trung voi cac booking da co
     @PostMapping("/get-duplicate-bookingslot-request")
     public ResponseEntity<List<BookingSlotResponseDTO>> getDuplicateBookingSlotRequest(@RequestBody List<BookingSlotResponseDTO> pricePerSlotRequestDTOs) {       
-        return ResponseEntity.ok().body(bookingService.getDupBookingSlotRequest(pricePerSlotRequestDTOs));
+        return ResponseEntity.ok().body(bookingService.getDupBookingSlotRequest(pricePerSlotRequestDTOs, 0));
     }
 
     

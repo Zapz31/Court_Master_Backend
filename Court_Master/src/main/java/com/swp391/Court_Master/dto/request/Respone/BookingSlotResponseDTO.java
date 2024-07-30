@@ -11,6 +11,7 @@ public class BookingSlotResponseDTO {
     private String bookingType;
     private String playTime;
     private Integer price;
+    private int isTemp;
     public BookingSlotResponseDTO() {
     }
     public BookingSlotResponseDTO(String courtId, LocalTime startBooking, LocalTime endBooking, LocalDate bookingDate,
@@ -23,6 +24,8 @@ public class BookingSlotResponseDTO {
         this.playTime = playTime;
         this.price = price;
     }
+
+    
     public String getCourtId() {
         return courtId;
     }
@@ -64,6 +67,12 @@ public class BookingSlotResponseDTO {
     }
     public void setPrice(Integer price) {
         this.price = price;
+    }
+    public int getIsTemp() {
+        return isTemp;
+    }
+    public void setIsTemp(int isTemp) {
+        this.isTemp = isTemp;
     }
 
     

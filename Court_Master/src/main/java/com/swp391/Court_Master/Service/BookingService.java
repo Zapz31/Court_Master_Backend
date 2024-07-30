@@ -11,9 +11,11 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.uuid.Generators;
 import com.swp391.Court_Master.Entities.BookedDTO;
+import com.swp391.Court_Master.Entities.BookingSchedule;
 import com.swp391.Court_Master.Entities.Invoice;
 import com.swp391.Court_Master.Entities.PaymentDetail;
 import com.swp391.Court_Master.Entities.PaymentUpdateBookingSchedule;
@@ -323,16 +325,33 @@ public class BookingService {
     }
 
     /*
-     * Kiem tra xem cac booking slot co trung nhau hay khong, ham tra ve danh sach cac pricePerSlotRequestDTOs bi trung 
+     * Kiem tra xem cac booking slot co trung nhau hay khong, ham tra ve danh sach
+     * cac pricePerSlotRequestDTOs bi trung
      * thay vi bookedDTO
      */
-    public List<BookingSlotResponseDTO> getDupBookingSlotRequest(List<BookingSlotResponseDTO> pricePerSlotRequestDTOs) {
+    public List<BookingSlotResponseDTO> getDupBookingSlotRequest(List<BookingSlotResponseDTO> pricePerSlotRequestDTOs, int isTemp) {
         List<BookingSlotResponseDTO> duplicateBookingSlotRequests = new ArrayList<>();
         if (!pricePerSlotRequestDTOs.isEmpty() || pricePerSlotRequestDTOs != null) {
             List<BookedDTO> allBookingSlotsByCourtId = bookingRepository.getBookedList(pricePerSlotRequestDTOs);
+            List<BookedDTO> tempOrNotTempList = new ArrayList<>();
+            // Check trung theo danh sach cac booking slot tam thoi hoac ko tam thoi
+            if(isTemp == 1){
+                for(BookedDTO bookedDTO: allBookingSlotsByCourtId){
+                    if(bookedDTO.getIsTemp() == 1){
+                        tempOrNotTempList.add(bookedDTO);
+                    }
+                }
+            } else if(isTemp == 0){
+                for(BookedDTO bookedDTO : allBookingSlotsByCourtId){
+                    if(bookedDTO.getIsTemp() == 0){
+                        tempOrNotTempList.add(bookedDTO);
+                    }
+                }
+            } 
+            
             for (BookingSlotResponseDTO pricePerSlotRequestDTO : pricePerSlotRequestDTOs) {
                 int flag = 0;
-                for (BookedDTO bookedDTO : allBookingSlotsByCourtId) {
+                for (BookedDTO bookedDTO : tempOrNotTempList) {
                     if ((flag == 0) && (!pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId()))) {
                         continue;
                     } else if (pricePerSlotRequestDTO.getCourtId().equals(bookedDTO.getCourtId())) {
@@ -445,16 +464,33 @@ public class BookingService {
     }
 
     public MessageResponse excutePaymentTransaction(BookingPaymentRequestDTO bookingPaymentRequestDTO) {
-        // Goi ham insert booking schedule va lay booking_schedule_id o day
-        int remmainingAmount = bookingPaymentRequestDTO.getBookingSchedule().getTotalPrice()
-                - (bookingPaymentRequestDTO.getPaymentDetail().getAmount() / 100);
-        bookingPaymentRequestDTO.getBookingSchedule().setRemainingAmount(remmainingAmount);
-        String scheduleId = bookingRepository.insertBookingSchedule(bookingPaymentRequestDTO.getBookingSchedule());
+        String scheduleId = "";
 
         // Sau khi co booking_schedule_id, insert tung booking slot voi booking schedule
         // (Ham o day)
-        bookingRepository.insertBookingSlots(bookingPaymentRequestDTO.getBookingSchedule().getBookingSlotResponseDTOs(),
-                scheduleId);
+        if (bookingPaymentRequestDTO.getBookingSchedule().getScheduleType().equals("Flexible")) {
+            scheduleId = bookingRepository.insertBookingSchedule(bookingPaymentRequestDTO.getBookingSchedule());
+            List<BookingSlotResponseDTO> bookingSlotBeforeInsert = bookingPaymentRequestDTO.getBookingSchedule()
+                    .getBookingSlotResponseDTOs();
+            for (BookingSlotResponseDTO bs : bookingSlotBeforeInsert) {
+                bs.setIsTemp(0);
+            }
+            bookingRepository.insertBookingSlots(bookingSlotBeforeInsert,
+                    scheduleId);
+        } else {
+            String[] scheduleAndSlotIdTempPart = bookingPaymentRequestDTO.getScheduleAndSlotIdTemp().split(",");
+            List<String> bookingSlotIDstemp = new ArrayList<>();
+            scheduleId = scheduleAndSlotIdTempPart[0];
+            for(int i = 2; i < scheduleAndSlotIdTempPart.length; i++){
+                bookingSlotIDstemp.add(scheduleAndSlotIdTempPart[i]);
+            }
+
+            // Update bookingScheduleStatus and remainingAmount
+            String[] tempBookingScheduleAndSlotsPart = bookingPaymentRequestDTO.getScheduleAndSlotIdTemp().split(",");
+            int totalPrice = Integer.parseInt(tempBookingScheduleAndSlotsPart[1]);
+            int remmainingAmount = totalPrice - (bookingPaymentRequestDTO.getPaymentDetail().getAmount() / 100);
+            bookingRepository.updateScheduleAndSlotInfo(scheduleId, remmainingAmount); // Update 
+        }
 
         // Tao invoice va insert no vao db o day
         Invoice invoice = new Invoice(bookingPaymentRequestDTO.getClubName(),
@@ -551,8 +587,35 @@ public class BookingService {
         }
     }
 
-    public int calculatorPriceForPlayingTime(String clubId, int totalPlayingTime){
+    public int calculatorPriceForPlayingTime(String clubId, int totalPlayingTime) {
         int pricePerHours = bookingRepository.getFlexiblePrice(clubId);
         return totalPlayingTime * pricePerHours;
+    }
+
+
+
+    // Lay chuoi booking schedule va slot Id duoc them vao tam thoi vi du: SD0000030,350000,BS000022,BS000023...
+    @Transactional
+    public String getBookingScheduleAndSlotIdTemp(BookingSchedule bookingSchedule){
+        StringBuilder result = new StringBuilder();
+        String bookingScheduleId = bookingRepository.insertBookingSchedule(bookingSchedule);
+        bookingRepository.insertBookingSlots(bookingSchedule.getBookingSlotResponseDTOs(), bookingScheduleId);
+        List<String> allBookingSlotId = bookingRepository.getTempBookingSlotId();
+        Collections.sort(allBookingSlotId, new Comparator<String>() {
+
+            @Override
+            public int compare(String o1, String o2) {
+                return o2.compareTo(o1);
+            }
+            
+        });
+
+        List<String> tempBookingSlotIds = new ArrayList<>(allBookingSlotId.subList(0, Math.min(bookingSchedule.getBookingSlotResponseDTOs().size(), allBookingSlotId.size())));
+        result.append(bookingScheduleId + "," + bookingSchedule.getTotalPrice());
+        for(String bookingSlotId: tempBookingSlotIds){
+            result.append(","+bookingSlotId);
+        }
+        return result.toString();
+        
     }
 }

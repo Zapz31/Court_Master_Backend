@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
+import com.swp391.Court_Master.Entities.BookingSchedule;
 import com.swp391.Court_Master.Entities.PaymentDetail;
 import com.swp391.Court_Master.Entities.PaymentUpdateBookingSchedule;
 import com.swp391.Court_Master.Entities.PlayableTimePayment;
@@ -76,43 +77,16 @@ public class BookingController {
         if (bookingPaymentRequestDTO.getBookingSchedule().getStartDate()
                 .isAfter(bookingPaymentRequestDTO.getBookingSchedule().getEndDate())) {
             messageResponse.setMassage("Invalid start and end dates");
-        } else {
-            List<BookedDTO> duplicateBookingList = bookingService.getDuplicateBookingSlotList(
-                    bookingPaymentRequestDTO.getBookingSchedule().getBookingSlotResponseDTOs());
-            if (duplicateBookingList.size() != 0) {
-                StringBuilder invalidMess = new StringBuilder();
-                for (BookedDTO bookedDTO : duplicateBookingList) {
-                    invalidMess.append(bookedDTO.getStartTime() + " - " + bookedDTO.getEndTime() + ","
-                            + bookedDTO.getBookingDate() + "," + bookedDTO.getCourtName()).append("|");
-                }
-                invalidMess.append(bookingPaymentRequestDTO.getCourtManagerPhone());
-                messageResponse.setMassage(invalidMess.toString());
-            } else {
-                // Ham insert trong day (Chac chan thanh toan se thanh cong moi di vao luong
-                // nay)
-                // Khi nguoi dung dat lich ngay hoac fixed
-                if (!bookingPaymentRequestDTO.getBookingSchedule().getScheduleType().equals("Flexible")) {
-                    messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
-                 }// else {
-                //     // Khi nguoi dung dat lich kieu flexible
-                //     // Kiem tra xem nguoi dung co du gio choi hay khong
-                //     if (bookingRepository.isEnoughTime(
-                //             bookingPaymentRequestDTO.getBookingSchedule().getTotalPlayingTime(),
-                //             bookingPaymentRequestDTO.getBookingSchedule().getCustomerId(),
-                //             bookingPaymentRequestDTO.getClubId())) {
-                //         messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
-                //     } else {
-                //         messageResponse.setMassage("Số giờ chơi đăng ký của bạn không đủ để thực hiện giao dịch");
-                //     }
-                // }
-            }
+        } else {     
+            messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
         }
         return ResponseEntity.ok().body(messageResponse);
     }
 
-    // Thanh toan cho kieu flexible 
+    // Thanh toan cho kieu flexible
     @PostMapping("/flexible-payment")
-    public ResponseEntity<MessageResponse> executeFlexiblePayment(@RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO) {
+    public ResponseEntity<MessageResponse> executeFlexiblePayment(
+            @RequestBody BookingPaymentRequestDTO bookingPaymentRequestDTO) {
         // chi book 1 ngay
         if (bookingPaymentRequestDTO.getBookingSchedule().getEndDate() == null) {
             bookingPaymentRequestDTO.getBookingSchedule()
@@ -123,25 +97,24 @@ public class BookingController {
                 .isAfter(bookingPaymentRequestDTO.getBookingSchedule().getEndDate())) {
             messageResponse.setMassage("Invalid start and end dates");
         } else {
-            List<BookingSlotResponseDTO> duplicateBsRequest = bookingService.getDupBookingSlotRequest(bookingPaymentRequestDTO.getBookingSchedule().getBookingSlotResponseDTOs());
-            if(!duplicateBsRequest.isEmpty()){
+            List<BookingSlotResponseDTO> duplicateBsRequest = bookingService.getDupBookingSlotRequest(
+                    bookingPaymentRequestDTO.getBookingSchedule().getBookingSlotResponseDTOs(), 0);
+            if (!duplicateBsRequest.isEmpty()) {
                 messageResponse.setMassage("duplicate");
             } else {
                 // Khong bi trung.
                 if (bookingRepository.isEnoughTime(
-                            bookingPaymentRequestDTO.getBookingSchedule().getTotalPlayingTime(),
-                            bookingPaymentRequestDTO.getBookingSchedule().getCustomerId(),
-                            bookingPaymentRequestDTO.getClubId())) {
-                        messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
-                    } else {
-                        messageResponse.setMassage("Not enough time");
-                    }
+                        bookingPaymentRequestDTO.getBookingSchedule().getTotalPlayingTime(),
+                        bookingPaymentRequestDTO.getBookingSchedule().getCustomerId(),
+                        bookingPaymentRequestDTO.getClubId())) {
+                    messageResponse = bookingService.excutePaymentTransaction(bookingPaymentRequestDTO);
+                } else {
+                    messageResponse.setMassage("Not enough time");
+                }
             }
         }
         return ResponseEntity.ok().body(messageResponse);
     }
-    
-
 
     @GetMapping("/history/schedule")
     public List<BookingScheduleHistory> bookingScheduleHistories(@RequestParam("customerId") String customerId) {
@@ -195,12 +168,46 @@ public class BookingController {
     }
 
     @GetMapping("/total-hours-calculated-price")
-    public ResponseEntity<HashMap<String, Integer>> getTotalCalculated(@RequestParam("clubId") String clubId, @RequestParam("totalHours") String totalHoursString){
+    public ResponseEntity<HashMap<String, Integer>> getTotalCalculated(@RequestParam("clubId") String clubId,
+            @RequestParam("totalHours") String totalHoursString) {
         int totalHOurs = Integer.parseInt(totalHoursString);
         int calculatedPrice = bookingService.calculatorPriceForPlayingTime(clubId, totalHOurs);
         HashMap<String, Integer> results = new HashMap<>();
         results.put("totalPrice", calculatedPrice);
         return ResponseEntity.ok().body(results);
     }
-    
+
+    // them booking schedule va booking slot tam thoi truoc khi nguoi dung thuc su
+    // thanh toan
+    @PostMapping("/insert-temp-bookingscheduleslot")
+    public ResponseEntity<MessageResponse> insertTempBookingSlot(@RequestBody BookingSchedule bookingSchedule) {
+        boolean isDup = true;
+        List<BookingSlotResponseDTO> duplicateBsRequest = new ArrayList<>();
+        MessageResponse mess = new MessageResponse("");
+        // Check trung voi cac booking co is_temp = 0
+        duplicateBsRequest = bookingService.getDupBookingSlotRequest(bookingSchedule.getBookingSlotResponseDTOs(), 0);
+        if (!duplicateBsRequest.isEmpty()) {
+            isDup = false;
+        } else {
+            // Check trung voi cac booking co is_temp = 1
+            duplicateBsRequest = bookingService.getDupBookingSlotRequest(bookingSchedule.getBookingSlotResponseDTOs(),
+                    1);
+            if (!duplicateBsRequest.isEmpty()) {
+                isDup = false;
+            }
+        }
+
+        if (!isDup) {
+            mess.setMassage("dup");
+        } else {
+            // Neu khong trung thi insert booking schedule temp o day
+            // chi book 1 ngay
+            if (bookingSchedule.getEndDate() == null) {
+                bookingSchedule.setEndDate(bookingSchedule.getStartDate());
+            }
+            mess.setMassage(bookingService.getBookingScheduleAndSlotIdTemp(bookingSchedule));
+        }
+        return ResponseEntity.ok().body(mess);
+
+    }
 }

@@ -153,7 +153,7 @@ public class CourtManagerController {
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/update-staff")
+    @PostMapping("/update-staff")
     public String updateStaffInfo(
             @RequestBody UpdateStaffRequest UpdateStaffRequest) {
         String result = courtManagerService.updateStaffInfo(UpdateStaffRequest);

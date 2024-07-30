@@ -105,23 +105,23 @@ public class BookingRepository {
      */
     public List<BookedDTO> getBookedList(List<BookingSlotResponseDTO> perSlotRequestDTOs) {
         StringBuilder sql = new StringBuilder(
-                "select bs.booking_slot_id, bs.start_time, bs.end_time, bs.booking_date, bc.badminton_court_id, bc.badminton_court_name from booking_slot bs\r\n"
+                "select bs.booking_slot_id, bs.start_time, bs.end_time, bs.booking_date, bc.badminton_court_id, bc.badminton_court_name, bs.is_temp from booking_slot bs\r\n"
                         + //
                         " inner join badminton_court bc on bc.badminton_court_id = bs.badminton_court_id ");
 
         List<Object> params = new ArrayList<>();
         for (int i = 0; i < perSlotRequestDTOs.size(); i++) {
             if (i == 0) {
-                sql.append(" where (bc.badminton_court_id = ?");
+                sql.append(" where bc.badminton_court_id = ?");
                 params.add(perSlotRequestDTOs.get(i).getCourtId());
             } else {
                 sql.append(" or bc.badminton_court_id = ?");
                 params.add(perSlotRequestDTOs.get(i).getCourtId());
             }
         }
-        if(!perSlotRequestDTOs.isEmpty()){
-            sql.append(") and bs.is_temp != 1");
-        }
+        // if(!perSlotRequestDTOs.isEmpty()){
+        //     sql.append(") and bs.is_temp != 1");
+        // }
         sql.append(" order by bc.badminton_court_id");
         String sqlQuery = sql.toString();
 
@@ -212,9 +212,9 @@ public class BookingRepository {
 
     @Transactional
     public void insertBookingSlots(List<BookingSlotResponseDTO> bookingSlotList, String bookingScheduleId) {
-        String sql = "insert into booking_slot(start_time, end_time, booking_date, price, badminton_court_id, booking_schedule_id)\r\n"
+        String sql = "insert into booking_slot(start_time, end_time, booking_date, price, badminton_court_id, booking_schedule_id, is_temp)\r\n"
                 + //
-                "values(?, ?, ?, ?, ?, ?)";
+                "values(?, ?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 
@@ -232,6 +232,7 @@ public class BookingRepository {
                 ps.setInt(4, bookingSlotResponseDTO.getPrice());
                 ps.setString(5, bookingSlotResponseDTO.getCourtId());
                 ps.setString(6, bookingScheduleId);
+                ps.setInt(7, bookingSlotResponseDTO.getIsTemp());
             }
 
         });
@@ -503,5 +504,35 @@ public class BookingRepository {
         }
     }
 
-    
+    // Lay danh sach cac booking slot dat tam thoi
+    public List<String> getTempBookingSlotId (){
+        String sql = "select booking_slot_id from booking_slot";
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
+
+    // Udate thong tin booking slot va booking schedule sau khi nguoi dung thanh toan thanh cong
+    @Transactional
+    public void updateScheduleAndSlotInfo(String scheduleId, int remainingAamount){
+        String updateBookingScheduleQuery = "update booking_schedule\r\n" + //
+                        "set remaining_amount = ?\r\n" + //
+                        "where booking_schedule_id = ?";
+        PreparedStatementSetter bookingSchedulSetter = new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setInt(1, remainingAamount);
+                ps.setString(2, scheduleId);
+            }
+            
+        };
+        jdbcTemplate.update(updateBookingScheduleQuery, bookingSchedulSetter);
+
+        String updateBookingSlotQuery = "update booking_slot\r\n" + //
+                        "set is_temp = 0\r\n" + //
+                        "where booking_schedule_id in (?)";
+        jdbcTemplate.update(updateBookingSlotQuery, scheduleId);
+
+    }
+
+
 }

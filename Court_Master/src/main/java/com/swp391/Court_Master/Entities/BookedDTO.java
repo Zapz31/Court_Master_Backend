@@ -15,6 +15,7 @@ public class BookedDTO {
     private String bookingSlotId;
     private int isCheckIn;
     private int price;
+    private int isTemp;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String userFullName;
@@ -26,13 +27,14 @@ public class BookedDTO {
     }
     
     public BookedDTO(LocalTime startTime, LocalTime endTime, LocalDate bookingDate, String courtId, String courtName,
-            String bookingSlotId) {
+            String bookingSlotId, int isTemp) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.bookingDate = bookingDate;
         this.courtId = courtId;
         this.courtName = courtName;
         this.bookingSlotId = bookingSlotId;
+        this.isTemp = isTemp;
     }
 
     
@@ -64,7 +66,22 @@ public class BookedDTO {
         this.userId = userId;
     }
 
-    
+    public BookedDTO(String bookingScheduleId, LocalTime startTime, LocalTime endTime, LocalDate bookingDate,
+            String courtId, String courtName, String bookingSlotId, int isCheckIn, int price, int isTemp,
+            String userFullName, String userId) {
+        this.bookingScheduleId = bookingScheduleId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.bookingDate = bookingDate;
+        this.courtId = courtId;
+        this.courtName = courtName;
+        this.bookingSlotId = bookingSlotId;
+        this.isCheckIn = isCheckIn;
+        this.price = price;
+        this.isTemp = isTemp;
+        this.userFullName = userFullName;
+        this.userId = userId;
+    }
 
     public LocalTime getStartTime() {
         return startTime;
@@ -143,6 +160,14 @@ public class BookedDTO {
 
     public void setBookingScheduleId(String bookingScheduleId) {
         this.bookingScheduleId = bookingScheduleId;
+    }
+
+    public int getIsTemp() {
+        return isTemp;
+    }
+
+    public void setIsTemp(int isTemp) {
+        this.isTemp = isTemp;
     }
 
     

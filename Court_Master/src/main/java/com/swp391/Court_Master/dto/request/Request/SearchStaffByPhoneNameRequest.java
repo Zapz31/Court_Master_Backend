@@ -5,7 +5,7 @@ import org.springframework.core.annotation.MergedAnnotations.Search;
 public class SearchStaffByPhoneNameRequest {
 
     // Declaring a variable to hold the court manager ID
-    String court_manager_id;
+    String courtManagerId;
 
     // Declaring a variable to hold the search string
     String search;
@@ -16,10 +16,10 @@ public class SearchStaffByPhoneNameRequest {
     }
 
     // Parameterized constructor
-    public SearchStaffByPhoneNameRequest(String court_manager_id, String search) {
+    public SearchStaffByPhoneNameRequest(String courtManagerId, String search) {
         // Assigning court manager ID
-        String temporaryCourtManagerId = court_manager_id;
-        this.court_manager_id = temporaryCourtManagerId;
+        String temporaryCourtManagerId = courtManagerId;
+        this.courtManagerId = temporaryCourtManagerId;
 
         // Assigning search query
         String temporarySearchQuery = search;
@@ -28,14 +28,14 @@ public class SearchStaffByPhoneNameRequest {
 
     // Getter for court_manager_id
     public String getCourtManagerId() {
-        String resultCourtManagerId = this.court_manager_id;
+        String resultCourtManagerId = this.courtManagerId;
         return resultCourtManagerId;
     }
 
     // Setter for court_manager_id
-    public void setCourtManagerId(String court_manager_id) {
-        String temporaryCourtManagerId = court_manager_id;
-        this.court_manager_id = temporaryCourtManagerId;
+    public void setCourtManagerId(String courtManagerId) {
+        String temporaryCourtManagerId = courtManagerId;
+        this.courtManagerId = temporaryCourtManagerId;
     }
 
     // Getter for search
@@ -53,7 +53,7 @@ public class SearchStaffByPhoneNameRequest {
     // Method to print current state of object
     public void printCurrentState() {
         // Printing the current state of the object
-        System.out.println("Court Manager ID: " + this.court_manager_id);
+        System.out.println("Court Manager ID: " + this.courtManagerId);
         System.out.println("Search Query: " + this.search);
     }
 
@@ -68,7 +68,7 @@ public class SearchStaffByPhoneNameRequest {
 
     // Method to compute and print lengths of fields
     public void computeAndPrintLengths() {
-        int lengthOfCourtManagerId = this.court_manager_id.length();
+        int lengthOfCourtManagerId = this.courtManagerId.length();
         int lengthOfSearchQuery = this.search.length();
 
         System.out.println("Length of Court Manager ID: " + lengthOfCourtManagerId);

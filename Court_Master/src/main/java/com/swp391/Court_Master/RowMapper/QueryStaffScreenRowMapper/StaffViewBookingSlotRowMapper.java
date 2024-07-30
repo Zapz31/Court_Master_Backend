@@ -22,7 +22,7 @@ public class StaffViewBookingSlotRowMapper implements RowMapper<StaffViewBooking
         LocalDate bookingDate = arg0.getDate("booking_date").toLocalDate();
         int isCheckIn = arg0.getInt("is_check_in");
         int price = arg0.getInt("price");
-
+        
         return new StaffViewBookingSlotDTO(bookingSlotId, customerPhoneNumber, customerFullName, badmintonCourtName, startTime, endTime, bookingDate, isCheckIn, price);
     }
 
