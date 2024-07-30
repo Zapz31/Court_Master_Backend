@@ -598,6 +598,9 @@ public class BookingService {
     @Transactional
     public String getBookingScheduleAndSlotIdTemp(BookingSchedule bookingSchedule){
         StringBuilder result = new StringBuilder();
+        if(bookingSchedule.getBookingScheduleStatus().isEmpty()){
+            bookingSchedule.setBookingScheduleStatus("Paid");
+        }
         String bookingScheduleId = bookingRepository.insertBookingSchedule(bookingSchedule);
         bookingRepository.insertBookingSlots(bookingSchedule.getBookingSlotResponseDTOs(), bookingScheduleId);
         List<String> allBookingSlotId = bookingRepository.getTempBookingSlotId();
@@ -618,4 +621,13 @@ public class BookingService {
         return result.toString();
         
     }
+
+    // Xoa term booking khi nguoi dung huy thanh toan
+    public void removeTempBooking(String scheduleAndSlotIdTemp){
+        String[] part = scheduleAndSlotIdTemp.split(",");
+        String scheduleId = part[0];
+        bookingRepository.deleteTempBookingScheduleAndSlot(scheduleId);
+    }
+
+    
 }

@@ -221,4 +221,8 @@ public class CourtManagerService {
             return "false";
         }
     }
+
+    public String getClubIdByCourtManagerId(String courtManagerId){
+        return courtManagerRepository.getClubIdByMngId(courtManagerId);
+    }
 }

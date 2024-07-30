@@ -120,7 +120,7 @@ public class BookingRepository {
             }
         }
         // if(!perSlotRequestDTOs.isEmpty()){
-        //     sql.append(") and bs.is_temp != 1");
+        // sql.append(") and bs.is_temp != 1");
         // }
         sql.append(" order by bc.badminton_court_id");
         String sqlQuery = sql.toString();
@@ -177,8 +177,9 @@ public class BookingRepository {
 
     @Transactional
     public String insertBookingSchedule(BookingSchedule bookingSchedule) {
-        String insertSQL = "insert into booking_schedule(customer_fullname, customer_phone_number, booking_schedule_status, start_date, end_date, schedule_type, customer_id, total_price, total_playing_time, remaining_amount)\r\n" + //
-                        "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertSQL = "insert into booking_schedule(customer_fullname, customer_phone_number, booking_schedule_status, start_date, end_date, schedule_type, customer_id, total_price, total_playing_time, remaining_amount)\r\n"
+                + //
+                "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         String totalPlayHours = bookingSchedule.getTotalPlayingTime();
         String[] parts = totalPlayHours.split(":");
@@ -484,8 +485,8 @@ public class BookingRepository {
     @Transactional
     public boolean isUpdateStatus(String bookingScheduleId, String bookingScheduleStatus, int amount) {
         String sql = "update booking_schedule\r\n" + //
-                        "set booking_schedule_status = ?, remaining_amount = remaining_amount - ?\r\n" + //
-                        "where booking_schedule_id = ?";
+                "set booking_schedule_status = ?, remaining_amount = remaining_amount - ?\r\n" + //
+                "where booking_schedule_id = ?";
 
         PreparedStatementSetter pss = new PreparedStatementSetter() {
 
@@ -505,17 +506,18 @@ public class BookingRepository {
     }
 
     // Lay danh sach cac booking slot dat tam thoi
-    public List<String> getTempBookingSlotId (){
+    public List<String> getTempBookingSlotId() {
         String sql = "select booking_slot_id from booking_slot";
         return jdbcTemplate.queryForList(sql, String.class);
     }
 
-    // Udate thong tin booking slot va booking schedule sau khi nguoi dung thanh toan thanh cong
+    // Udate thong tin booking slot va booking schedule sau khi nguoi dung thanh
+    // toan thanh cong
     @Transactional
-    public void updateScheduleAndSlotInfo(String scheduleId, int remainingAamount){
+    public void updateScheduleAndSlotInfo(String scheduleId, int remainingAamount) {
         String updateBookingScheduleQuery = "update booking_schedule\r\n" + //
-                        "set remaining_amount = ?\r\n" + //
-                        "where booking_schedule_id = ?";
+                "set remaining_amount = ?\r\n" + //
+                "where booking_schedule_id = ?";
         PreparedStatementSetter bookingSchedulSetter = new PreparedStatementSetter() {
 
             @Override
@@ -523,16 +525,29 @@ public class BookingRepository {
                 ps.setInt(1, remainingAamount);
                 ps.setString(2, scheduleId);
             }
-            
+
         };
         jdbcTemplate.update(updateBookingScheduleQuery, bookingSchedulSetter);
 
         String updateBookingSlotQuery = "update booking_slot\r\n" + //
-                        "set is_temp = 0\r\n" + //
-                        "where booking_schedule_id in (?)";
+                "set is_temp = 0\r\n" + //
+                "where booking_schedule_id in (?)";
         jdbcTemplate.update(updateBookingSlotQuery, scheduleId);
 
     }
 
+    @Transactional
+    public void deleteTempBookingScheduleAndSlot(String scheduleId) {
+            String removeBookingSlotsQuery = "delete booking_slot \r\n" + //
+                    "where booking_schedule_id = ?";
+            int bookingSlotRemove = jdbcTemplate.update(removeBookingSlotsQuery, scheduleId);
+
+            String removeBookingScheduleQuery = "delete booking_schedule \r\n" + //
+                    "where booking_schedule_id = ?";
+            int bookingScheduleRemove = jdbcTemplate.update(removeBookingScheduleQuery, scheduleId);
+            if(!(bookingScheduleRemove > 0 && bookingSlotRemove > 0)){
+                throw new RuntimeException("Can not find booking schedule or booking slot to remove");
+            }
+    }
 
 }

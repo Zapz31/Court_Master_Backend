@@ -161,9 +161,9 @@ public class BookingController {
     }
 
     @PostMapping("/getDuplicateBookingSlot")
-    public ResponseEntity<List<BookedDTO>> getDuplicateBookingSlotList(
+    public ResponseEntity<List<BookingSlotResponseDTO>> getDuplicateBookingSlotList(
             @RequestBody List<BookingSlotResponseDTO> pricePerSlotRequestDTOList) {
-        List<BookedDTO> list = bookingService.getDuplicateBookingSlotList(pricePerSlotRequestDTOList);
+        List<BookingSlotResponseDTO> list = bookingService.getDupBookingSlotRequest(pricePerSlotRequestDTOList, 0);
         return ResponseEntity.ok().body(list);
     }
 
@@ -210,4 +210,13 @@ public class BookingController {
         return ResponseEntity.ok().body(mess);
 
     }
+
+    // Xoa cac bookingSchedule va bookingSlot tam thoi khi nguoi dung ko thanh toan vnPay
+    @PostMapping("/remove-temp-booking")
+    public ResponseEntity<MessageResponse> postMethodName(@RequestBody HashMap<String,String> entity) {
+        String scheduleAndSlotIdTemp = entity.get("tempIdStr");
+        bookingService.removeTempBooking(scheduleAndSlotIdTemp);
+        return ResponseEntity.ok().body(new MessageResponse("success"));
+    }
+    
 }

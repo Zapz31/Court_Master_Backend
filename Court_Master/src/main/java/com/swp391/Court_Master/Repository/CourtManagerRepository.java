@@ -866,4 +866,11 @@ public class CourtManagerRepository {
         }
     }
 
+    public String getClubIdByMngId(String courtManagerId){
+        String sql = "select bcl.badminton_club_id from authenticated_user au\r\n" + //
+                        "inner join badminton_club bcl on au.user_id = bcl.court_manager_id\r\n" + //
+                        "where au.user_id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, courtManagerId);
+    }
+
 }

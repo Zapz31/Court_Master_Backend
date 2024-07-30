@@ -165,4 +165,10 @@ public class CourtManagerController {
             @RequestParam("court_manager_id") String court_manager_id) {
         return courtManagerService.deleteStaff(staff_id, court_manager_id);
     }
+
+    @GetMapping("/get-clubId-by-mngid")
+    public ResponseEntity<MessageResponse> getMethodName(@RequestParam("id") String courtManagerId) {
+        return ResponseEntity.ok().body( new MessageResponse(courtManagerService.getClubIdByCourtManagerId(courtManagerId)));
+    }
+    
 }

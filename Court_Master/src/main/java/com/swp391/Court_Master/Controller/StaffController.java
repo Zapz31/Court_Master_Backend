@@ -56,7 +56,11 @@ public class StaffController {
     public ResponseEntity<HashMap<String, String>> getMethodName(@RequestParam("staffId") String staffId) {
         HashMap<String, String> response = new HashMap<>();
         String clubId = staffService.getClubIdByStaffId(staffId);
-        response.put("clubId", clubId);
+        if(clubId!=null){
+            response.put("clubId", clubId);
+        } else {
+            response.put("clubId", "none");
+        }
         return ResponseEntity.ok().body(response);
     }
 
