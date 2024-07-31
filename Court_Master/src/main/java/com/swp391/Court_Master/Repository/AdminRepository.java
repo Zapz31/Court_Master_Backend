@@ -198,6 +198,57 @@ public class AdminRepository {
         // Return the list of UserAccountDTO objects
         return userAccountDTOList;
     }
+
+    //Show all account cua 1 role tu dropdown list
+    public List<UserAccountDTO> getAllSpecificRoleAccount(String role) {
+        // Define the SQL query to retrieve customer account information
+        String sqlQueryToFetchCustomerAccounts = 
+              "\tSELECT [user_id]\r\n" + // Selecting user ID
+              "      ,[first_name]\r\n" + // Selecting user's first name
+              "      ,[last_name]\r\n" + // Selecting user's last name
+              "      ,[email]\r\n" + // Selecting user's email address
+              "      ,[phone_number]\r\n" + // Selecting user's phone number
+              "      ,[birthday]\r\n" + // Selecting user's date of birth
+              "      ,[role]\r\n" + // Selecting user's role
+              "      ,[user_status]\r\n" + // Selecting user's status
+              "      ,[register_date]\r\n" + // Selecting the date the user registered
+              "      ,[avatar_image_url]\r\n" + // Selecting URL for user's avatar image
+              "  FROM [Court_Master].[dbo].[authenticated_user]\r\n" + // Table from which to select
+              "  WHERE [role] = ?"; // Filtering users based on role
+    
+        // Create a PreparedStatementSetter to set parameters in the query
+        PreparedStatementSetter preparedStatementSetterForCustomerAccounts = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement preparedStatementForCustomerAccounts) throws SQLException {
+                preparedStatementForCustomerAccounts.setString(1, role);
+            }
+        };
+    
+        // Store the SQL query in a variable
+        String sqlQuery = sqlQueryToFetchCustomerAccounts;
+    
+        // Store the PreparedStatementSetter in a variable
+        PreparedStatementSetter pss = preparedStatementSetterForCustomerAccounts;
+    
+        // Create an instance of AdminViewUserAccountsRowMapper to map result set to UserAccountDTO
+        AdminViewUserAccountsRowMapper userAccountRowMapper = new AdminViewUserAccountsRowMapper();
+    
+        // Store the row mapper in a variable
+        AdminViewUserAccountsRowMapper rowMapper = userAccountRowMapper;
+    
+        // Execute the query and retrieve the list of UserAccountDTO objects
+        List<UserAccountDTO> userAccountDTOList = jdbcTemplate.query(
+            sqlQuery,      // SQL query to execute
+            pss,           // PreparedStatementSetter for setting query parameters
+            rowMapper      // RowMapper for mapping result set rows to UserAccountDTO objects
+        );
+    
+        // Determine the number of customer accounts fetched
+        int numberOfCustomerAccounts = userAccountDTOList.size();
+    
+        // Return the list of UserAccountDTO objects
+        return userAccountDTOList;
+    }
     // Tim bang userId,fist_name,last_name
 
     // Ban user: doi user_status tu 0 thanh 1

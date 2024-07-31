@@ -15,23 +15,28 @@ public class AdminService {
     AdminRepository adminRepository;
 
     public List<UserAccountDTO> getAllUserAccount() {
-        List<UserAccountDTO> StaffList = adminRepository.getAllUserAccount();
-        return StaffList;
+        List<UserAccountDTO> UserList = adminRepository.getAllUserAccount();
+        return UserList;
     }
 
     public List<UserAccountDTO> getAllCustomerAccount() {
-        List<UserAccountDTO> StaffList = adminRepository.getAllCustomerAccount();
-        return StaffList;
+        List<UserAccountDTO> CusList = adminRepository.getAllCustomerAccount();
+        return CusList;
     }
 
     public List<UserAccountDTO> getAllCourtManagerAccount() {
-        List<UserAccountDTO> StaffList = adminRepository.getAllCourtManagerAccount();
-        return StaffList;
+        List<UserAccountDTO> CourtManagerList = adminRepository.getAllCourtManagerAccount();
+        return CourtManagerList;
     }
 
     public List<UserAccountDTO> getAllStaffAccount() {
         List<UserAccountDTO> StaffList = adminRepository.getAllStaffAccount();
         return StaffList;
+    }
+
+    public List<UserAccountDTO> getAllSpecificRoleAccount(String role) {
+        List<UserAccountDTO> RoleList = adminRepository.getAllSpecificRoleAccount(role);
+        return RoleList;
     }
 
 }

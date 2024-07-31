@@ -45,4 +45,11 @@ public class AdminController {
         return ResponseEntity.ok().body(list);
     }
 
+    //chon tu dropdown list, role = 1? 2? 3?
+    @GetMapping("/get-all-role")
+    public ResponseEntity<List<UserAccountDTO>> getAllSpecificRoleAccount(@RequestParam("role") String role) {
+        List<UserAccountDTO> list = adminService.getAllSpecificRoleAccount(role);
+        return ResponseEntity.ok().body(list);
+    }
+
 }
