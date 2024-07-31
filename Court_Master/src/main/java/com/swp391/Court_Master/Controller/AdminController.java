@@ -1,11 +1,48 @@
 package com.swp391.Court_Master.Controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.cloud.storage.Acl.User;
+import com.swp391.Court_Master.Service.AdminService;
+import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
+import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 
 @RestController
 @RequestMapping("/admin")
 
 public class AdminController {
-    
+    @Autowired
+    private AdminService adminService;
+
+    @GetMapping("/get-all-user")
+    public ResponseEntity<List<UserAccountDTO>> getAllUserAccount() {
+        List<UserAccountDTO> list = adminService.getAllUserAccount();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/get-all-customer")
+    public ResponseEntity<List<UserAccountDTO>> getAllCustomerAccount() {
+        List<UserAccountDTO> list = adminService.getAllCustomerAccount();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/get-all-manager")
+    public ResponseEntity<List<UserAccountDTO>> getAllCourtManagerAccount() {
+        List<UserAccountDTO> list = adminService.getAllCourtManagerAccount();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/get-all-staff")
+    public ResponseEntity<List<UserAccountDTO>> getAllStaffAccount() {
+        List<UserAccountDTO> list = adminService.getAllStaffAccount();
+        return ResponseEntity.ok().body(list);
+    }
+
 }

@@ -873,4 +873,8 @@ public class CourtManagerRepository {
         return jdbcTemplate.queryForObject(sql, String.class, courtManagerId);
     }
 
+    // Cho dong san, mo san: sua badminton_court_status
+
+
+    // Xem booking slot + schedule giong nhu history
 }
