@@ -15,6 +15,7 @@ import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest
 import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.UpdateAccountRequest;
+import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.ClubDTO;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
 import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -83,6 +84,12 @@ public class AdminController {
             @RequestBody UpdateAccountRequest updateAccountRequest) {
         String result = adminService.updateAccount(updateAccountRequest);
         return result;
+    }
+
+    @GetMapping("/get-all-club")
+    public ResponseEntity<List<ClubDTO>> getAllClub() {
+        List<ClubDTO> list = adminService.getAllClub();
+        return ResponseEntity.ok().body(list);
     }
 
 }

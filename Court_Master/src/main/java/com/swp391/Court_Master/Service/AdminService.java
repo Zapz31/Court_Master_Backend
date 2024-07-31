@@ -10,6 +10,7 @@ import com.swp391.Court_Master.Repository.AdminRepository;
 import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.UpdateAccountRequest;
+import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.ClubDTO;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;;
 
 @Service
@@ -75,5 +76,11 @@ public class AdminService {
             return "false";
         }
     }
+
+    public List<ClubDTO> getAllClub() {
+        List<ClubDTO> ClubList = adminRepository.getAllClub();
+        return ClubList;
+    }
+
 
 }

@@ -10,13 +10,11 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 import com.swp391.Court_Master.RowMapper.QueryAdminScreenRowMapper.AdminViewUserAccountsRowMapper;
-import com.swp391.Court_Master.RowMapper.QueryCourtManagerScreenRowMapper.CourtManagerViewStaffRowMapper;
-import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
-import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
+import com.swp391.Court_Master.RowMapper.QueryAdminScreenRowMapper.AdminViewClubRowMapper;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.UpdateAccountRequest;
+import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.ClubDTO;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
-import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 
 @Repository
 public class AdminRepository {
@@ -374,9 +372,9 @@ public class AdminRepository {
     }
 
     // Edit account: tham khao ben CourtManagerRepository
-    //fName, lName, mail, phone
+    // fName, lName, mail, phone
 
-        public boolean updateAccountInfo(UpdateAccountRequest UpdateAccountRequest) {
+    public boolean updateAccountInfo(UpdateAccountRequest UpdateAccountRequest) {
 
         String userId = UpdateAccountRequest.getUserId();
         String firstName = UpdateAccountRequest.getFirstName();
@@ -410,7 +408,7 @@ public class AdminRepository {
         }
 
         // Step 6: Construct SET clause for email if present
-        if (email != null && email !="") {
+        if (email != null && email != "") {
             if (hasParameters) {
                 updateSQL.append(", ");
             }
@@ -493,7 +491,6 @@ public class AdminRepository {
         }
     }
 
-
     // Ban user: doi user_status tu 0 thanh 1
     public boolean isBanAccount(String userId) {
         String sql = "UPDATE [Court_Master].[dbo].[authenticated_user]\r\n" + //
@@ -530,5 +527,48 @@ public class AdminRepository {
         } else {
             return false;
         }
+    }
+
+    // Show all club
+    public List<ClubDTO> getAllClub() {
+        String sql = "SELECT\r\n" + //
+                "c.[badminton_club_id]\r\n" + //
+                ",c.[badminton_club_name]\r\n" + //
+                ",a.[unit_number]\r\n" + //
+                ",a.[ward]\r\n" + //
+                ",a.[district]\r\n" + //
+                ",a.[province]\r\n" + //
+                ",c.[description]\r\n" + //
+                ",c.[badminton_club_status]\r\n" + //
+                ",c.[court_manager_id]\r\n" + //
+                "FROM\r\n" + //
+                "[Court_Master].[dbo].[badminton_club] c\r\n" + //
+                "left join\r\n" + //
+                "[Court_Master].[dbo].[address] a\r\n" + //
+                "ON\r\n" + //
+                "c.address_id=a.address_id";
+        // SELECT
+        // c.[badminton_club_id]
+        // ,c.[badminton_club_name]
+        // ,a.[unit_number]
+        // ,a.[ward]
+        // ,a.[district]
+        // ,a.[province]
+        // ,c.[description]
+        // ,c.[badminton_club_status]
+        // ,c.[court_manager_id]
+        // FROM
+        // [Court_Master].[dbo].[badminton_club] c
+        // left join
+        // [Court_Master].[dbo].[address] a
+        // ON
+        // c.address_id=a.address_id
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+
+            }
+        };
+        return jdbcTemplate.query(sql, new AdminViewClubRowMapper());
     }
 }

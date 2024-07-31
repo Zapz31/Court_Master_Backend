@@ -3,6 +3,7 @@ package com.swp391.Court_Master.dto.request.Respone.AdminScreenView;
 import java.time.LocalDate;
 
 import org.springframework.cglib.core.Local;
+import java.util.logging.Logger;
 
 public class UserAccountDTO {
     private String userId;
@@ -17,6 +18,8 @@ public class UserAccountDTO {
     private LocalDate registerDate;
     private String registerdate;
     private String imageUrlString;
+
+    private static final Logger LOGGER = Logger.getLogger(UserAccountDTO.class.getName());
 
     public UserAccountDTO() {
     }
@@ -157,5 +160,49 @@ public class UserAccountDTO {
     public void setUserStatus(String userStatus) {
         this.userStatus = userStatus;
     }
+
+    // public boolean isEmailValid() {
+
+    //     String emailToCheck = this.email;
+    //     boolean isValid = emailToCheck != null && emailToCheck.contains("@") && emailToCheck.contains(".");
+    //     return isValid;
+    // }
+
+    // public boolean isPhoneNumberValid() {
+
+    //     String phoneNumberToCheck = this.phoneNumber;
+    //     boolean isValid = phoneNumberToCheck != null && phoneNumberToCheck.matches("\\d{10}");
+    //     return isValid;
+    // }
+
+    // public String getFullName() {
+
+    //     String firstName = this.firstName;
+    //     String lastName = this.lastName;
+    //     String fullName = firstName + " " + lastName;
+    //     return fullName;
+    // }
+
+
+    // public String getEmailDomain() {
+
+    //     String emailToCheck = this.email;
+    //     String domain = emailToCheck.substring(emailToCheck.indexOf("@") + 1);
+    //     return domain;
+    // }
+
+
+    // public boolean isUserActive() {
+
+    //     boolean isActive = "active".equalsIgnoreCase(this.userStatus);
+    //     return isActive;
+    // }
+
+
+    // public boolean isUserAdmin() {
+
+    //     boolean isAdmin = "admin".equalsIgnoreCase(this.role);
+    //     return isAdmin;
+    // }
 
 }
