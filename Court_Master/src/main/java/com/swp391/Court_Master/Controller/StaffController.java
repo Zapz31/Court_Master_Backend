@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.Repository.StaffRepository;
 import com.swp391.Court_Master.Service.StaffService;
+import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.StaffScreenView.StaffViewBookingSlotDTO;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,4 +83,9 @@ public class StaffController {
         return staffService.removeCheckIn(slotId);
     }
 
+    @GetMapping("/get-all-court")
+    public ResponseEntity<List<Court>> getAllCourtByClubId(@RequestParam("clubId") String clubId) {
+        return ResponseEntity.ok().body(staffService.getCourtsByClubId(clubId));
+    }
+    
 }

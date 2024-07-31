@@ -14,7 +14,9 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 import com.swp391.Court_Master.Entities.BookedDTO;
+import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.RowMapper.BookedDTORowMapper;
+import com.swp391.Court_Master.RowMapper.CourtRowMapper;
 import com.swp391.Court_Master.RowMapper.QueryStaffScreenRowMapper.StaffViewBookingSlotRowMapper;
 import com.swp391.Court_Master.dto.request.Respone.StaffScreenView.StaffViewBookingSlotDTO;
 
@@ -130,5 +132,12 @@ public class StaffRepository {
             return false;
         }
     }
+
+    public List<Court> getAllCourtByClubId(String clubId){
+        String sql = "select badminton_court_id, badminton_court_name, badminton_court_status from badminton_court\r\n" + //
+                        "where badminton_club_id = ?";
+        return jdbcTemplate.query(sql, new CourtRowMapper(), clubId);
+    }
+
 
 }

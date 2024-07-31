@@ -873,6 +873,7 @@ public class CourtManagerRepository {
                 "where au.user_id = ?";
         return jdbcTemplate.queryForObject(sql, String.class, courtManagerId);
     }
+    
 
     // Cho dong san, mo san: sua badminton_court_status
 

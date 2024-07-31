@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.Repository.StaffRepository;
 import com.swp391.Court_Master.dto.request.Respone.StaffScreenView.StaffViewBookingSlotDTO;
 
@@ -59,5 +60,9 @@ public class StaffService {
         } else {
             return "false";
         }
+    }
+
+    public List<Court> getCourtsByClubId(String clubId){
+        return staffRepository.getAllCourtByClubId(clubId);
     }
 }
