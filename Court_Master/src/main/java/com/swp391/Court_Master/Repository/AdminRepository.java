@@ -370,7 +370,9 @@ public class AdminRepository {
 
         return jdbcTemplate.query(sql, pss, new AdminViewUserAccountsRowMapper());
     }
-
+    //Edit account: tham khao ben CourtManagerRepository
+    //email,phone phai check trung truoc khi cho update
+    //how to check trung? -> khong can nua vi Database da co constraint
     // Ban user: doi user_status tu 0 thanh 1
     // Unban user: doi user_status tu 1 thanh 0
 }

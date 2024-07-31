@@ -768,13 +768,13 @@ public class CourtManagerRepository {
         boolean hasParameters = false;
 
         // Step 4: Construct SET clause for first name if present
-        if (firstName != null) {
+        if (firstName != null && firstName != "") {
             updateSQL.append("first_name = ?");
             hasParameters = true;
         }
 
         // Step 5: Construct SET clause for last name if present
-        if (lastName != null) {
+        if (lastName != null && lastName != "") {
             if (hasParameters) {
                 updateSQL.append(", ");
             }
@@ -792,7 +792,7 @@ public class CourtManagerRepository {
         }
 
         // Step 7: Construct SET clause for phone number if present
-        if (phoneNumber != null) {
+        if (phoneNumber != null && phoneNumber != "") {
             if (hasParameters) {
                 updateSQL.append(", ");
             }
@@ -801,7 +801,7 @@ public class CourtManagerRepository {
         }
 
         // Step 8: Construct SET clause for birthday if present
-        if (birthday != null) {
+        if (birthday != null && birthday !="") {
             if (hasParameters) {
                 updateSQL.append(", ");
             }
@@ -866,15 +866,14 @@ public class CourtManagerRepository {
         }
     }
 
-    public String getClubIdByMngId(String courtManagerId){
+    public String getClubIdByMngId(String courtManagerId) {
         String sql = "select bcl.badminton_club_id from authenticated_user au\r\n" + //
-                        "inner join badminton_club bcl on au.user_id = bcl.court_manager_id\r\n" + //
-                        "where au.user_id = ?";
+                "inner join badminton_club bcl on au.user_id = bcl.court_manager_id\r\n" + //
+                "where au.user_id = ?";
         return jdbcTemplate.queryForObject(sql, String.class, courtManagerId);
     }
 
     // Cho dong san, mo san: sua badminton_court_status
-
 
     // Xem booking slot + schedule giong nhu history
 }
