@@ -26,6 +26,7 @@ import com.swp391.Court_Master.Entities.PricingService;
 import com.swp391.Court_Master.Entities.TimeFrame;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Utils.TimeUtils;
+import com.swp391.Court_Master.dto.request.Request.BookingChangeInforRequest;
 import com.swp391.Court_Master.dto.request.Request.BookingPaymentRequestDTO;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
 import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
@@ -658,7 +659,8 @@ public class BookingService {
                     if (dupListResult.isEmpty()) { // Khong trung
                         resultList.add(allowDate + " - " + court.getCourtName() + " - "
                                 + TimeUtils.convertLocalTimeToString(tempBookingSlot.getStartBooking()) + " to "
-                                + TimeUtils.convertLocalTimeToString(tempBookingSlot.getEndBooking()));
+                                + TimeUtils.convertLocalTimeToString(tempBookingSlot.getEndBooking())
+                                + " - " + court.getCourtId());
                     }
                 }
 
@@ -679,5 +681,11 @@ public class BookingService {
         }
         return dateAllowDays;
     }
+
+    public void changeBookingSlotCus(BookingChangeInforRequest bookingChangeInforRequest){
+        bookingRepository.changeBookingSlot(bookingChangeInforRequest);
+    }
+
+
 
 }

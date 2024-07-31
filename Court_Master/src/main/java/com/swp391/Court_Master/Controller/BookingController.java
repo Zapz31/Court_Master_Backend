@@ -19,6 +19,7 @@ import com.swp391.Court_Master.Entities.PlayableTimePayment;
 import com.swp391.Court_Master.Repository.BookingRepository;
 import com.swp391.Court_Master.Service.BookingService;
 import com.swp391.Court_Master.Utils.TimeUtils;
+import com.swp391.Court_Master.dto.request.Request.BookingChangeInforRequest;
 import com.swp391.Court_Master.dto.request.Request.BookingPaymentRequestDTO;
 import com.swp391.Court_Master.dto.request.Request.CheckValidBooking;
 import com.swp391.Court_Master.dto.request.Request.PricePerSlotRequestDTO;
@@ -223,6 +224,13 @@ public class BookingController {
     public ResponseEntity<List<String>> getAvailableBookingTime(@RequestBody BookingSlotResponseDTO entity) {
         List<String> results = bookingService.getAllowedCourtChangeTime(entity);
         return ResponseEntity.ok().body(results);
+    }
+    
+    @PostMapping("/change-cus-booking-slot")
+    public ResponseEntity<MessageResponse> changeCusBs(@RequestBody BookingChangeInforRequest entity) {
+        bookingService.changeBookingSlotCus(entity);
+        
+        return ResponseEntity.ok().body(new MessageResponse("success"));
     }
     
 }

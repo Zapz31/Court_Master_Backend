@@ -32,6 +32,7 @@ import com.swp391.Court_Master.RowMapper.CourtRowMapper;
 import com.swp391.Court_Master.RowMapper.PaymentDetailHistoryRowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFramePricingServiceRowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFrameRowMapperWithoutId;
+import com.swp391.Court_Master.dto.request.Request.BookingChangeInforRequest;
 import com.swp391.Court_Master.dto.request.Respone.BookingScheduleHistory;
 import com.swp391.Court_Master.dto.request.Respone.BookingSlotResponseDTO;
 import com.swp391.Court_Master.dto.request.Respone.TimeFramePricingServiceDTO;
@@ -561,6 +562,37 @@ public class BookingRepository {
                         "";
         
         return jdbcTemplate.query(sql, new CourtRowMapper(), courtId);
+    }
+
+    @Transactional
+    public void changeBookingSlot(BookingChangeInforRequest bookingChangeInforRequest){
+        String removeOldBookingSlotQuery = "delete booking_slot\r\n" + //
+                        "where booking_slot_id = ?";
+        int deleteRow = jdbcTemplate.update(removeOldBookingSlotQuery, bookingChangeInforRequest.getOldBookingSlotId());
+
+        String insertNewBookingSlotQuery = "insert into booking_slot(start_time, end_time, booking_date, price, badminton_court_id, booking_schedule_id, is_temp)\r\n" + //
+                        "values(?, ?, ?, ?, ?, ?, ?)";
+
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setTime(1, Time.valueOf(bookingChangeInforRequest.getStartBooking()));
+                ps.setTime(2, Time.valueOf(bookingChangeInforRequest.getEndBooking()));
+                ps.setDate(3, Date.valueOf(bookingChangeInforRequest.getBookingDate()));
+                ps.setInt(4, bookingChangeInforRequest.getPrice());
+                ps.setString(5, bookingChangeInforRequest.getCourtId());
+                ps.setString(6, bookingChangeInforRequest.getScheduleId());
+                ps.setInt(7, bookingChangeInforRequest.getIsTemp());
+            }
+            
+        };
+        int insertRow = jdbcTemplate.update(insertNewBookingSlotQuery, pss);
+
+        if(!(insertRow > 0 && deleteRow > 0)){
+            throw new RuntimeException("Error at changeBookingSlot in BookingRepository");
+        }
+        
     }
 
 }
