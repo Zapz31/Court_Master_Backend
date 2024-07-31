@@ -213,10 +213,16 @@ public class BookingController {
 
     // Xoa cac bookingSchedule va bookingSlot tam thoi khi nguoi dung ko thanh toan vnPay
     @PostMapping("/remove-temp-booking")
-    public ResponseEntity<MessageResponse> postMethodName(@RequestBody HashMap<String,String> entity) {
+    public ResponseEntity<MessageResponse> removeTempBooking(@RequestBody HashMap<String,String> entity) {
         String scheduleAndSlotIdTemp = entity.get("tempIdStr");
         bookingService.removeTempBooking(scheduleAndSlotIdTemp);
         return ResponseEntity.ok().body(new MessageResponse("success"));
+    }
+
+    @PostMapping("/get-available-time")
+    public ResponseEntity<List<String>> getAvailableBookingTime(@RequestBody BookingSlotResponseDTO entity) {
+        List<String> results = bookingService.getAllowedCourtChangeTime(entity);
+        return ResponseEntity.ok().body(results);
     }
     
 }

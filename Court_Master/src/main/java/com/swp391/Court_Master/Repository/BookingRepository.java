@@ -28,6 +28,7 @@ import com.swp391.Court_Master.RowMapper.BookedDTOHistoryRowMapper;
 import com.swp391.Court_Master.RowMapper.BookedDTOResponseOMRowMapper;
 import com.swp391.Court_Master.RowMapper.BookedDTORowMapper;
 import com.swp391.Court_Master.RowMapper.BookingScheduleHistoryRowMapper;
+import com.swp391.Court_Master.RowMapper.CourtRowMapper;
 import com.swp391.Court_Master.RowMapper.PaymentDetailHistoryRowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFramePricingServiceRowMapper;
 import com.swp391.Court_Master.RowMapper.TimeFrameRowMapperWithoutId;
@@ -548,6 +549,18 @@ public class BookingRepository {
             if(!(bookingScheduleRemove > 0 && bookingSlotRemove > 0)){
                 throw new RuntimeException("Can not find booking schedule or booking slot to remove");
             }
+    }
+
+    public List<Court> getAllCourtIdOfClubByCourtId(String courtId){
+        String sql = "select bc.badminton_court_id, bc.badminton_court_name, bc.badminton_court_status from badminton_court bc \r\n" + //
+                        "inner join badminton_club bcl on bc.badminton_club_id = bcl.badminton_club_id\r\n" + //
+                        "where bcl.badminton_club_id = (\r\n" + //
+                        "\tselect badminton_club_id from badminton_court\r\n" + //
+                        "\twhere badminton_court_id = ?\r\n" + //
+                        ")\r\n" + //
+                        "";
+        
+        return jdbcTemplate.query(sql, new CourtRowMapper(), courtId);
     }
 
 }

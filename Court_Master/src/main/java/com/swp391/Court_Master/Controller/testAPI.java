@@ -38,6 +38,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -232,6 +233,15 @@ public class testAPI {
     @PostMapping("/get-duplicate-bookingslot-request")
     public ResponseEntity<List<BookingSlotResponseDTO>> getDuplicateBookingSlotRequest(@RequestBody List<BookingSlotResponseDTO> pricePerSlotRequestDTOs) {       
         return ResponseEntity.ok().body(bookingService.getDupBookingSlotRequest(pricePerSlotRequestDTOs, 0));
+    }
+
+    @PostMapping("/getDayAllowChange")
+    public ResponseEntity<HashMap<String, List<LocalDate>>> getAllowDays(@RequestBody BookingSlotResponseDTO entity) {
+        //TODO: process POST request
+        List<LocalDate> allowDays = bookingService.generateDatesWithinMonth(entity.getBookingDate());
+        HashMap<String, List<LocalDate>> result = new HashMap<>();
+        result.put("allowdays", allowDays);
+        return ResponseEntity.ok().body(result);
     }
 
     

@@ -1,5 +1,6 @@
 package com.swp391.Court_Master.Utils;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -39,5 +40,15 @@ public class TimeUtils {
         int minuteDiff = lastTimeMinute - firstTimeMinute;
         return convertMinutestoTimeFormat(minuteDiff);
 
+    }
+
+    public static String convertLocalDatetoString(LocalDate inputDate){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return inputDate.format(formatter);
+    }
+
+    public static String convertLocalTimeToString(LocalTime inputTime){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        return inputTime.format(formatter);
     }
 }
