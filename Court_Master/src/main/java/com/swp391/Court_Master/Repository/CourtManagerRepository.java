@@ -116,6 +116,7 @@ public class CourtManagerRepository {
         }
     }
 
+    //hien tai khong cho update, khong bo qua service, controller
     public boolean updateClubAddress(String addressId, String unit_number, String ward, String district,
             String province) {
         // Buoc 1 Tao StringBuilder de xay dung cau truy van SQL
@@ -783,7 +784,7 @@ public class CourtManagerRepository {
         }
 
         // Step 6: Construct SET clause for email if present
-        if (email != null) {
+        if (email != null && email !="") {
             if (hasParameters) {
                 updateSQL.append(", ");
             }
@@ -801,7 +802,7 @@ public class CourtManagerRepository {
         }
 
         // Step 8: Construct SET clause for birthday if present
-        if (birthday != null && birthday !="") {
+        if (birthday != null && birthday != "") {
             if (hasParameters) {
                 updateSQL.append(", ");
             }
@@ -824,27 +825,27 @@ public class CourtManagerRepository {
                 int index = 1;
 
                 // Step 12: Set value for first name if present
-                if (firstName != null) {
+                if (firstName != null && firstName != "") {
                     ps.setString(index++, firstName);
                 }
 
                 // Step 13: Set value for last name if present
-                if (lastName != null) {
+                if (lastName != null && lastName != "") {
                     ps.setString(index++, lastName);
                 }
 
                 // Step 14: Set value for email if present
-                if (email != null) {
+                if (email != null && email != "") {
                     ps.setString(index++, email);
                 }
 
                 // Step 15: Set value for phone number if present
-                if (phoneNumber != null) {
+                if (phoneNumber != null && phoneNumber != "") {
                     ps.setString(index++, phoneNumber);
                 }
 
                 // Step 16: Set value for birthday if present
-                if (birthday != null) {
+                if (birthday != null && birthday != "") {
                     ps.setString(index++, birthday);
                 }
 
