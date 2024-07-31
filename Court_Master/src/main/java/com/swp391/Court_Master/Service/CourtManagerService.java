@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryBookingSlotMapper;
 import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryTotalCustomerMapper;
 import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryTotalRevenueMapper;
@@ -224,5 +225,12 @@ public class CourtManagerService {
 
     public String getClubIdByCourtManagerId(String courtManagerId){
         return courtManagerRepository.getClubIdByMngId(courtManagerId);
+    }
+
+    public void updateCourtInfo(Court court){
+        boolean isUpdateCourt = courtManagerRepository.updateCourtInfo(court.getCourtId(), court.getCourtName(), court.getStatus());
+        if(!isUpdateCourt){
+            throw new RuntimeException("failed");
+        }
     }
 }

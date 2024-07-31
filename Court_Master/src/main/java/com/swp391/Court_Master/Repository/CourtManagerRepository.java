@@ -255,7 +255,7 @@ public class CourtManagerRepository {
 
                 // Buoc 11 Set gia tri cho ward neu ton tai
                 if (badminton_court_status != null) {
-                    ps.setString(index++, badminton_court_name);
+                    ps.setString(index++, badminton_court_status);
                 }
 
                 // Buoc 14 Set gia tri cho addressId

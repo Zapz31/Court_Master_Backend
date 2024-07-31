@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swp391.Court_Master.Entities.BadmintonClubImage;
+import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryBookingSlotMapper;
 import com.swp391.Court_Master.Entities.QueryDashBoardMapper.QueryTotalRevenueMapper;
 import com.swp391.Court_Master.Repository.CourtManagerRepository;
@@ -169,6 +170,13 @@ public class CourtManagerController {
     @GetMapping("/get-clubId-by-mngid")
     public ResponseEntity<MessageResponse> getMethodName(@RequestParam("id") String courtManagerId) {
         return ResponseEntity.ok().body( new MessageResponse(courtManagerService.getClubIdByCourtManagerId(courtManagerId)));
+    }
+    
+    @PostMapping("/update-court")
+    public ResponseEntity<MessageResponse> updateCourt(@RequestBody Court newCourt) {
+        courtManagerService.updateCourtInfo(newCourt);
+        
+        return ResponseEntity.ok().body(new MessageResponse("success"));
     }
     
 }
