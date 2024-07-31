@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.cloud.storage.Acl.User;
 import com.swp391.Court_Master.Service.AdminService;
 import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
+import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
+import com.swp391.Court_Master.dto.request.Request.AdminRequest.UpdateAccountRequest;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
 import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,6 +76,13 @@ public class AdminController {
     public String banAccount(@RequestParam("userId") String userId) {
 
         return adminService.banAccount(userId);
+    }
+
+    @PostMapping("/update-account")
+    public String updateAccount(
+            @RequestBody UpdateAccountRequest updateAccountRequest) {
+        String result = adminService.updateAccount(updateAccountRequest);
+        return result;
     }
 
 }

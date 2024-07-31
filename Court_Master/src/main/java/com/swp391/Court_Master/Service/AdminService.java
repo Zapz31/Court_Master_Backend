@@ -7,7 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.swp391.Court_Master.Repository.AdminRepository;
+import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
+import com.swp391.Court_Master.dto.request.Request.AdminRequest.UpdateAccountRequest;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;;
 
 @Service
@@ -58,6 +60,16 @@ public class AdminService {
     public String unbanAccount(String userId) {
         boolean isBanAccount = adminRepository.isUnbanAccount(userId);
         if (isBanAccount) {
+            return "success";
+        } else {
+            return "false";
+        }
+    }
+
+
+    public String updateAccount(UpdateAccountRequest UpdateAccountRequest) {
+        boolean isUpdateAccount = adminRepository.updateAccountInfo(UpdateAccountRequest);
+        if (isUpdateAccount) {
             return "success";
         } else {
             return "false";

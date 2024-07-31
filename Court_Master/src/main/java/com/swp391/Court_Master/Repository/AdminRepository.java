@@ -12,7 +12,9 @@ import org.springframework.stereotype.Repository;
 import com.swp391.Court_Master.RowMapper.QueryAdminScreenRowMapper.AdminViewUserAccountsRowMapper;
 import com.swp391.Court_Master.RowMapper.QueryCourtManagerScreenRowMapper.CourtManagerViewStaffRowMapper;
 import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
+import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
+import com.swp391.Court_Master.dto.request.Request.AdminRequest.UpdateAccountRequest;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
 import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
 
@@ -372,8 +374,126 @@ public class AdminRepository {
     }
 
     // Edit account: tham khao ben CourtManagerRepository
-    // email,phone phai check trung truoc khi cho update
-    // how to check trung? -> khong can nua vi Database da co constraint
+    //fName, lName, mail, phone
+
+        public boolean updateAccountInfo(UpdateAccountRequest UpdateAccountRequest) {
+
+        String userId = UpdateAccountRequest.getUserId();
+        String firstName = UpdateAccountRequest.getFirstName();
+        String lastName = UpdateAccountRequest.getLastName();
+        String email = UpdateAccountRequest.getEmail();
+        String phoneNumber = UpdateAccountRequest.getPhoneNumber();
+        String birthday = UpdateAccountRequest.getBirthday();
+
+        // Step 1: Construct SQL query to update staff information
+        StringBuilder updateSQL = new StringBuilder();
+
+        // Step 2: Initial SQL query construction
+        updateSQL.append("UPDATE [Court_Master].[dbo].[authenticated_user] SET ");
+
+        // Step 3: Flag to check if any column needs to be updated
+        boolean hasParameters = false;
+
+        // Step 4: Construct SET clause for first name if present
+        if (firstName != null && firstName != "") {
+            updateSQL.append("first_name = ?");
+            hasParameters = true;
+        }
+
+        // Step 5: Construct SET clause for last name if present
+        if (lastName != null && lastName != "") {
+            if (hasParameters) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("last_name = ?");
+            hasParameters = true;
+        }
+
+        // Step 6: Construct SET clause for email if present
+        if (email != null && email !="") {
+            if (hasParameters) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("email = ?");
+            hasParameters = true;
+        }
+
+        // Step 7: Construct SET clause for phone number if present
+        if (phoneNumber != null && phoneNumber != "") {
+            if (hasParameters) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("phone_number = ?");
+            hasParameters = true;
+        }
+
+        // Step 8: Construct SET clause for birthday if present
+        if (birthday != null && birthday != "") {
+            if (hasParameters) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("birthday = ?");
+            hasParameters = true;
+        }
+
+        // Step 9: Check if no parameters are present for update
+        if (!hasParameters) {
+            return false;
+        }
+
+        // Step 10: Construct WHERE clause for the SQL query
+        updateSQL.append(" WHERE user_id = ?");
+
+        // Step 11: Create PreparedStatementSetter to set the values for the query
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                int index = 1;
+
+                // Step 12: Set value for first name if present
+                if (firstName != null && firstName != "") {
+                    ps.setString(index++, firstName);
+                }
+
+                // Step 13: Set value for last name if present
+                if (lastName != null && lastName != "") {
+                    ps.setString(index++, lastName);
+                }
+
+                // Step 14: Set value for email if present
+                if (email != null && email != "") {
+                    ps.setString(index++, email);
+                }
+
+                // Step 15: Set value for phone number if present
+                if (phoneNumber != null && phoneNumber != "") {
+                    ps.setString(index++, phoneNumber);
+                }
+
+                // Step 16: Set value for birthday if present
+                if (birthday != null && birthday != "") {
+                    ps.setString(index++, birthday);
+                }
+
+                // Step 17: Set value for staffId and courtManagerId
+                ps.setString(index, userId);
+
+            }
+        };
+
+        // Step 18: Execute the query and check the number of rows updated
+        int updateRow = jdbcTemplate.update(updateSQL.toString(), pss);
+
+        // Step 19: Return true if rows were updated
+        if (updateRow > 0) {
+            return true;
+        } else {
+            // Step 20: Return false if no rows were updated
+            return false;
+        }
+    }
+
+
     // Ban user: doi user_status tu 0 thanh 1
     public boolean isBanAccount(String userId) {
         String sql = "UPDATE [Court_Master].[dbo].[authenticated_user]\r\n" + //
