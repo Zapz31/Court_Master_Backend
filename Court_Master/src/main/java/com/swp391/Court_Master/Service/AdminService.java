@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.swp391.Court_Master.Repository.AdminRepository;
+import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;;
 
 @Service
@@ -37,6 +38,11 @@ public class AdminService {
     public List<UserAccountDTO> getAllSpecificRoleAccount(String role) {
         List<UserAccountDTO> RoleList = adminRepository.getAllSpecificRoleAccount(role);
         return RoleList;
+    }
+
+    public List<UserAccountDTO> searchAccountByIdNamePhoneMail(SearchAccountByIdNamePhoneMail searchAccountByIdNamePhoneMail) {
+        List<UserAccountDTO> searchList = adminRepository.getAccountByIdNamePhoneMail(searchAccountByIdNamePhoneMail);
+        return searchList;
     }
 
 }

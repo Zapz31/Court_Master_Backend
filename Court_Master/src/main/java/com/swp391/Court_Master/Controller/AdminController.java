@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.cloud.storage.Acl.User;
 import com.swp391.Court_Master.Service.AdminService;
+import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
 import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/admin")
@@ -45,10 +48,18 @@ public class AdminController {
         return ResponseEntity.ok().body(list);
     }
 
-    //chon tu dropdown list, role = 1? 2? 3?
+    // chon tu dropdown list, role = 1? 2? 3?
     @GetMapping("/get-all-role")
     public ResponseEntity<List<UserAccountDTO>> getAllSpecificRoleAccount(@RequestParam("role") String role) {
         List<UserAccountDTO> list = adminService.getAllSpecificRoleAccount(role);
+        return ResponseEntity.ok().body(list);
+    }
+
+    // search account by id,name,phone,mail
+    @PostMapping("/search-account")
+    public ResponseEntity<List<UserAccountDTO>> searchAccountByIdNamePhoneMail(
+            @RequestBody SearchAccountByIdNamePhoneMail SearchAccountByIdNamePhoneMail) {
+        List<UserAccountDTO> list = adminService.searchAccountByIdNamePhoneMail(SearchAccountByIdNamePhoneMail);
         return ResponseEntity.ok().body(list);
     }
 
