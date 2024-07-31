@@ -370,9 +370,45 @@ public class AdminRepository {
 
         return jdbcTemplate.query(sql, pss, new AdminViewUserAccountsRowMapper());
     }
-    //Edit account: tham khao ben CourtManagerRepository
-    //email,phone phai check trung truoc khi cho update
-    //how to check trung? -> khong can nua vi Database da co constraint
+
+    // Edit account: tham khao ben CourtManagerRepository
+    // email,phone phai check trung truoc khi cho update
+    // how to check trung? -> khong can nua vi Database da co constraint
     // Ban user: doi user_status tu 0 thanh 1
+    public boolean isBanAccount(String userId) {
+        String sql = "UPDATE [Court_Master].[dbo].[authenticated_user]\r\n" + //
+                "SET [user_status] ='1'\r\n" + //
+                "wHERE [user_id] = ?";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, userId);
+            }
+        };
+        int updateRow = jdbcTemplate.update(sql, pss);
+        if (updateRow > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Unban user: doi user_status tu 1 thanh 0
+    public boolean isUnbanAccount(String userId) {
+        String sql = "UPDATE [Court_Master].[dbo].[authenticated_user]\r\n" + //
+                "SET [user_status] ='0'\r\n" + //
+                "wHERE [user_id] = ?";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, userId);
+            }
+        };
+        int updateRow = jdbcTemplate.update(sql, pss);
+        if (updateRow > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

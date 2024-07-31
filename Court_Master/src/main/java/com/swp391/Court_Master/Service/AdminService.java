@@ -40,9 +40,28 @@ public class AdminService {
         return RoleList;
     }
 
-    public List<UserAccountDTO> searchAccountByIdNamePhoneMail(SearchAccountByIdNamePhoneMail searchAccountByIdNamePhoneMail) {
+    public List<UserAccountDTO> searchAccountByIdNamePhoneMail(
+            SearchAccountByIdNamePhoneMail searchAccountByIdNamePhoneMail) {
         List<UserAccountDTO> searchList = adminRepository.getAccountByIdNamePhoneMail(searchAccountByIdNamePhoneMail);
         return searchList;
+    }
+
+    public String banAccount(String userId) {
+        boolean isBanAccount = adminRepository.isBanAccount(userId);
+        if (isBanAccount) {
+            return "success";
+        } else {
+            return "false";
+        }
+    }
+
+    public String unbanAccount(String userId) {
+        boolean isBanAccount = adminRepository.isUnbanAccount(userId);
+        if (isBanAccount) {
+            return "success";
+        } else {
+            return "false";
+        }
     }
 
 }

@@ -64,5 +64,16 @@ public class AdminController {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping("/unban-account")
+    public String unbanAccount(@RequestParam("userId") String userId) {
+
+        return adminService.unbanAccount(userId);
+    }
+
+    @GetMapping("/ban-account")
+    public String banAccount(@RequestParam("userId") String userId) {
+
+        return adminService.banAccount(userId);
+    }
 
 }
