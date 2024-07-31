@@ -360,46 +360,15 @@ public class AdminRepository {
                 String searchPattern = "%" + SearchAccountByIdNamePhoneMail.getSearch() + "%";
                 String search = SearchAccountByIdNamePhoneMail.getSearch();
                 String court_manager_id = SearchAccountByIdNamePhoneMail.getSearch();
-                ps.setString(1, searchPattern);
+                ps.setString(1, search);
                 ps.setString(2, searchPattern);
                 ps.setString(3, searchPattern);
-                ps.setString(4, search);
+                ps.setString(4, searchPattern);
+                ps.setString(5, search);
             }
         };
 
         return jdbcTemplate.query(sql, pss, new AdminViewUserAccountsRowMapper());
-    }
-
-    public List<StaffAccountDTO> getStaffByNamePhone(SearchStaffByPhoneNameRequest SearchStaffByPhoneNameRequest) {
-        String sql = "SELECT [user_id],\r\n" + //
-                "       [first_name],\r\n" + //
-                "       [last_name],\r\n" + //
-                "       [email],\r\n" + //
-                "       [phone_number],\r\n" + //
-                "       [birthday],\r\n" + //
-                "       [avatar_image_url]\r\n" + //
-                "FROM [Court_Master].[dbo].[authenticated_user]\r\n" + //
-                "WHERE [court_manager_id] = ?\r\n" + //
-                "  AND ([first_name] LIKE ?\r\n" + //
-                "       OR [last_name] LIKE ?\r\n" + //
-                "       OR [phone_number] LIKE ?);";
-
-        PreparedStatementSetter pss = new PreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps) throws SQLException {
-                // Set the court_manager_id parameter
-                ps.setString(1, SearchStaffByPhoneNameRequest.getCourtManagerId());
-                // Set the search term for name and phone number filtering
-                String searchPattern = "%" + SearchStaffByPhoneNameRequest.getSearch() + "%";
-                String court_manager_id = SearchStaffByPhoneNameRequest.getCourtManagerId();
-                ps.setString(1, court_manager_id);
-                ps.setString(2, searchPattern);
-                ps.setString(3, searchPattern);
-                ps.setString(4, searchPattern);
-            }
-        };
-
-        return jdbcTemplate.query(sql, pss, new CourtManagerViewStaffRowMapper());
     }
 
     // Ban user: doi user_status tu 0 thanh 1

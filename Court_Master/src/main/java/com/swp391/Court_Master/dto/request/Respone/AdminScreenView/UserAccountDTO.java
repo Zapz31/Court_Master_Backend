@@ -2,6 +2,8 @@ package com.swp391.Court_Master.dto.request.Respone.AdminScreenView;
 
 import java.time.LocalDate;
 
+import org.springframework.cglib.core.Local;
+
 public class UserAccountDTO {
     private String userId;
     private String firstName;
@@ -9,9 +11,11 @@ public class UserAccountDTO {
     private String email;
     private String phoneNumber;
     private LocalDate birthDay;
+    private String birthday;
     private String role;
     private String userStatus;
     private LocalDate registerDate;
+    private String registerdate;
     private String imageUrlString;
 
     public UserAccountDTO() {
@@ -25,6 +29,49 @@ public class UserAccountDTO {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.birthDay = birthDay;
+        this.role = role;
+        this.userStatus = userStatus;
+        this.registerDate = registerDate;
+        this.imageUrlString = imageUrlString;
+    }
+
+    // Them truong hop constructor nhan birthday va register la string vi null o DB
+    public UserAccountDTO(String userId, String firstName, String lastName, String email, String phoneNumber,
+            String birthday, String role, String userStatus, String registerdate, String imageUrlString) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.birthday = birthday;
+        this.role = role;
+        this.userStatus = userStatus;
+        this.registerdate = registerdate;
+        this.imageUrlString = imageUrlString;
+    }
+
+    public UserAccountDTO(String userId, String firstName, String lastName, String email, String phoneNumber,
+            LocalDate birthDay, String role, String userStatus, String registerdate, String imageUrlString) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.birthDay = birthDay;
+        this.role = role;
+        this.userStatus = userStatus;
+        this.registerdate = registerdate;
+        this.imageUrlString = imageUrlString;
+    }
+
+    public UserAccountDTO(String userId, String firstName, String lastName, String email, String phoneNumber,
+            String birthday, String role, String userStatus, LocalDate registerDate, String imageUrlString) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.birthday = birthday;
         this.role = role;
         this.userStatus = userStatus;
         this.registerDate = registerDate;
