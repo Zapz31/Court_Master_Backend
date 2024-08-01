@@ -1117,5 +1117,72 @@ public class AdminRepository {
     }
 
     // Edit club info
+    public boolean updateClubInfo(String name, String description, String clubId) {
+        // Buoc 1 Tinh toan cau truy van SQL de cap nhat thong tin club
+        StringBuilder updateSQL = new StringBuilder();
+
+        // Buoc 2 Xay dung cau truy van SQL ban dau
+        updateSQL.append("UPDATE [Court_Master].[dbo].[badminton_club] SET ");
+
+        // Buoc 3 Bien kiem tra neu co cot nao can cap nhat
+        boolean hasParameters = false;
+
+        // Buoc 4 Xay dung phan SET cho name neu ton tai
+        if (name != null && name != "") {
+            updateSQL.append("badminton_club_name = ?");
+            hasParameters = true;
+        }
+
+        // Buoc 5 Xay dung phan SET cho description neu ton tai
+        if (description != null && description != "") {
+            if (hasParameters) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("description = ?");
+            hasParameters = true;
+        }
+
+        // Buoc 6 Xay dung phan SET cho status neu ton tai
+
+        // Buoc 7 Kiem tra neu khong co tham so nao de cap nhat
+        if (!hasParameters) {
+            return false;
+        }
+
+        // Buoc 8 Xay dung phan WHERE cho cau truy van SQL
+        updateSQL.append(" WHERE badminton_club_id = ?");
+
+        // Buoc 9 Tao PreparedStatementSetter de set gia tri cho cau truy van
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                int index = 1;
+
+                // Buoc 10 Set gia tri cho name neu ton tai
+                if (name != null && name != "") {
+                    ps.setString(index++, name);
+                }
+
+                // Buoc 11 Set gia tri cho description neu ton tai
+                if (description != null && description != "") {
+                    ps.setString(index++, description);
+                }
+
+                // Buoc 13 Set gia tri cho clubId
+                ps.setString(index, clubId);
+            }
+        };
+
+        // Buoc 14 Thuc thi cau truy van va kiem tra so dong duoc cap nhat
+        int updateRow = jdbcTemplate.update(updateSQL.toString(), pss);
+
+        // Buoc 15 Tra ve true neu so dong duoc cap nhat lon hon 0
+        if (updateRow > 0) {
+            return true;
+        } else {
+            // Buoc 16 Tra ve false neu khong co dong nao duoc cap nhat
+            return false;
+        }
+    }
 
 }

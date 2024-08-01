@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.cloud.storage.Acl.User;
+import com.swp391.Court_Master.Entities.Club;
 import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.Service.AdminService;
 import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
@@ -100,7 +101,7 @@ public class AdminController {
         List<ClubDTO> list = adminService.getAllActiveClub();
         return ResponseEntity.ok().body(list);
     }
-    
+
     @GetMapping("/get-all-inactive-club")
     public ResponseEntity<List<ClubDTO>> getAllInactiveClub() {
         List<ClubDTO> list = adminService.getAllInactiveClub();
@@ -113,7 +114,6 @@ public class AdminController {
         return ResponseEntity.ok().body(list);
     }
 
-    
     // search account by id,name,phone,mail
     @PostMapping("/search-club")
     public ResponseEntity<List<ClubDTO>> searchClubByIdName(
@@ -134,10 +134,17 @@ public class AdminController {
         return adminService.openClub(clubId);
     }
 
-        @PostMapping("/update-court")
+    @PostMapping("/update-court")
     public ResponseEntity<MessageResponse> updateCourt(@RequestBody Court newCourt) {
         adminService.updateCourtInfo(newCourt);
-        
+
+        return ResponseEntity.ok().body(new MessageResponse("success"));
+    }
+
+    @PostMapping("/update-club")
+    public ResponseEntity<MessageResponse> updateClub(@RequestBody Club newClub) {
+        adminService.updateClubInfo(newClub);
+
         return ResponseEntity.ok().body(new MessageResponse("success"));
     }
 

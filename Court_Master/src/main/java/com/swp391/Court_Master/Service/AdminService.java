@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.swp391.Court_Master.Entities.Club;
 import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.Repository.AdminRepository;
 import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
@@ -122,9 +123,18 @@ public class AdminService {
         }
     }
 
-        public void updateCourtInfo(Court court){
-        boolean isUpdateCourt = adminRepository.updateCourtInfo(court.getCourtId(), court.getCourtName(), court.getStatus());
-        if(!isUpdateCourt){
+    public void updateCourtInfo(Court court) {
+        boolean isUpdateCourt = adminRepository.updateCourtInfo(court.getCourtId(), court.getCourtName(),
+                court.getStatus());
+        if (!isUpdateCourt) {
+            throw new RuntimeException("failed");
+        }
+    }
+
+    public void updateClubInfo(Club club) {
+        boolean isUpdateCourt = adminRepository.updateClubInfo(club.getClubName(), club.getDescription(),
+        club.getClubId());
+        if (!isUpdateCourt) {
             throw new RuntimeException("failed");
         }
     }

@@ -14,7 +14,7 @@ import com.google.firebase.FirebaseOptions;
 
 @SpringBootApplication()
 public class CourtMasterApplication {
-
+	
 	public static void main(String[] args) throws IOException {
 		File file = new File("firebasePrivateKey.json");
 		//"D:/FPTU/Semester V/SWP391/Court_Master_Backend/Court_Master_Backend/Court_Master/src/main/resources/firebasePrivateKey.json"
