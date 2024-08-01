@@ -571,4 +571,127 @@ public class AdminRepository {
         };
         return jdbcTemplate.query(sql, new AdminViewClubRowMapper());
     }
+
+    // Show all Active clubs
+    public List<ClubDTO> getAllActiveClub() {
+        String sql = "SELECT\r\n" + //
+                "c.[badminton_club_id]\r\n" + //
+                ",c.[badminton_club_name]\r\n" + //
+                ",a.[unit_number]\r\n" + //
+                ",a.[ward]\r\n" + //
+                ",a.[district]\r\n" + //
+                ",a.[province]\r\n" + //
+                ",c.[description]\r\n" + //
+                ",c.[badminton_club_status]\r\n" + //
+                ",c.[court_manager_id]\r\n" + //
+                "FROM\r\n" + //
+                "[Court_Master].[dbo].[badminton_club] c\r\n" + //
+                "left join\r\n" + //
+                "[Court_Master].[dbo].[address] a\r\n" + //
+                "ON\r\n" + //
+                "c.address_id=a.address_id\r\n" + //
+                "WHERE\r\n" + //
+                "[badminton_club_status]='1'";
+        // SELECT
+        // c.[badminton_club_id]
+        // ,c.[badminton_club_name]
+        // ,a.[unit_number]
+        // ,a.[ward]
+        // ,a.[district]
+        // ,a.[province]
+        // ,c.[description]
+        // ,c.[badminton_club_status]
+        // ,c.[court_manager_id]
+        // FROM
+        // [Court_Master].[dbo].[badminton_club] c
+        // left join
+        // [Court_Master].[dbo].[address] a
+        // ON
+        // c.address_id=a.address_id
+        // WHERE
+        // [badminton_club_status]='1'
+
+        // Create an instance of PreparedStatementSetter
+        PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
+            // Override the setValues method to set the values for the prepared statement
+            @Override
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                // Currently, no values to set in the prepared statement
+            }
+        };
+
+        // Initialize an empty list of ClubDTO objects
+        List<ClubDTO> activeClubsList = null;
+
+        // Perform the database query to fetch active clubs
+        activeClubsList = jdbcTemplate.query(sql, new AdminViewClubRowMapper());
+
+        // Return the list of active clubs
+        return activeClubsList;
+
+    }
+
+    // Show all Inactive clubs
+    public List<ClubDTO> getAllInactiveClub() {
+        String sql = "SELECT\r\n" + //
+                "c.[badminton_club_id]\r\n" + //
+                ",c.[badminton_club_name]\r\n" + //
+                ",a.[unit_number]\r\n" + //
+                ",a.[ward]\r\n" + //
+                ",a.[district]\r\n" + //
+                ",a.[province]\r\n" + //
+                ",c.[description]\r\n" + //
+                ",c.[badminton_club_status]\r\n" + //
+                ",c.[court_manager_id]\r\n" + //
+                "FROM\r\n" + //
+                "[Court_Master].[dbo].[badminton_club] c\r\n" + //
+                "left join\r\n" + //
+                "[Court_Master].[dbo].[address] a\r\n" + //
+                "ON\r\n" + //
+                "c.address_id=a.address_id\r\n" + //
+                "WHERE\r\n" + //
+                "[badminton_club_status]='0'";
+        // SELECT
+        // c.[badminton_club_id]
+        // ,c.[badminton_club_name]
+        // ,a.[unit_number]
+        // ,a.[ward]
+        // ,a.[district]
+        // ,a.[province]
+        // ,c.[description]
+        // ,c.[badminton_club_status]
+        // ,c.[court_manager_id]
+        // FROM
+        // [Court_Master].[dbo].[badminton_club] c
+        // left join
+        // [Court_Master].[dbo].[address] a
+        // ON
+        // c.address_id=a.address_id
+        // WHERE
+        // [badminton_club_status]='0'
+
+        // Create an instance of PreparedStatementSetter
+        PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
+            // Override the setValues method to set the values for the prepared statement
+            @Override
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                // Currently, no values to set in the prepared statement
+            }
+        };
+
+        // Initialize an empty list of ClubDTO objects
+        List<ClubDTO> inactiveClubsList = null;
+
+        // Perform the database query to fetch active clubs
+        inactiveClubsList = jdbcTemplate.query(sql, new AdminViewClubRowMapper());
+
+        // Return the list of active clubs
+        return inactiveClubsList;
+
+    }
+
+    //Search Club by ID, name, unitNumber,ward,district,province,courtManagerId
+
+    //Edit club info, court info
+
 }
