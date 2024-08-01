@@ -87,7 +87,7 @@ public class AdminService {
     }
 
     public List<ClubDTO> getAllInactiveClub() {
-        List<ClubDTO> ClubList = adminRepository.getAllActiveClub();
+        List<ClubDTO> ClubList = adminRepository.getAllInactiveClub();
         return ClubList;
     }
 

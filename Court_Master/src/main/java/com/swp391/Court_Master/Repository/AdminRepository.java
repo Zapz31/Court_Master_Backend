@@ -752,7 +752,7 @@ public class AdminRepository {
                         "ON\r\n" + //
                         "    c.court_manager_id = u.user_id\r\n" + //
                         "WHERE\r\n" + //
-                        "\tc.badminton_club_status = ?";
+                        "\tc.badminton_club_status = ? ;";
             //     SELECT
             //     c.[badminton_club_id],
             //     c.[badminton_club_name],
@@ -790,8 +790,10 @@ public class AdminRepository {
         // Initialize an empty list of ClubDTO objects
         List<ClubDTO> statusClubsList = null;
 
+        PreparedStatementSetter pss = preparedStatementSetter;
+
         // Perform the database query to fetch active clubs
-        statusClubsList = jdbcTemplate.query(sql, new AdminViewClubRowMapper());
+        statusClubsList = jdbcTemplate.query(sql, pss, new AdminViewClubRowMapper());
 
         // Return the list of active clubs
         return statusClubsList;
