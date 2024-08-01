@@ -36,7 +36,7 @@ public class CourtManagerRepository {
     // Update thong tin cua club
     // Phai them phan cap nhat dia chi cho club
     // La post clubId get AddressID, sua dia chi trong table Address
-    public boolean updateClubInfo(String name, String description, Integer status, String clubId) {
+    public boolean updateClubInfo(String name, String description, String clubId) {
         // Buoc 1 Tinh toan cau truy van SQL de cap nhat thong tin club
         StringBuilder updateSQL = new StringBuilder();
 
@@ -47,13 +47,13 @@ public class CourtManagerRepository {
         boolean hasParameters = false;
 
         // Buoc 4 Xay dung phan SET cho name neu ton tai
-        if (name != null) {
+        if (name != null && name != "") {
             updateSQL.append("badminton_club_name = ?");
             hasParameters = true;
         }
 
         // Buoc 5 Xay dung phan SET cho description neu ton tai
-        if (description != null) {
+        if (description != null && description != "") {
             if (hasParameters) {
                 updateSQL.append(", ");
             }
@@ -62,13 +62,6 @@ public class CourtManagerRepository {
         }
 
         // Buoc 6 Xay dung phan SET cho status neu ton tai
-        if (status != null) {
-            if (hasParameters) {
-                updateSQL.append(", ");
-            }
-            updateSQL.append("badminton_club_status = ?");
-            hasParameters = true;
-        }
 
         // Buoc 7 Kiem tra neu khong co tham so nao de cap nhat
         if (!hasParameters) {
@@ -85,18 +78,13 @@ public class CourtManagerRepository {
                 int index = 1;
 
                 // Buoc 10 Set gia tri cho name neu ton tai
-                if (name != null) {
+                if (name != null && name != "") {
                     ps.setString(index++, name);
                 }
 
                 // Buoc 11 Set gia tri cho description neu ton tai
-                if (description != null) {
+                if (description != null && description != "") {
                     ps.setString(index++, description);
-                }
-
-                // Buoc 12 Set gia tri cho status neu ton tai
-                if (status != null) {
-                    ps.setInt(index++, status);
                 }
 
                 // Buoc 13 Set gia tri cho clubId

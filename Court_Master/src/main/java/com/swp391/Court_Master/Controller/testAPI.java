@@ -219,15 +219,6 @@ public class testAPI {
 
     }
 
-    //phai de request body, k dc de 4 tham so
-    @PostMapping("/managerUpdateInfo")
-    public String managerUpdateInfo(@RequestParam("name") String name,@RequestParam("description") String description,
-    @RequestParam("status") Integer status,@RequestParam("clubId") String clubId) {
-        if(courtManagerRepository.updateClubInfo(name, description, status, clubId)){
-            return "true";
-        };
-        return "false";
-    }
 
     // Lay nhung booking duoc yeu cau dat nhung chua thanh toan ma bi danh dau la trung voi cac booking da co
     @PostMapping("/get-duplicate-bookingslot-request")
