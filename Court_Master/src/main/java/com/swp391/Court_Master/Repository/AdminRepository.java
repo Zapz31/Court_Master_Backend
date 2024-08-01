@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.swp391.Court_Master.RowMapper.QueryAdminScreenRowMapper.AdminViewUserAccountsRowMapper;
 import com.swp391.Court_Master.RowMapper.QueryAdminScreenRowMapper.AdminViewClubRowMapper;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
+import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchClubByIdNameRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.UpdateAccountRequest;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.ClubDTO;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
@@ -359,7 +360,6 @@ public class AdminRepository {
                 // Set the search term for name and phone number filtering
                 String searchPattern = "%" + SearchAccountByIdNamePhoneMail.getSearch() + "%";
                 String search = SearchAccountByIdNamePhoneMail.getSearch();
-                String court_manager_id = SearchAccountByIdNamePhoneMail.getSearch();
                 ps.setString(1, search);
                 ps.setString(2, searchPattern);
                 ps.setString(3, searchPattern);
@@ -801,7 +801,78 @@ public class AdminRepository {
     }
 
 
-    //Search Club by ID, name, unitNumber,ward,district,province,courtManagerId
+    //Search Club by ID, name
+        public List<ClubDTO> searchClubByIdName(
+            SearchClubByIdNameRequest SearchClubByIdNameRequest) {
+        String sql = "SELECT\r\n" + //
+                        "    c.[badminton_club_id],\r\n" + //
+                        "    c.[badminton_club_name],\r\n" + //
+                        "    a.[unit_number],\r\n" + //
+                        "    a.[ward],\r\n" + //
+                        "    a.[district],\r\n" + //
+                        "    a.[province],\r\n" + //
+                        "    c.[description],\r\n" + //
+                        "    c.[badminton_club_status],\r\n" + //
+                        "    c.[court_manager_id],\r\n" + //
+                        "    u.[first_name],\r\n" + //
+                        "    u.[last_name]\r\n" + //
+                        "FROM \r\n" + //
+                        "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
+                        "LEFT JOIN\r\n" + //
+                        "    [Court_Master].[dbo].[address] a\r\n" + //
+                        "ON\r\n" + //
+                        "    c.address_id = a.address_id\r\n" + //
+                        "LEFT JOIN\r\n" + //
+                        "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
+                        "ON\r\n" + //
+                        "    c.court_manager_id = u.user_id\r\n" + //
+                        "WHERE\r\n" + //
+                        "\tc.[badminton_club_id] = ?\r\n" + //
+                        "OR\r\n" + //
+                        "    c.[badminton_club_name] LIKE ?";
+
+//         SELECT
+//     c.[badminton_club_id],
+//     c.[badminton_club_name],
+//     a.[unit_number],
+//     a.[ward],
+//     a.[district],
+//     a.[province],
+//     c.[description],
+//     c.[badminton_club_status],
+//     c.[court_manager_id],
+//     u.[first_name],
+//     u.[last_name]
+// FROM 
+//     [Court_Master].[dbo].[badminton_club] c
+// LEFT JOIN
+//     [Court_Master].[dbo].[address] a
+// ON
+//     c.address_id = a.address_id
+// LEFT JOIN
+//     [Court_Master].[dbo].[authenticated_user] u
+// ON
+//     c.court_manager_id = u.user_id
+// WHERE
+// 	c.[badminton_club_id] = ''
+// OR
+//     c.[badminton_club_name] LIKE '%%'
+
+
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+
+                // Set the search term for name and phone number filtering
+                String searchPattern = "%" + SearchClubByIdNameRequest.getSearch() + "%";
+                String search = SearchClubByIdNameRequest.getSearch();
+                ps.setString(1, search);
+                ps.setString(2, searchPattern);
+            }
+        };
+
+        return jdbcTemplate.query(sql, pss, new AdminViewClubRowMapper());
+    }
 
     //Edit club info, court info
 

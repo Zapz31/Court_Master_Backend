@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.swp391.Court_Master.Repository.AdminRepository;
 import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
+import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchClubByIdNameRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.UpdateAccountRequest;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.ClubDTO;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;;
@@ -96,4 +97,9 @@ public class AdminService {
         return ClubList;
     }
 
+    public List<ClubDTO> searchClubByIdName(
+        SearchClubByIdNameRequest SearchClubByIdNameRequest) {
+    List<ClubDTO> ClubList = adminRepository.searchClubByIdName(SearchClubByIdNameRequest);
+    return ClubList;
+}
 }

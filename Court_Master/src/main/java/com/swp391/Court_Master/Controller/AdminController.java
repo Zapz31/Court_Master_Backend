@@ -14,6 +14,7 @@ import com.swp391.Court_Master.Service.AdminService;
 import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
 import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
+import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchClubByIdNameRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.UpdateAccountRequest;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.ClubDTO;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
@@ -107,6 +108,15 @@ public class AdminController {
     @GetMapping("/get-all-status-club")
     public ResponseEntity<List<ClubDTO>> getAllStatusClub(@RequestParam("status") String status) {
         List<ClubDTO> list = adminService.getAllStatusClub(status);
+        return ResponseEntity.ok().body(list);
+    }
+
+    
+    // search account by id,name,phone,mail
+    @PostMapping("/search-club")
+    public ResponseEntity<List<ClubDTO>> searchClubByIdName(
+            @RequestBody SearchClubByIdNameRequest SearchClubByIdNameRequest) {
+        List<ClubDTO> list = adminService.searchClubByIdName(SearchClubByIdNameRequest);
         return ResponseEntity.ok().body(list);
     }
 
