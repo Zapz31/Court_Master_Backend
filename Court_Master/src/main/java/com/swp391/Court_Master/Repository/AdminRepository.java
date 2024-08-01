@@ -532,37 +532,49 @@ public class AdminRepository {
     // Show all club
     public List<ClubDTO> getAllClub() {
         String sql = "SELECT\r\n" + //
-                "c.[badminton_club_id]\r\n" + //
-                ",c.[badminton_club_name]\r\n" + //
-                ",a.[unit_number]\r\n" + //
-                ",a.[ward]\r\n" + //
-                ",a.[district]\r\n" + //
-                ",a.[province]\r\n" + //
-                ",c.[description]\r\n" + //
-                ",c.[badminton_club_status]\r\n" + //
-                ",c.[court_manager_id]\r\n" + //
-                "FROM\r\n" + //
-                "[Court_Master].[dbo].[badminton_club] c\r\n" + //
-                "left join\r\n" + //
-                "[Court_Master].[dbo].[address] a\r\n" + //
-                "ON\r\n" + //
-                "c.address_id=a.address_id";
-        // SELECT
-        // c.[badminton_club_id]
-        // ,c.[badminton_club_name]
-        // ,a.[unit_number]
-        // ,a.[ward]
-        // ,a.[district]
-        // ,a.[province]
-        // ,c.[description]
-        // ,c.[badminton_club_status]
-        // ,c.[court_manager_id]
-        // FROM
-        // [Court_Master].[dbo].[badminton_club] c
-        // left join
-        // [Court_Master].[dbo].[address] a
-        // ON
-        // c.address_id=a.address_id
+                        "    c.[badminton_club_id],\r\n" + //
+                        "    c.[badminton_club_name],\r\n" + //
+                        "    a.[unit_number],\r\n" + //
+                        "    a.[ward],\r\n" + //
+                        "    a.[district],\r\n" + //
+                        "    a.[province],\r\n" + //
+                        "    c.[description],\r\n" + //
+                        "    c.[badminton_club_status],\r\n" + //
+                        "    c.[court_manager_id],\r\n" + //
+                        "    u.[first_name],\r\n" + //
+                        "    u.[last_name]\r\n" + //
+                        "FROM \r\n" + //
+                        "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
+                        "LEFT JOIN\r\n" + //
+                        "    [Court_Master].[dbo].[address] a\r\n" + //
+                        "ON\r\n" + //
+                        "    c.address_id = a.address_id\r\n" + //
+                        "LEFT JOIN\r\n" + //
+                        "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
+                        "ON\r\n" + //
+                        "    c.court_manager_id = u.user_id;";
+            //     SELECT
+            //     c.[badminton_club_id],
+            //     c.[badminton_club_name],
+            //     a.[unit_number],
+            //     a.[ward],
+            //     a.[district],
+            //     a.[province],
+            //     c.[description],
+            //     c.[badminton_club_status],
+            //     c.[court_manager_id],
+            //     u.[first_name],
+            //     u.[last_name]
+            // FROM 
+            //     [Court_Master].[dbo].[badminton_club] c
+            // LEFT JOIN
+            //     [Court_Master].[dbo].[address] a
+            // ON
+            //     c.address_id = a.address_id
+            // LEFT JOIN
+            //     [Court_Master].[dbo].[authenticated_user] u
+            // ON
+            //     c.court_manager_id = u.user_id;
         PreparedStatementSetter pss = new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {

@@ -37,6 +37,12 @@ public class AdminViewClubRowMapper implements RowMapper<ClubDTO> {
         
         // Extract the courtManagerId from the ResultSet
         String courtManagerId = arg0.getString("court_manager_id");
+
+        //Extract the courtManagerFirstName from the ResultSet
+        String courtManagerFirstName = arg0.getString("first_name");
+
+        //Extract the courtManagerLastName from the ResultSet
+        String courtManagerLastName = arg0.getString("last_name");
         
         // Create a new ClubDTO object using the extracted values
         ClubDTO club = new ClubDTO(clubId
@@ -47,7 +53,9 @@ public class AdminViewClubRowMapper implements RowMapper<ClubDTO> {
         , province
         , description
         , clubStatus
-        , courtManagerId);
+        , courtManagerId
+        , courtManagerFirstName
+        , courtManagerLastName);
         
         // Return the ClubDTO object
         return club;

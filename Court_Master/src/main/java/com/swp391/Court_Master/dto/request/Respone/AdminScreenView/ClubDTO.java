@@ -30,6 +30,12 @@ public class ClubDTO {
     // Variable to hold the ID of the court manager
     private String courtManagerId;
 
+    //Variable to hold the first name of the court manager
+    private String courtManagerFirstName;
+
+    //Variable to hold the last name of the court manager
+    private String courtManagerLastName;
+
     private static final Logger LOGGER = Logger.getLogger(ClubDTO.class.getName());
 
     public ClubDTO() {
@@ -43,7 +49,9 @@ public class ClubDTO {
     , String province
     , String description
     , String badmintonClubStatus
-    , String courtManagerId) {
+    , String courtManagerId
+    , String courtManagerFirstName
+    , String courtManagerLastName) {
         LOGGER.info("ClubDTO parameterized constructor called");
 
 
@@ -91,6 +99,16 @@ public class ClubDTO {
         String tempCourtManagerId = courtManagerId;
         // Assign courtManagerId to instance variable
         this.courtManagerId = tempCourtManagerId;
+
+        // Temporary variable to hold courtManagerId
+        String tempCourtManagerFirstName = courtManagerFirstName;
+        // Assign courtManagerId to instance variable
+        this.courtManagerFirstName = tempCourtManagerFirstName;
+        
+        // Temporary variable to hold courtManagerId
+        String tempCourtManagerLastName = courtManagerLastName;
+        // Assign courtManagerId to instance variable
+        this.courtManagerLastName = tempCourtManagerLastName;        
     }
 
     // Getter for clubId
@@ -219,6 +237,34 @@ public class ClubDTO {
         this.courtManagerId = tempCourtManagerId;
     }
 
+    // Getter for courtManagerFirstName
+    public String getCourtManagerFirstName() {
+        LOGGER.info("getCourtManagerFirstName method called");
+        String tempCourtManagerFirstName = this.courtManagerFirstName;
+        return tempCourtManagerFirstName;
+    }
+
+    // Setter for courtManagerFirstName
+    public void setCourtManagerFirstName(String courtManagerFirstName) {
+        LOGGER.info("setCourtManagerFirstName method called");
+        String tempCourtManagerFirstName = courtManagerFirstName;
+        this.courtManagerFirstName = tempCourtManagerFirstName;
+    }
+
+    // Getter for courtManageLastName
+    public String getCourtManagerLastName() {
+        LOGGER.info("getCourtManagerLastName method called");
+        String tempCourtManagerLastName = this.courtManagerLastName;
+        return tempCourtManagerLastName;
+    }
+
+    // Setter for courtManagerLastName
+    public void setCourtManagerLastName(String courtManagerLastName) {
+        LOGGER.info("setCourtManagerLastName method called");
+        String tempCourtManagerLastName = courtManagerLastName;
+        this.courtManagerLastName = tempCourtManagerLastName;
+    }
+
     // Additional methods
 //     public boolean isClubActive() {
 
@@ -238,6 +284,11 @@ public class ClubDTO {
 
         String address = this.unitNumber + ", " + this.ward + ", " + this.district + ", " + this.province;
         return address;
+    }
+
+    public String getFullCourtManagerName(){
+        String name = this.courtManagerFirstName + " " + this.courtManagerLastName;
+        return name;
     }
 
 //     public boolean hasManager() {
