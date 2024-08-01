@@ -220,13 +220,13 @@ public class CourtManagerRepository {
         boolean hasParameters = true;
 
         // Buoc 3 Xay dung phan SET cho unit_number neu ton tai
-        if (badminton_court_name != null) {
+        if (badminton_court_name != null && badminton_court_name != "") {
             updateSQL.append("badminton_court_name = ?");
             hasParameters = false;
         }
 
         // Buoc 4 Xay dung phan SET cho province neu ton tai
-        if (badminton_court_status != null) {
+        if (badminton_court_status != null && badminton_court_status != "") {
             if (!hasParameters) {
                 updateSQL.append(", ");
             }
@@ -249,12 +249,12 @@ public class CourtManagerRepository {
                 int index = 1;
 
                 // Buoc 10 Set gia tri cho unit_number neu ton tai
-                if (badminton_court_name != null) {
+                if (badminton_court_name != null && badminton_court_name != "") {
                     ps.setString(index++, badminton_court_name);
                 }
 
                 // Buoc 11 Set gia tri cho ward neu ton tai
-                if (badminton_court_status != null) {
+                if (badminton_court_status != null && badminton_court_status != "") {
                     ps.setString(index++, badminton_court_status);
                 }
 

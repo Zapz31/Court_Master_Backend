@@ -530,68 +530,68 @@ public class AdminRepository {
     }
 
     // Show all club
-    public List<ClubDTO> getAllClub() { 
-        String sql="SELECT\r\n" + //
-                        "    c.[badminton_club_id],\r\n" + //
-                        "    c.[badminton_club_name],\r\n" + //
-                        "    a.[unit_number],\r\n" + //
-                        "    a.[ward],\r\n" + //
-                        "    a.[district],\r\n" + //
-                        "    a.[province],\r\n" + //
-                        "    c.[description],\r\n" + //
-                        "    c.[badminton_club_status],\r\n" + //
-                        "    c.[court_manager_id],\r\n" + //
-                        "    u.[first_name],\r\n" + //
-                        "    u.[last_name],\r\n" + //
-                        "\ti.[image_url],\r\n" + //
-                        "\ti.[is_main_avatar]\r\n" + //
-                        "FROM \r\n" + //
-                        "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "    [Court_Master].[dbo].[address] a\r\n" + //
-                        "ON\r\n" + //
-                        "    c.address_id = a.address_id\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
-                        "ON\r\n" + //
-                        "    c.court_manager_id = u.user_id\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "\t[Court_Master].[dbo].[badminton_club_image] i\r\n" + //
-                        "ON\r\n" + //
-                        "\tc.badminton_club_id = i.badminton_club_id\r\n" + //
-                        "WHERE\r\n" + //
-                        "\ti.is_main_avatar='1'";
+    public List<ClubDTO> getAllClub() {
+        String sql = "SELECT\r\n" + //
+                "    c.[badminton_club_id],\r\n" + //
+                "    c.[badminton_club_name],\r\n" + //
+                "    a.[unit_number],\r\n" + //
+                "    a.[ward],\r\n" + //
+                "    a.[district],\r\n" + //
+                "    a.[province],\r\n" + //
+                "    c.[description],\r\n" + //
+                "    c.[badminton_club_status],\r\n" + //
+                "    c.[court_manager_id],\r\n" + //
+                "    u.[first_name],\r\n" + //
+                "    u.[last_name],\r\n" + //
+                "\ti.[image_url],\r\n" + //
+                "\ti.[is_main_avatar]\r\n" + //
+                "FROM \r\n" + //
+                "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "    [Court_Master].[dbo].[address] a\r\n" + //
+                "ON\r\n" + //
+                "    c.address_id = a.address_id\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
+                "ON\r\n" + //
+                "    c.court_manager_id = u.user_id\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "\t[Court_Master].[dbo].[badminton_club_image] i\r\n" + //
+                "ON\r\n" + //
+                "\tc.badminton_club_id = i.badminton_club_id\r\n" + //
+                "WHERE\r\n" + //
+                "\ti.is_main_avatar='1'";
 
-                    //     SELECT
-                    //     c.[badminton_club_id],
-                    //     c.[badminton_club_name],
-                    //     a.[unit_number],
-                    //     a.[ward],
-                    //     a.[district],
-                    //     a.[province],
-                    //     c.[description],
-                    //     c.[badminton_club_status],
-                    //     c.[court_manager_id],
-                    //     u.[first_name],
-                    //     u.[last_name],
-                    //     i.[image_url],
-                    //     i.[is_main_avatar]
-                    // FROM 
-                    //     [Court_Master].[dbo].[badminton_club] c
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[address] a
-                    // ON
-                    //     c.address_id = a.address_id
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[authenticated_user] u
-                    // ON
-                    //     c.court_manager_id = u.user_id
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[badminton_club_image] i
-                    // ON
-                    //     c.badminton_club_id = i.badminton_club_id
-                    // WHERE
-                    //     i.is_main_avatar='1'
+        // SELECT
+        // c.[badminton_club_id],
+        // c.[badminton_club_name],
+        // a.[unit_number],
+        // a.[ward],
+        // a.[district],
+        // a.[province],
+        // c.[description],
+        // c.[badminton_club_status],
+        // c.[court_manager_id],
+        // u.[first_name],
+        // u.[last_name],
+        // i.[image_url],
+        // i.[is_main_avatar]
+        // FROM
+        // [Court_Master].[dbo].[badminton_club] c
+        // LEFT JOIN
+        // [Court_Master].[dbo].[address] a
+        // ON
+        // c.address_id = a.address_id
+        // LEFT JOIN
+        // [Court_Master].[dbo].[authenticated_user] u
+        // ON
+        // c.court_manager_id = u.user_id
+        // LEFT JOIN
+        // [Court_Master].[dbo].[badminton_club_image] i
+        // ON
+        // c.badminton_club_id = i.badminton_club_id
+        // WHERE
+        // i.is_main_avatar='1'
 
         PreparedStatementSetter pss = new PreparedStatementSetter() {
             @Override
@@ -604,70 +604,70 @@ public class AdminRepository {
 
     // Show all Active clubs
     public List<ClubDTO> getAllActiveClub() {
-        String sql="SELECT\r\n" + //
-                        "    c.[badminton_club_id],\r\n" + //
-                        "    c.[badminton_club_name],\r\n" + //
-                        "    a.[unit_number],\r\n" + //
-                        "    a.[ward],\r\n" + //
-                        "    a.[district],\r\n" + //
-                        "    a.[province],\r\n" + //
-                        "    c.[description],\r\n" + //
-                        "    c.[badminton_club_status],\r\n" + //
-                        "    c.[court_manager_id],\r\n" + //
-                        "    u.[first_name],\r\n" + //
-                        "    u.[last_name],\r\n" + //
-                        "\ti.[image_url],\r\n" + //
-                        "\ti.[is_main_avatar]\r\n" + //
-                        "FROM \r\n" + //
-                        "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "    [Court_Master].[dbo].[address] a\r\n" + //
-                        "ON\r\n" + //
-                        "    c.address_id = a.address_id\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
-                        "ON\r\n" + //
-                        "    c.court_manager_id = u.user_id\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "\t[Court_Master].[dbo].[badminton_club_image] i\r\n" + //
-                        "ON\r\n" + //
-                        "\tc.badminton_club_id = i.badminton_club_id\r\n" + //
-                        "WHERE\r\n" + //
-                        "\ti.is_main_avatar='1'\r\n" + //
-                        "AND \r\n" + //
-                        "\tc.badminton_club_status='1'";
-                    //     SELECT
-                    //     c.[badminton_club_id],
-                    //     c.[badminton_club_name],
-                    //     a.[unit_number],
-                    //     a.[ward],
-                    //     a.[district],
-                    //     a.[province],
-                    //     c.[description],
-                    //     c.[badminton_club_status],
-                    //     c.[court_manager_id],
-                    //     u.[first_name],
-                    //     u.[last_name],
-                    //     i.[image_url],
-                    //     i.[is_main_avatar]
-                    // FROM 
-                    //     [Court_Master].[dbo].[badminton_club] c
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[address] a
-                    // ON
-                    //     c.address_id = a.address_id
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[authenticated_user] u
-                    // ON
-                    //     c.court_manager_id = u.user_id
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[badminton_club_image] i
-                    // ON
-                    //     c.badminton_club_id = i.badminton_club_id
-                    // WHERE
-                    //     i.is_main_avatar='1'
-                    // AND 
-                    //     c.badminton_club_status='1'
+        String sql = "SELECT\r\n" + //
+                "    c.[badminton_club_id],\r\n" + //
+                "    c.[badminton_club_name],\r\n" + //
+                "    a.[unit_number],\r\n" + //
+                "    a.[ward],\r\n" + //
+                "    a.[district],\r\n" + //
+                "    a.[province],\r\n" + //
+                "    c.[description],\r\n" + //
+                "    c.[badminton_club_status],\r\n" + //
+                "    c.[court_manager_id],\r\n" + //
+                "    u.[first_name],\r\n" + //
+                "    u.[last_name],\r\n" + //
+                "\ti.[image_url],\r\n" + //
+                "\ti.[is_main_avatar]\r\n" + //
+                "FROM \r\n" + //
+                "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "    [Court_Master].[dbo].[address] a\r\n" + //
+                "ON\r\n" + //
+                "    c.address_id = a.address_id\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
+                "ON\r\n" + //
+                "    c.court_manager_id = u.user_id\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "\t[Court_Master].[dbo].[badminton_club_image] i\r\n" + //
+                "ON\r\n" + //
+                "\tc.badminton_club_id = i.badminton_club_id\r\n" + //
+                "WHERE\r\n" + //
+                "\ti.is_main_avatar='1'\r\n" + //
+                "AND \r\n" + //
+                "\tc.badminton_club_status='1'";
+        // SELECT
+        // c.[badminton_club_id],
+        // c.[badminton_club_name],
+        // a.[unit_number],
+        // a.[ward],
+        // a.[district],
+        // a.[province],
+        // c.[description],
+        // c.[badminton_club_status],
+        // c.[court_manager_id],
+        // u.[first_name],
+        // u.[last_name],
+        // i.[image_url],
+        // i.[is_main_avatar]
+        // FROM
+        // [Court_Master].[dbo].[badminton_club] c
+        // LEFT JOIN
+        // [Court_Master].[dbo].[address] a
+        // ON
+        // c.address_id = a.address_id
+        // LEFT JOIN
+        // [Court_Master].[dbo].[authenticated_user] u
+        // ON
+        // c.court_manager_id = u.user_id
+        // LEFT JOIN
+        // [Court_Master].[dbo].[badminton_club_image] i
+        // ON
+        // c.badminton_club_id = i.badminton_club_id
+        // WHERE
+        // i.is_main_avatar='1'
+        // AND
+        // c.badminton_club_status='1'
 
         // Create an instance of PreparedStatementSetter
         PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
@@ -691,70 +691,70 @@ public class AdminRepository {
 
     // Show all Inactive clubs
     public List<ClubDTO> getAllInactiveClub() {
-        String sql="SELECT\r\n" + //
-                        "    c.[badminton_club_id],\r\n" + //
-                        "    c.[badminton_club_name],\r\n" + //
-                        "    a.[unit_number],\r\n" + //
-                        "    a.[ward],\r\n" + //
-                        "    a.[district],\r\n" + //
-                        "    a.[province],\r\n" + //
-                        "    c.[description],\r\n" + //
-                        "    c.[badminton_club_status],\r\n" + //
-                        "    c.[court_manager_id],\r\n" + //
-                        "    u.[first_name],\r\n" + //
-                        "    u.[last_name],\r\n" + //
-                        "\ti.[image_url],\r\n" + //
-                        "\ti.[is_main_avatar]\r\n" + //
-                        "FROM \r\n" + //
-                        "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "    [Court_Master].[dbo].[address] a\r\n" + //
-                        "ON\r\n" + //
-                        "    c.address_id = a.address_id\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
-                        "ON\r\n" + //
-                        "    c.court_manager_id = u.user_id\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "\t[Court_Master].[dbo].[badminton_club_image] i\r\n" + //
-                        "ON\r\n" + //
-                        "\tc.badminton_club_id = i.badminton_club_id\r\n" + //
-                        "WHERE\r\n" + //
-                        "\ti.is_main_avatar='1'\r\n" + //
-                        "AND \r\n" + //
-                        "\tc.badminton_club_status='0'";
-                    //     SELECT
-                    //     c.[badminton_club_id],
-                    //     c.[badminton_club_name],
-                    //     a.[unit_number],
-                    //     a.[ward],
-                    //     a.[district],
-                    //     a.[province],
-                    //     c.[description],
-                    //     c.[badminton_club_status],
-                    //     c.[court_manager_id],
-                    //     u.[first_name],
-                    //     u.[last_name],
-                    //     i.[image_url],
-                    //     i.[is_main_avatar]
-                    // FROM 
-                    //     [Court_Master].[dbo].[badminton_club] c
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[address] a
-                    // ON
-                    //     c.address_id = a.address_id
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[authenticated_user] u
-                    // ON
-                    //     c.court_manager_id = u.user_id
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[badminton_club_image] i
-                    // ON
-                    //     c.badminton_club_id = i.badminton_club_id
-                    // WHERE
-                    //     i.is_main_avatar='1'
-                    // AND 
-                    //     c.badminton_club_status='0'
+        String sql = "SELECT\r\n" + //
+                "    c.[badminton_club_id],\r\n" + //
+                "    c.[badminton_club_name],\r\n" + //
+                "    a.[unit_number],\r\n" + //
+                "    a.[ward],\r\n" + //
+                "    a.[district],\r\n" + //
+                "    a.[province],\r\n" + //
+                "    c.[description],\r\n" + //
+                "    c.[badminton_club_status],\r\n" + //
+                "    c.[court_manager_id],\r\n" + //
+                "    u.[first_name],\r\n" + //
+                "    u.[last_name],\r\n" + //
+                "\ti.[image_url],\r\n" + //
+                "\ti.[is_main_avatar]\r\n" + //
+                "FROM \r\n" + //
+                "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "    [Court_Master].[dbo].[address] a\r\n" + //
+                "ON\r\n" + //
+                "    c.address_id = a.address_id\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
+                "ON\r\n" + //
+                "    c.court_manager_id = u.user_id\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "\t[Court_Master].[dbo].[badminton_club_image] i\r\n" + //
+                "ON\r\n" + //
+                "\tc.badminton_club_id = i.badminton_club_id\r\n" + //
+                "WHERE\r\n" + //
+                "\ti.is_main_avatar='1'\r\n" + //
+                "AND \r\n" + //
+                "\tc.badminton_club_status='0'";
+        // SELECT
+        // c.[badminton_club_id],
+        // c.[badminton_club_name],
+        // a.[unit_number],
+        // a.[ward],
+        // a.[district],
+        // a.[province],
+        // c.[description],
+        // c.[badminton_club_status],
+        // c.[court_manager_id],
+        // u.[first_name],
+        // u.[last_name],
+        // i.[image_url],
+        // i.[is_main_avatar]
+        // FROM
+        // [Court_Master].[dbo].[badminton_club] c
+        // LEFT JOIN
+        // [Court_Master].[dbo].[address] a
+        // ON
+        // c.address_id = a.address_id
+        // LEFT JOIN
+        // [Court_Master].[dbo].[authenticated_user] u
+        // ON
+        // c.court_manager_id = u.user_id
+        // LEFT JOIN
+        // [Court_Master].[dbo].[badminton_club_image] i
+        // ON
+        // c.badminton_club_id = i.badminton_club_id
+        // WHERE
+        // i.is_main_avatar='1'
+        // AND
+        // c.badminton_club_status='0'
 
         // Create an instance of PreparedStatementSetter
         PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
@@ -776,73 +776,73 @@ public class AdminRepository {
 
     }
 
-    //Show clubs with a specific status 
-    
+    // Show clubs with a specific status
+
     public List<ClubDTO> getAllStatusClub(String status) {
-        String sql="SELECT\r\n" + //
-                        "    c.[badminton_club_id],\r\n" + //
-                        "    c.[badminton_club_name],\r\n" + //
-                        "    a.[unit_number],\r\n" + //
-                        "    a.[ward],\r\n" + //
-                        "    a.[district],\r\n" + //
-                        "    a.[province],\r\n" + //
-                        "    c.[description],\r\n" + //
-                        "    c.[badminton_club_status],\r\n" + //
-                        "    c.[court_manager_id],\r\n" + //
-                        "    u.[first_name],\r\n" + //
-                        "    u.[last_name],\r\n" + //
-                        "\ti.[image_url],\r\n" + //
-                        "\ti.[is_main_avatar]\r\n" + //
-                        "FROM \r\n" + //
-                        "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "    [Court_Master].[dbo].[address] a\r\n" + //
-                        "ON\r\n" + //
-                        "    c.address_id = a.address_id\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
-                        "ON\r\n" + //
-                        "    c.court_manager_id = u.user_id\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "\t[Court_Master].[dbo].[badminton_club_image] i\r\n" + //
-                        "ON\r\n" + //
-                        "\tc.badminton_club_id = i.badminton_club_id\r\n" + //
-                        "WHERE\r\n" + //
-                        "\ti.is_main_avatar='1'\r\n" + //
-                        "AND \r\n" + //
-                        "\tc.badminton_club_status= ?";
-                    //     SELECT
-                    //     c.[badminton_club_id],
-                    //     c.[badminton_club_name],
-                    //     a.[unit_number],
-                    //     a.[ward],
-                    //     a.[district],
-                    //     a.[province],
-                    //     c.[description],
-                    //     c.[badminton_club_status],
-                    //     c.[court_manager_id],
-                    //     u.[first_name],
-                    //     u.[last_name],
-                    //     i.[image_url],
-                    //     i.[is_main_avatar]
-                    // FROM 
-                    //     [Court_Master].[dbo].[badminton_club] c
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[address] a
-                    // ON
-                    //     c.address_id = a.address_id
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[authenticated_user] u
-                    // ON
-                    //     c.court_manager_id = u.user_id
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[badminton_club_image] i
-                    // ON
-                    //     c.badminton_club_id = i.badminton_club_id
-                    // WHERE
-                    //     i.is_main_avatar='1'
-                    // AND 
-                    //     c.badminton_club_status= ?; 1 0
+        String sql = "SELECT\r\n" + //
+                "    c.[badminton_club_id],\r\n" + //
+                "    c.[badminton_club_name],\r\n" + //
+                "    a.[unit_number],\r\n" + //
+                "    a.[ward],\r\n" + //
+                "    a.[district],\r\n" + //
+                "    a.[province],\r\n" + //
+                "    c.[description],\r\n" + //
+                "    c.[badminton_club_status],\r\n" + //
+                "    c.[court_manager_id],\r\n" + //
+                "    u.[first_name],\r\n" + //
+                "    u.[last_name],\r\n" + //
+                "\ti.[image_url],\r\n" + //
+                "\ti.[is_main_avatar]\r\n" + //
+                "FROM \r\n" + //
+                "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "    [Court_Master].[dbo].[address] a\r\n" + //
+                "ON\r\n" + //
+                "    c.address_id = a.address_id\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
+                "ON\r\n" + //
+                "    c.court_manager_id = u.user_id\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "\t[Court_Master].[dbo].[badminton_club_image] i\r\n" + //
+                "ON\r\n" + //
+                "\tc.badminton_club_id = i.badminton_club_id\r\n" + //
+                "WHERE\r\n" + //
+                "\ti.is_main_avatar='1'\r\n" + //
+                "AND \r\n" + //
+                "\tc.badminton_club_status= ?";
+        // SELECT
+        // c.[badminton_club_id],
+        // c.[badminton_club_name],
+        // a.[unit_number],
+        // a.[ward],
+        // a.[district],
+        // a.[province],
+        // c.[description],
+        // c.[badminton_club_status],
+        // c.[court_manager_id],
+        // u.[first_name],
+        // u.[last_name],
+        // i.[image_url],
+        // i.[is_main_avatar]
+        // FROM
+        // [Court_Master].[dbo].[badminton_club] c
+        // LEFT JOIN
+        // [Court_Master].[dbo].[address] a
+        // ON
+        // c.address_id = a.address_id
+        // LEFT JOIN
+        // [Court_Master].[dbo].[authenticated_user] u
+        // ON
+        // c.court_manager_id = u.user_id
+        // LEFT JOIN
+        // [Court_Master].[dbo].[badminton_club_image] i
+        // ON
+        // c.badminton_club_id = i.badminton_club_id
+        // WHERE
+        // i.is_main_avatar='1'
+        // AND
+        // c.badminton_club_status= ?; 1 0
 
         // Create an instance of PreparedStatementSetter
         PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
@@ -866,80 +866,78 @@ public class AdminRepository {
 
     }
 
-
-    //Search Club by ID, name
-        public List<ClubDTO> searchClubByIdName(
+    // Search Club by ID, name
+    public List<ClubDTO> searchClubByIdName(
             SearchClubByIdNameRequest SearchClubByIdNameRequest) {
         String sql = "SELECT\r\n" + //
-                        "    c.[badminton_club_id],\r\n" + //
-                        "    c.[badminton_club_name],\r\n" + //
-                        "    a.[unit_number],\r\n" + //
-                        "    a.[ward],\r\n" + //
-                        "    a.[district],\r\n" + //
-                        "    a.[province],\r\n" + //
-                        "    c.[description],\r\n" + //
-                        "    c.[badminton_club_status],\r\n" + //
-                        "    c.[court_manager_id],\r\n" + //
-                        "    u.[first_name],\r\n" + //
-                        "    u.[last_name],\r\n" + //
-                        "\ti.[image_url],\r\n" + //
-                        "\ti.[is_main_avatar]\r\n" + //
-                        "FROM \r\n" + //
-                        "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "    [Court_Master].[dbo].[address] a\r\n" + //
-                        "ON\r\n" + //
-                        "    c.address_id = a.address_id\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
-                        "ON\r\n" + //
-                        "    c.court_manager_id = u.user_id\r\n" + //
-                        "LEFT JOIN\r\n" + //
-                        "\t[Court_Master].[dbo].[badminton_club_image] i\r\n" + //
-                        "ON\r\n" + //
-                        "\tc.badminton_club_id = i.badminton_club_id\r\n" + //
-                        "WHERE\r\n" + //
-                        "\t(i.is_main_avatar='1')\r\n" + //
-                        "AND\r\n" + //
-                        "\t(c.[badminton_club_id] = ?\r\n" + //
-                        "OR\r\n" + //
-                        "    c.[badminton_club_name] LIKE ?)";
+                "    c.[badminton_club_id],\r\n" + //
+                "    c.[badminton_club_name],\r\n" + //
+                "    a.[unit_number],\r\n" + //
+                "    a.[ward],\r\n" + //
+                "    a.[district],\r\n" + //
+                "    a.[province],\r\n" + //
+                "    c.[description],\r\n" + //
+                "    c.[badminton_club_status],\r\n" + //
+                "    c.[court_manager_id],\r\n" + //
+                "    u.[first_name],\r\n" + //
+                "    u.[last_name],\r\n" + //
+                "\ti.[image_url],\r\n" + //
+                "\ti.[is_main_avatar]\r\n" + //
+                "FROM \r\n" + //
+                "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "    [Court_Master].[dbo].[address] a\r\n" + //
+                "ON\r\n" + //
+                "    c.address_id = a.address_id\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
+                "ON\r\n" + //
+                "    c.court_manager_id = u.user_id\r\n" + //
+                "LEFT JOIN\r\n" + //
+                "\t[Court_Master].[dbo].[badminton_club_image] i\r\n" + //
+                "ON\r\n" + //
+                "\tc.badminton_club_id = i.badminton_club_id\r\n" + //
+                "WHERE\r\n" + //
+                "\t(i.is_main_avatar='1')\r\n" + //
+                "AND\r\n" + //
+                "\t(c.[badminton_club_id] = ?\r\n" + //
+                "OR\r\n" + //
+                "    c.[badminton_club_name] LIKE ?)";
 
-                    //     SELECT
-                    //     c.[badminton_club_id],
-                    //     c.[badminton_club_name],
-                    //     a.[unit_number],
-                    //     a.[ward],
-                    //     a.[district],
-                    //     a.[province],
-                    //     c.[description],
-                    //     c.[badminton_club_status],
-                    //     c.[court_manager_id],
-                    //     u.[first_name],
-                    //     u.[last_name],
-                    //     i.[image_url],
-                    //     i.[is_main_avatar]
-                    // FROM 
-                    //     [Court_Master].[dbo].[badminton_club] c
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[address] a
-                    // ON
-                    //     c.address_id = a.address_id
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[authenticated_user] u
-                    // ON
-                    //     c.court_manager_id = u.user_id
-                    // LEFT JOIN
-                    //     [Court_Master].[dbo].[badminton_club_image] i
-                    // ON
-                    //     c.badminton_club_id = i.badminton_club_id
-                    // WHERE
-                    //     (i.is_main_avatar='1')
-                    // AND
-                    //     (c.[badminton_club_id] = 's'
-                    // OR
-                    //     c.[badminton_club_name] LIKE '%s%')
-
+        // SELECT
+        // c.[badminton_club_id],
+        // c.[badminton_club_name],
+        // a.[unit_number],
+        // a.[ward],
+        // a.[district],
+        // a.[province],
+        // c.[description],
+        // c.[badminton_club_status],
+        // c.[court_manager_id],
+        // u.[first_name],
+        // u.[last_name],
+        // i.[image_url],
+        // i.[is_main_avatar]
+        // FROM
+        // [Court_Master].[dbo].[badminton_club] c
+        // LEFT JOIN
+        // [Court_Master].[dbo].[address] a
+        // ON
+        // c.address_id = a.address_id
+        // LEFT JOIN
+        // [Court_Master].[dbo].[authenticated_user] u
+        // ON
+        // c.court_manager_id = u.user_id
+        // LEFT JOIN
+        // [Court_Master].[dbo].[badminton_club_image] i
+        // ON
+        // c.badminton_club_id = i.badminton_club_id
+        // WHERE
+        // (i.is_main_avatar='1')
+        // AND
+        // (c.[badminton_club_id] = 's'
+        // OR
+        // c.[badminton_club_name] LIKE '%s%')
 
         PreparedStatementSetter pss = new PreparedStatementSetter() {
             @Override
@@ -956,15 +954,21 @@ public class AdminRepository {
         return jdbcTemplate.query(sql, pss, new AdminViewClubRowMapper());
     }
 
-    //Close club
+    // Close club
     public boolean isCloseClub(String clubId) {
-        String sql="UPDATE\r\n" + //
-                        "\t[Court_Master].[dbo].[badminton_club]\r\n" + //
-                        "SET\r\n" + //
-                        "\t[badminton_club_status]='0'\r\n" + //
-                        "WHERE\r\n" + //
-                        "\t[badminton_club_id]= ?\r\n" + //
-                        "";
+        String sql = "UPDATE\r\n" + //
+                "\t[Court_Master].[dbo].[badminton_club]\r\n" + //
+                "SET\r\n" + //
+                "\t[badminton_club_status]='0'\r\n" + //
+                "WHERE\r\n" + //
+                "\t[badminton_club_id]= ?\r\n" + //
+                "";
+        // UPDATE
+        // [Court_Master].[dbo].[badminton_club]
+        // SET
+        // [badminton_club_status]='0'
+        // WHERE
+        // [badminton_club_id]='C0000001'
         PreparedStatementSetter pss = new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
@@ -978,31 +982,104 @@ public class AdminRepository {
             return false;
         }
     }
-    
-    //Reopen club
-    public boolean isOpenClub(String clubId) {
-        String sql="UPDATE\r\n" + //
-                        "\t[Court_Master].[dbo].[badminton_club]\r\n" + //
-                        "SET\r\n" + //
-                        "\t[badminton_club_status]='1'\r\n" + //
-                        "WHERE\r\n" + //
-                        "\t[badminton_club_id]= ?\r\n" + //
-                        "";
-        PreparedStatementSetter pss = new PreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps) throws SQLException {
-                ps.setString(1, clubId);
-            }
-        };
-        int updateRow = jdbcTemplate.update(sql, pss);
-        if (updateRow > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    //Show all court
 
-    //Edit club info, court info
+    // Reopen club
+    public boolean isOpenClub(String clubId) {
+        String sql = "UPDATE\r\n" + //
+                "\t[Court_Master].[dbo].[badminton_club]\r\n" + //
+                "SET\r\n" + //
+                "\t[badminton_club_status]='1'\r\n" + //
+                "WHERE\r\n" + //
+                "\t[badminton_club_id]= ?\r\n" + //
+                "";
+        // UPDATE
+        // [Court_Master].[dbo].[badminton_club]
+        // SET
+        // [badminton_club_status]='1'
+        // WHERE
+        // [badminton_club_id]='C0000001'
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, clubId);
+            }
+        };
+        int updateRow = jdbcTemplate.update(sql, pss);
+        if (updateRow > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    // Show all court
+
+    // Update Court Info: tham khao o CourtManagerRepoitory
+    public boolean updateCourtInfo(String badminton_court_id, String badminton_court_name,
+            String badminton_court_status) {
+        // Buoc 1 Tao StringBuilder de xay dung cau truy van SQL
+        StringBuilder updateSQL = new StringBuilder();
+        updateSQL.append("UPDATE [Court_Master].[dbo].[badminton_court] SET ");
+
+        // Buoc 2 Bien kiem tra de xac dinh co tham so nao de cap nhat
+        boolean hasParameters = true;
+
+        // Buoc 3 Xay dung phan SET cho unit_number neu ton tai
+        if (badminton_court_name != null && badminton_court_name != "") {
+            updateSQL.append("badminton_court_name = ?");
+            hasParameters = false;
+        }
+
+        // Buoc 4 Xay dung phan SET cho province neu ton tai
+        if (badminton_court_status != null && badminton_court_status != "") {
+            if (!hasParameters) {
+                updateSQL.append(", ");
+            }
+            updateSQL.append("badminton_court_status = ?");
+            hasParameters = false;
+        }
+
+        // Buoc 5 Kiem tra neu khong co tham so nao de cap nhat
+        if (hasParameters) {
+            return false;
+        }
+
+        // Buoc 6 Xay dung phan WHERE cho cau truy van SQL
+        updateSQL.append(" WHERE badminton_court_id = ?");
+
+        // Buoc 7 Tao PreparedStatementSetter de set gia tri cho cau truy van
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                int index = 1;
+
+                // Buoc 10 Set gia tri cho unit_number neu ton tai
+                if (badminton_court_name != null && badminton_court_name != "") {
+                    ps.setString(index++, badminton_court_name);
+                }
+
+                // Buoc 11 Set gia tri cho ward neu ton tai
+                if (badminton_court_status != null && badminton_court_status != "") {
+                    ps.setString(index++, badminton_court_status);
+                }
+
+                // Buoc 14 Set gia tri cho addressId
+                ps.setString(index, badminton_court_id);
+            }
+        };
+
+        // Buoc 8 Thuc thi cau truy van va kiem tra so dong duoc cap nhat
+        int updateRow = jdbcTemplate.update(updateSQL.toString(), pss);
+
+        // Buoc 9 Tra ve true neu so dong duoc cap nhat lon hon 0
+        if (updateRow > 0) {
+            return true;
+        } else {
+            // Buoc 10 Tra ve false neu khong co dong nao duoc cap nhat
+            return false;
+        }
+
+    }
+
+    // Edit club info, court info
 
 }

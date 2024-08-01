@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.cloud.storage.Acl.User;
+import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.Service.AdminService;
 import com.swp391.Court_Master.dto.request.Request.SearchStaffByPhoneNameRequest;
 import com.swp391.Court_Master.dto.request.Request.UpdateStaffRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchClubByIdNameRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.UpdateAccountRequest;
+import com.swp391.Court_Master.dto.request.Respone.MessageResponse;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.ClubDTO;
 import com.swp391.Court_Master.dto.request.Respone.AdminScreenView.UserAccountDTO;
 import com.swp391.Court_Master.dto.request.Respone.CourManagerScreenView.StaffAccountDTO;
@@ -130,6 +132,13 @@ public class AdminController {
     public String openClub(@RequestParam("clubId") String clubId) {
 
         return adminService.openClub(clubId);
+    }
+
+        @PostMapping("/update-court")
+    public ResponseEntity<MessageResponse> updateCourt(@RequestBody Court newCourt) {
+        adminService.updateCourtInfo(newCourt);
+        
+        return ResponseEntity.ok().body(new MessageResponse("success"));
     }
 
 }
