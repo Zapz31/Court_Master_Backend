@@ -587,41 +587,53 @@ public class AdminRepository {
     // Show all Active clubs
     public List<ClubDTO> getAllActiveClub() {
         String sql = "SELECT\r\n" + //
-                "c.[badminton_club_id]\r\n" + //
-                ",c.[badminton_club_name]\r\n" + //
-                ",a.[unit_number]\r\n" + //
-                ",a.[ward]\r\n" + //
-                ",a.[district]\r\n" + //
-                ",a.[province]\r\n" + //
-                ",c.[description]\r\n" + //
-                ",c.[badminton_club_status]\r\n" + //
-                ",c.[court_manager_id]\r\n" + //
-                "FROM\r\n" + //
-                "[Court_Master].[dbo].[badminton_club] c\r\n" + //
-                "left join\r\n" + //
-                "[Court_Master].[dbo].[address] a\r\n" + //
-                "ON\r\n" + //
-                "c.address_id=a.address_id\r\n" + //
-                "WHERE\r\n" + //
-                "[badminton_club_status]='1'";
-        // SELECT
-        // c.[badminton_club_id]
-        // ,c.[badminton_club_name]
-        // ,a.[unit_number]
-        // ,a.[ward]
-        // ,a.[district]
-        // ,a.[province]
-        // ,c.[description]
-        // ,c.[badminton_club_status]
-        // ,c.[court_manager_id]
-        // FROM
-        // [Court_Master].[dbo].[badminton_club] c
-        // left join
-        // [Court_Master].[dbo].[address] a
-        // ON
-        // c.address_id=a.address_id
-        // WHERE
-        // [badminton_club_status]='1'
+                        "    c.[badminton_club_id],\r\n" + //
+                        "    c.[badminton_club_name],\r\n" + //
+                        "    a.[unit_number],\r\n" + //
+                        "    a.[ward],\r\n" + //
+                        "    a.[district],\r\n" + //
+                        "    a.[province],\r\n" + //
+                        "    c.[description],\r\n" + //
+                        "    c.[badminton_club_status],\r\n" + //
+                        "    c.[court_manager_id],\r\n" + //
+                        "    u.[first_name],\r\n" + //
+                        "    u.[last_name]\r\n" + //
+                        "FROM \r\n" + //
+                        "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
+                        "LEFT JOIN\r\n" + //
+                        "    [Court_Master].[dbo].[address] a\r\n" + //
+                        "ON\r\n" + //
+                        "    c.address_id = a.address_id\r\n" + //
+                        "LEFT JOIN\r\n" + //
+                        "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
+                        "ON\r\n" + //
+                        "    c.court_manager_id = u.user_id\r\n" + //
+                        "WHERE\r\n" + //
+                        "\tc.badminton_club_status = '1'";
+            //     SELECT
+            //     c.[badminton_club_id],
+            //     c.[badminton_club_name],
+            //     a.[unit_number],
+            //     a.[ward],
+            //     a.[district],
+            //     a.[province],
+            //     c.[description],
+            //     c.[badminton_club_status],
+            //     c.[court_manager_id],
+            //     u.[first_name],
+            //     u.[last_name]
+            // FROM 
+            //     [Court_Master].[dbo].[badminton_club] c
+            // LEFT JOIN
+            //     [Court_Master].[dbo].[address] a
+            // ON
+            //     c.address_id = a.address_id
+            // LEFT JOIN
+            //     [Court_Master].[dbo].[authenticated_user] u
+            // ON
+            //     c.court_manager_id = u.user_id
+            // WHERE
+            //     c.badminton_club_status = '1';
 
         // Create an instance of PreparedStatementSetter
         PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
@@ -646,41 +658,53 @@ public class AdminRepository {
     // Show all Inactive clubs
     public List<ClubDTO> getAllInactiveClub() {
         String sql = "SELECT\r\n" + //
-                "c.[badminton_club_id]\r\n" + //
-                ",c.[badminton_club_name]\r\n" + //
-                ",a.[unit_number]\r\n" + //
-                ",a.[ward]\r\n" + //
-                ",a.[district]\r\n" + //
-                ",a.[province]\r\n" + //
-                ",c.[description]\r\n" + //
-                ",c.[badminton_club_status]\r\n" + //
-                ",c.[court_manager_id]\r\n" + //
-                "FROM\r\n" + //
-                "[Court_Master].[dbo].[badminton_club] c\r\n" + //
-                "left join\r\n" + //
-                "[Court_Master].[dbo].[address] a\r\n" + //
-                "ON\r\n" + //
-                "c.address_id=a.address_id\r\n" + //
-                "WHERE\r\n" + //
-                "[badminton_club_status]='0'";
-        // SELECT
-        // c.[badminton_club_id]
-        // ,c.[badminton_club_name]
-        // ,a.[unit_number]
-        // ,a.[ward]
-        // ,a.[district]
-        // ,a.[province]
-        // ,c.[description]
-        // ,c.[badminton_club_status]
-        // ,c.[court_manager_id]
-        // FROM
-        // [Court_Master].[dbo].[badminton_club] c
-        // left join
-        // [Court_Master].[dbo].[address] a
-        // ON
-        // c.address_id=a.address_id
-        // WHERE
-        // [badminton_club_status]='0'
+                        "    c.[badminton_club_id],\r\n" + //
+                        "    c.[badminton_club_name],\r\n" + //
+                        "    a.[unit_number],\r\n" + //
+                        "    a.[ward],\r\n" + //
+                        "    a.[district],\r\n" + //
+                        "    a.[province],\r\n" + //
+                        "    c.[description],\r\n" + //
+                        "    c.[badminton_club_status],\r\n" + //
+                        "    c.[court_manager_id],\r\n" + //
+                        "    u.[first_name],\r\n" + //
+                        "    u.[last_name]\r\n" + //
+                        "FROM \r\n" + //
+                        "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
+                        "LEFT JOIN\r\n" + //
+                        "    [Court_Master].[dbo].[address] a\r\n" + //
+                        "ON\r\n" + //
+                        "    c.address_id = a.address_id\r\n" + //
+                        "LEFT JOIN\r\n" + //
+                        "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
+                        "ON\r\n" + //
+                        "    c.court_manager_id = u.user_id\r\n" + //
+                        "WHERE\r\n" + //
+                        "\tc.badminton_club_status = '0'";
+            //     SELECT
+            //     c.[badminton_club_id],
+            //     c.[badminton_club_name],
+            //     a.[unit_number],
+            //     a.[ward],
+            //     a.[district],
+            //     a.[province],
+            //     c.[description],
+            //     c.[badminton_club_status],
+            //     c.[court_manager_id],
+            //     u.[first_name],
+            //     u.[last_name]
+            // FROM 
+            //     [Court_Master].[dbo].[badminton_club] c
+            // LEFT JOIN
+            //     [Court_Master].[dbo].[address] a
+            // ON
+            //     c.address_id = a.address_id
+            // LEFT JOIN
+            //     [Court_Master].[dbo].[authenticated_user] u
+            // ON
+            //     c.court_manager_id = u.user_id
+            // WHERE
+            //     c.badminton_club_status = '0';
 
         // Create an instance of PreparedStatementSetter
         PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
@@ -701,6 +725,79 @@ public class AdminRepository {
         return inactiveClubsList;
 
     }
+
+    //Show clubs with a specific status 
+    
+    public List<ClubDTO> getAllStatusClub(String status) {
+        String sql = "SELECT\r\n" + //
+                        "    c.[badminton_club_id],\r\n" + //
+                        "    c.[badminton_club_name],\r\n" + //
+                        "    a.[unit_number],\r\n" + //
+                        "    a.[ward],\r\n" + //
+                        "    a.[district],\r\n" + //
+                        "    a.[province],\r\n" + //
+                        "    c.[description],\r\n" + //
+                        "    c.[badminton_club_status],\r\n" + //
+                        "    c.[court_manager_id],\r\n" + //
+                        "    u.[first_name],\r\n" + //
+                        "    u.[last_name]\r\n" + //
+                        "FROM \r\n" + //
+                        "    [Court_Master].[dbo].[badminton_club] c\r\n" + //
+                        "LEFT JOIN\r\n" + //
+                        "    [Court_Master].[dbo].[address] a\r\n" + //
+                        "ON\r\n" + //
+                        "    c.address_id = a.address_id\r\n" + //
+                        "LEFT JOIN\r\n" + //
+                        "    [Court_Master].[dbo].[authenticated_user] u\r\n" + //
+                        "ON\r\n" + //
+                        "    c.court_manager_id = u.user_id\r\n" + //
+                        "WHERE\r\n" + //
+                        "\tc.badminton_club_status = ?";
+            //     SELECT
+            //     c.[badminton_club_id],
+            //     c.[badminton_club_name],
+            //     a.[unit_number],
+            //     a.[ward],
+            //     a.[district],
+            //     a.[province],
+            //     c.[description],
+            //     c.[badminton_club_status],
+            //     c.[court_manager_id],
+            //     u.[first_name],
+            //     u.[last_name]
+            // FROM 
+            //     [Court_Master].[dbo].[badminton_club] c
+            // LEFT JOIN
+            //     [Court_Master].[dbo].[address] a
+            // ON
+            //     c.address_id = a.address_id
+            // LEFT JOIN
+            //     [Court_Master].[dbo].[authenticated_user] u
+            // ON
+            //     c.court_manager_id = u.user_id
+            // WHERE
+            //     c.badminton_club_status = ?; 1 0
+
+        // Create an instance of PreparedStatementSetter
+        PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
+            // Override the setValues method to set the values for the prepared statement
+            @Override
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                preparedStatement.setString(1, status);
+            }
+        };
+
+        // Initialize an empty list of ClubDTO objects
+        List<ClubDTO> statusClubsList = null;
+
+        // Perform the database query to fetch active clubs
+        statusClubsList = jdbcTemplate.query(sql, new AdminViewClubRowMapper());
+
+        // Return the list of active clubs
+        return statusClubsList;
+
+    }
+
 
     //Search Club by ID, name, unitNumber,ward,district,province,courtManagerId
 

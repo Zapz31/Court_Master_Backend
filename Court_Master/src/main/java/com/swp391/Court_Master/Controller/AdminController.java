@@ -92,4 +92,22 @@ public class AdminController {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping("/get-all-active-club")
+    public ResponseEntity<List<ClubDTO>> getAllActiveClub() {
+        List<ClubDTO> list = adminService.getAllActiveClub();
+        return ResponseEntity.ok().body(list);
+    }
+    
+    @GetMapping("/get-all-inactive-club")
+    public ResponseEntity<List<ClubDTO>> getAllInactiveClub() {
+        List<ClubDTO> list = adminService.getAllInactiveClub();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/get-all-status-club")
+    public ResponseEntity<List<ClubDTO>> getAllStatusClub(@RequestParam("status") String status) {
+        List<ClubDTO> list = adminService.getAllStatusClub(status);
+        return ResponseEntity.ok().body(list);
+    }
+
 }

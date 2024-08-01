@@ -67,7 +67,6 @@ public class AdminService {
         }
     }
 
-
     public String updateAccount(UpdateAccountRequest UpdateAccountRequest) {
         boolean isUpdateAccount = adminRepository.updateAccountInfo(UpdateAccountRequest);
         if (isUpdateAccount) {
@@ -82,5 +81,19 @@ public class AdminService {
         return ClubList;
     }
 
+    public List<ClubDTO> getAllActiveClub() {
+        List<ClubDTO> ClubList = adminRepository.getAllActiveClub();
+        return ClubList;
+    }
+
+    public List<ClubDTO> getAllInactiveClub() {
+        List<ClubDTO> ClubList = adminRepository.getAllActiveClub();
+        return ClubList;
+    }
+
+    public List<ClubDTO> getAllStatusClub(String status) {
+        List<ClubDTO> ClubList = adminRepository.getAllStatusClub(status);
+        return ClubList;
+    }
 
 }
