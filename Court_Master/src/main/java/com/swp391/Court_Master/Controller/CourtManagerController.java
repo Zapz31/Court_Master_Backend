@@ -68,9 +68,15 @@ public class CourtManagerController {
         MessageResponse mess = null;
         // Kiem tra xem court manager do co club nao truoc do chua. Neu co thi ko cho
         // dang ky
+        BadmintonClubImage avatarImage;
         List<BadmintonClubImage> imageList = new ArrayList<>();
-        BadmintonClubImage avatarImage = new BadmintonClubImage(avatar.getOriginalFilename());
-        if (!images.isEmpty() || images != null) {
+        if(avatar.isEmpty()){
+            avatarImage = new BadmintonClubImage("defaultclub.jpg");
+        } else {
+            avatarImage = new BadmintonClubImage(avatar.getOriginalFilename());
+        }
+        //BadmintonClubImage    
+        if ((!images.isEmpty() || images != null) && !images.get(0).getOriginalFilename().isEmpty()) {
             for (int i = 0; i < images.size(); i++) {
                 MultipartFile image = images.get(i);
                 String imageName = image.getOriginalFilename();
@@ -78,7 +84,7 @@ public class CourtManagerController {
                 uploadClubImages(image);
             }
         }
-        if (avatar != null || !avatar.isEmpty()) {
+        if (!avatar.getOriginalFilename().isEmpty()) {
             uploadClubImages(avatar);
         }
         mess = clubRegisterService.isRegisterClub(clubRegisterDTO, imageList, avatarImage);
@@ -178,5 +184,5 @@ public class CourtManagerController {
         
         return ResponseEntity.ok().body(new MessageResponse("success"));
     }
-    
+
 }
