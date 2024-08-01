@@ -36,6 +36,12 @@ public class ClubDTO {
     //Variable to hold the last name of the court manager
     private String courtManagerLastName;
 
+    //Variable to hold the image url of the club image
+    private String imageUrl;
+
+    //Variable to check if the image is the main image
+    private String isMainAvatar;
+
     private static final Logger LOGGER = Logger.getLogger(ClubDTO.class.getName());
 
     public ClubDTO() {
@@ -51,7 +57,9 @@ public class ClubDTO {
     , String badmintonClubStatus
     , String courtManagerId
     , String courtManagerFirstName
-    , String courtManagerLastName) {
+    , String courtManagerLastName
+    , String imageUrl
+    , String isMainAvatar) {
         LOGGER.info("ClubDTO parameterized constructor called");
 
 
@@ -100,15 +108,25 @@ public class ClubDTO {
         // Assign courtManagerId to instance variable
         this.courtManagerId = tempCourtManagerId;
 
-        // Temporary variable to hold courtManagerId
+        // Temporary variable to hold courtManagerFirstName
         String tempCourtManagerFirstName = courtManagerFirstName;
-        // Assign courtManagerId to instance variable
+        // Assign courtManagerFirstName to instance variable
         this.courtManagerFirstName = tempCourtManagerFirstName;
         
-        // Temporary variable to hold courtManagerId
+        // Temporary variable to hold courtManagerLastName
         String tempCourtManagerLastName = courtManagerLastName;
-        // Assign courtManagerId to instance variable
-        this.courtManagerLastName = tempCourtManagerLastName;        
+        // Assign courtManagerLastName to instance variable
+        this.courtManagerLastName = tempCourtManagerLastName;     
+        
+        // Temporary variable to hold imageUrl
+        String tempImageUrl = imageUrl;
+        // Assign imageUrl to instance variable
+        this.imageUrl = tempImageUrl; 
+        
+        // Temporary variable to hold isMainAvatar
+        String tempIsMainAvatar = isMainAvatar;
+        // Assign isMainAvatar to instance variable
+        this.isMainAvatar = tempIsMainAvatar;         
     }
 
     // Getter for clubId
@@ -263,6 +281,34 @@ public class ClubDTO {
         LOGGER.info("setCourtManagerLastName method called");
         String tempCourtManagerLastName = courtManagerLastName;
         this.courtManagerLastName = tempCourtManagerLastName;
+    }
+
+    // Getter for imageUrl
+    public String getImageUrl() {
+        LOGGER.info("getImageUrl method called");
+        String tempImageUrl = this.imageUrl;
+        return tempImageUrl;
+    }
+
+    // Setter for courtManagerLastName
+    public void setImageUrl(String imageUrl) {
+        LOGGER.info("setImageUrl method called");
+        String tempImageUrl = imageUrl;
+        this.imageUrl = tempImageUrl;
+    }
+
+    // Getter for courtManageLastName
+    public String getIsMainAvatar() {
+        LOGGER.info("getIsMainAvatar method called");
+        String tempIsMainAvatar = this.isMainAvatar;
+        return tempIsMainAvatar;
+    }
+
+    // Setter for courtManagerLastName
+    public void setIsMainAvatar(String isMainAvatar) {
+        LOGGER.info("setIsMainAvatar method called");
+        String tempIsMainAvatar = isMainAvatar;
+        this.isMainAvatar = tempIsMainAvatar;
     }
 
     // Additional methods

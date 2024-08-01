@@ -43,6 +43,12 @@ public class AdminViewClubRowMapper implements RowMapper<ClubDTO> {
 
         //Extract the courtManagerLastName from the ResultSet
         String courtManagerLastName = arg0.getString("last_name");
+
+        //Extract the image url from the ResultSet
+        String imageUrl = arg0.getString("image_url");
+
+        //Extract the is main avatar from the ResultSet
+        String isMainAvatar = arg0.getString("is_main_avatar");
         
         // Create a new ClubDTO object using the extracted values
         ClubDTO club = new ClubDTO(clubId
@@ -55,7 +61,9 @@ public class AdminViewClubRowMapper implements RowMapper<ClubDTO> {
         , clubStatus
         , courtManagerId
         , courtManagerFirstName
-        , courtManagerLastName);
+        , courtManagerLastName
+        , imageUrl
+        , isMainAvatar);
         
         // Return the ClubDTO object
         return club;
