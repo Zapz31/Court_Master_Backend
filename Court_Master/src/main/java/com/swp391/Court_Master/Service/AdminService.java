@@ -98,8 +98,26 @@ public class AdminService {
     }
 
     public List<ClubDTO> searchClubByIdName(
-        SearchClubByIdNameRequest SearchClubByIdNameRequest) {
-    List<ClubDTO> ClubList = adminRepository.searchClubByIdName(SearchClubByIdNameRequest);
-    return ClubList;
-}
+            SearchClubByIdNameRequest SearchClubByIdNameRequest) {
+        List<ClubDTO> ClubList = adminRepository.searchClubByIdName(SearchClubByIdNameRequest);
+        return ClubList;
+    }
+
+    public String closeClub(String clubId) {
+        boolean isCloseClub = adminRepository.isCloseClub(clubId);
+        if (isCloseClub) {
+            return "success";
+        } else {
+            return "false";
+        }
+    }
+
+    public String openClub(String clubId) {
+        boolean isOpenClub = adminRepository.isOpenClub(clubId);
+        if (isOpenClub) {
+            return "success";
+        } else {
+            return "false";
+        }
+    }
 }

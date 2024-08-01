@@ -956,6 +956,53 @@ public class AdminRepository {
         return jdbcTemplate.query(sql, pss, new AdminViewClubRowMapper());
     }
 
+    //Close club
+    public boolean isCloseClub(String clubId) {
+        String sql="UPDATE\r\n" + //
+                        "\t[Court_Master].[dbo].[badminton_club]\r\n" + //
+                        "SET\r\n" + //
+                        "\t[badminton_club_status]='0'\r\n" + //
+                        "WHERE\r\n" + //
+                        "\t[badminton_club_id]= ?\r\n" + //
+                        "";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, clubId);
+            }
+        };
+        int updateRow = jdbcTemplate.update(sql, pss);
+        if (updateRow > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    //Reopen club
+    public boolean isOpenClub(String clubId) {
+        String sql="UPDATE\r\n" + //
+                        "\t[Court_Master].[dbo].[badminton_club]\r\n" + //
+                        "SET\r\n" + //
+                        "\t[badminton_club_status]='1'\r\n" + //
+                        "WHERE\r\n" + //
+                        "\t[badminton_club_id]= ?\r\n" + //
+                        "";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, clubId);
+            }
+        };
+        int updateRow = jdbcTemplate.update(sql, pss);
+        if (updateRow > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //Show all court
+
     //Edit club info, court info
 
 }

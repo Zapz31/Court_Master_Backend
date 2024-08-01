@@ -120,4 +120,16 @@ public class AdminController {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping("/close-club")
+    public String closeClub(@RequestParam("clubId") String clubId) {
+
+        return adminService.closeClub(clubId);
+    }
+
+    @GetMapping("/open-club")
+    public String openClub(@RequestParam("clubId") String clubId) {
+
+        return adminService.openClub(clubId);
+    }
+
 }
