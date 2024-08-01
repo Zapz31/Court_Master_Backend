@@ -128,4 +128,9 @@ public class AdminService {
             throw new RuntimeException("failed");
         }
     }
+
+    public List<Court> getAllCourts(String clubId) {
+        List<Court> CourtList = adminRepository.getAllCourt(clubId);
+        return CourtList;
+    }
 }

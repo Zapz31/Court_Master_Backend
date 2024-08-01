@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 import com.swp391.Court_Master.RowMapper.QueryAdminScreenRowMapper.AdminViewUserAccountsRowMapper;
+import com.swp391.Court_Master.Entities.Court;
 import com.swp391.Court_Master.RowMapper.QueryAdminScreenRowMapper.AdminViewClubRowMapper;
+import com.swp391.Court_Master.RowMapper.QueryAdminScreenRowMapper.AdminViewCourtRowMapper;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchAccountByIdNamePhoneMail;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.SearchClubByIdNameRequest;
 import com.swp391.Court_Master.dto.request.Request.AdminRequest.UpdateAccountRequest;
@@ -1012,6 +1014,40 @@ public class AdminRepository {
         }
     }
     // Show all court
+    public List<Court> getAllCourt(String clubId){
+        String sql="SELECT[badminton_court_id]\r\n" + //
+                        "      ,[badminton_court_name]\r\n" + //
+                        "      ,[badminton_court_status]\r\n" + //
+                        "      ,[badminton_club_id]\r\n" + //
+                        "  FROM [Court_Master].[dbo].[badminton_court]\r\n" + //
+                        "  WHERE [badminton_club_id]= ? ";
+//                         SELECT[badminton_court_id]
+//       ,[badminton_court_name]
+//       ,[badminton_court_status]
+//       ,[badminton_club_id]
+//   FROM [Court_Master].[dbo].[badminton_court]
+//   WHERE [badminton_club_id]='C0000001'
+                // Create an instance of PreparedStatementSetter
+                PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetter() {
+                    // Override the setValues method to set the values for the prepared statement
+                    @Override
+                    public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                        preparedStatement.setString(1, clubId);
+                    }
+                };
+
+                PreparedStatementSetter pss = preparedStatementSetter;
+        
+                // Initialize an empty list of ClubDTO objects
+                List<Court> courtList = null;
+        
+                // Perform the database query to fetch active clubs
+                courtList = jdbcTemplate.query(sql, pss, new AdminViewCourtRowMapper());
+        
+                // Return the list of active clubs
+
+        return courtList;
+    }
 
     // Update Court Info: tham khao o CourtManagerRepoitory
     public boolean updateCourtInfo(String badminton_court_id, String badminton_court_name,
@@ -1080,6 +1116,6 @@ public class AdminRepository {
 
     }
 
-    // Edit club info, court info
+    // Edit club info
 
 }

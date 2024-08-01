@@ -141,4 +141,10 @@ public class AdminController {
         return ResponseEntity.ok().body(new MessageResponse("success"));
     }
 
+    @GetMapping("/get-courts-of-club")
+    public ResponseEntity<List<Court>> getAllCourts(@RequestParam("clubId") String clubId) {
+        List<Court> list = adminService.getAllCourts(clubId);
+        return ResponseEntity.ok().body(list);
+    }
+
 }
